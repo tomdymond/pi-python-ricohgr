@@ -14,7 +14,7 @@ class Grimage(object):
     for i in self.objs['dirs']:
       if i['name'] == dirname:
         for image_file in i['files']:
-          if image_file.split('.')[1] == 'JPG':
+          if image_file['n'].split('.')[1] == 'JPG':
             files.append(image_file)
         f.append(files)
     return f
@@ -26,9 +26,9 @@ class Grimage(object):
       d.append(i['name'])
     return d
 
-  def getimage(self, dirname, filename):
+  def getimage(self, dirname, filename, size=full):
     """ Download an image """
-    r = requests.get('http://{ip}/v1/photos/{dirname}/{filename}?size=thumb'.format(ip=self.ip, dirname=dirname, filename=filename))
+    r = requests.get('http://{ip}/v1/photos/{dirname}/{filename}?size={size}'.format(ip=self.ip, dirname=dirname, filename=filename, size=size))
     with open('/tmp/{}'.format(filename), 'wb') as f:
       for chunk in r.iter_content(chunk_size=1024): 
         if chunk: # filter out keep-alive new chunks
