@@ -10,9 +10,13 @@ class Grimage(object):
   def listimages(self, dirname):
     """ Get the images from the camera """
     f = []
+    files = []
     for i in self.objs['dirs']:
       if i['name'] == dirname:
-        f.append(i['files'])
+        for image_file in i['files']:
+          if image_file.split('.')[1] == 'JPG':
+            files.append(image_file)
+        f.append(files)
     return f
 
   def listdirs(self):
@@ -24,4 +28,9 @@ class Grimage(object):
 
   def getimage(self, dirname, filename):
     """ Download an image """
-    return requests.get('http://{ip}/v1/photos/{dirname}/{filename}?size=full'.format(ip=self.ip, dirname=dirname, filename=filename))
+    r = requests.get('http://{ip}/v1/photos/{dirname}/{filename}?size=thumb'.format(ip=self.ip, dirname=dirname, filename=filename))
+    with open('/tmp/{}'.format(filename), 'wb') as f:
+      for chunk in r.iter_content(chunk_size=1024): 
+        if chunk: # filter out keep-alive new chunks
+          f.write(chunk)
+ 

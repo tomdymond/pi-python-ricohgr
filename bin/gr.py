@@ -16,6 +16,7 @@ if a.is_camera_on():
     for d in b.listdirs():
       for i in b.listimages(d):
         for j in i:
+          b.getimage(d, j['n'])
           print j['n']
 
 
