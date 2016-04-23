@@ -2,10 +2,6 @@
 
 import sh
 import re
-import time
-import sys
-import os
-
 
 class Wifishit(object):
     def __init__(self, camera_ssid):
