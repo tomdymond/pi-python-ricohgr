@@ -6,8 +6,9 @@ import sh
 import re
 import time
 import sys
+import os
 
-RICOH_SSID="RICOH_66E7D0"
+RICOH_SSID=os.environ["RICOH_SSID"]
 
 class Wifishit(object):
     def __init__(self):
