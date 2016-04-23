@@ -8,7 +8,9 @@ sys.path.append('{}/../lib/'.format(cwd))
 from piricohmotoWifi import Wifishit
 from piricohmoto import Grimage
 
-a = Wifishit()
+RICOH_SSID=os.environ["RICOH_SSID"]
+
+a = Wifishit(camera_ssid=RICOH_SSID)
 
 if a.is_camera_on():
     if a.get_current_ssid() != RICOH_SSID:

@@ -6,11 +6,10 @@ import time
 import sys
 import os
 
-RICOH_SSID=os.environ["RICOH_SSID"]
 
 class Wifishit(object):
-    def __init__(self):
-        fo=1
+    def __init__(self, camera_ssid):
+        self.camera_ssid = camera_ssid
 
     def get_ssids(self):
         """ Return a list of access points """
@@ -42,7 +41,7 @@ class Wifishit(object):
 
     def is_camera_on(self):
         """ Return true if the camera is turned on """
-        if RICOH_SSID in self.get_ssids():
+        if self.camera_ssid in self.get_ssids():
             print "Camera is ON!"
             return True
         print "Camera is OFF!"
