@@ -79,9 +79,9 @@ class Wifishit(object):
           sys.exit(1)
         i += 1
 
-      print "current SSID is good!"
-      if self.get_current_ssid() == self.camera_ssid:
-        return True
-      else:
-        print "Problem connecting to SSID {}".format(self.camera_ssid)
-      return False
+    print "current SSID is good!"
+    if self.get_current_ssid() == self.camera_ssid:
+      return True
+    else:
+      print "Problem connecting to SSID {}".format(self.camera_ssid)
+    return False
