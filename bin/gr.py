@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-import sys
+from os import sys, path
 
 cwd = sys.path.dirname(path.abspath(__file__))
 sys.path.append('{}/lib/'.format(cwd))
