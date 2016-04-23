@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 
-cwd = path.dirname(path.abspath(__file__))
+import sys
+
+cwd = sys.path.dirname(path.abspath(__file__))
 sys.path.append('{}/lib/'.format(cwd))
 sys.path.append('{}/../lib/'.format(cwd))
 from piricohmotoWifi import Wifishit
