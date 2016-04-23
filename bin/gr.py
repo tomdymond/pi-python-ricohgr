@@ -13,8 +13,10 @@ a = Wifishit(camera_ssid=os.environ["RICOH_SSID"])
 if a.is_camera_on():
   if a.connect_to_camera_ssid():
     b = Grimage()
-    for i in b.listimages('102RICOH'):
-      for j in i:
-        print j['n']
+    dirs = b.listdirs()
+    for d in b.listdirs():
+      for i in b.listimages(d):
+        for j in i:
+          print j['n']
 
 
