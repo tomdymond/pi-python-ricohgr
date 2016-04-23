@@ -1,7 +1,5 @@
 #!/usr/bin/env python
 
-import requests
-from pprint import pprint
 import sh
 import re
 import time
@@ -68,55 +66,3 @@ class Wifishit(object):
         """ Restart wlan0 interface """
         self.manage_wlan0('down')
         self.manage_wlan0('up')
-
-class Grimage(object):
-    def __init__(self, ip='192.168.0.1'):
-        self.ip = ip
-        self.objs = requests.get('http://{ip}/_gr/objs'.format(ip=ip), timeout=10).json()
-
-
-    def listimages(self, dirname):
-        """ Get the images from the camera """
-        f = []
-        for i in self.objs['dirs']:
-            if i['name'] == dirname:
-                f.append(i['files'])
-        return f
-
-    def listdirs(self):
-        for i in self.objs['dirs']:
-            print i['name']
-
-    def getimage(self, dirname, filename):
-        """ Download an image """
-        return requests.get('http://{ip}/v1/photos/{dirname}/{filename}?size=full'.format(ip=self.ip, dirname=dirname, filename=filename))
-
-
-
-a = Wifishit()
-
-if a.is_camera_on():
-    if a.get_current_ssid() != RICOH_SSID:
-        print a.get_current_ssid()
-        print RICOH_SSID
-        a.restart_interface()
-        print "Waiting for interface"
-        time.sleep(2)
-        i = 0
-        while a.get_current_ssid() != RICOH_SSID:
-            print a.get_current_ssid()
-            time.sleep(1)
-            if i > 20:
-                print "Error connecting to the camera"
-                sys.exit(1)
-            i += 1
-
-    print "current SSID is good!"
-    if a.get_current_ssid() == RICOH_SSID:
-        b = Grimage()
-        for i in b.listimages('102RICOH'):
-            for j in i:
-                print j['n']
-    else:
-        print "Problem connecting to SSID {}".format(RICOH_SSID)
-
