@@ -26,7 +26,7 @@ class Grimage(object):
       d.append(i['name'])
     return d
 
-  def getimage(self, dirname, filename, size=full):
+  def getimage(self, dirname, filename, size='full'):
     """ Download an image """
     r = requests.get('http://{ip}/v1/photos/{dirname}/{filename}?size={size}'.format(ip=self.ip, dirname=dirname, filename=filename, size=size))
     with open('/tmp/{}'.format(filename), 'wb') as f:
