@@ -16,8 +16,11 @@ class Grimage(object):
     return f
 
   def listdirs(self):
+    """ Return the list of directories on the SD card """
+    d = []
     for i in self.objs['dirs']:
-      print i['name']
+      d.append(i['name'])
+    return d
 
   def getimage(self, dirname, filename):
     """ Download an image """
