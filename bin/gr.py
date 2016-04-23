@@ -2,7 +2,7 @@
 
 import os
 
-cwd = os.path.dirname(path.abspath(__file__))
+cwd = os.path.dirname(os.path.abspath(__file__))
 os.sys.path.append('{}/lib/'.format(cwd))
 os.sys.path.append('{}/../lib/'.format(cwd))
 from piricohmotoWifi import Wifishit
