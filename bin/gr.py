@@ -1,10 +1,10 @@
 #!/usr/bin/env python
 
-from os import sys, path
+import os
 
-cwd = path.dirname(path.abspath(__file__))
-sys.path.append('{}/lib/'.format(cwd))
-sys.path.append('{}/../lib/'.format(cwd))
+cwd = os.path.dirname(path.abspath(__file__))
+os.sys.path.append('{}/lib/'.format(cwd))
+os.sys.path.append('{}/../lib/'.format(cwd))
 from piricohmotoWifi import Wifishit
 from piricohmoto import Grimage
 
