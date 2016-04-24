@@ -6,6 +6,7 @@ import sys
 import datetime
 
 
+
 class Geo(object):
   def __init__(self, device):
     self.device = device
