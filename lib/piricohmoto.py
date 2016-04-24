@@ -47,7 +47,13 @@ class Grimage(object):
             f.write(chunk)
       timestamp_2 = int(datetime.datetime.now().strftime('%s'))
       self.update_state(filename)
-      print "Download took {} seconds".format(timestamp_2 - timestamp_1)
+
+      # This code is shit and i would expect requests is already giving me this
+      size_on_disk = int(os.path.getsize('{}/{}'.format(DOWNLOAD_DIR, filename)))
+      total_time = timestamp_2 - timestamp_1
+      download_speed = ( size_on_disk / total_time )
+
+      print "Download took {} seconds. Speed={} Bytes/s".format(total_time, download_speed)
       return True
     except Exception as e:
       print e.message
