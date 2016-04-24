@@ -13,6 +13,7 @@ class Grimage(object):
     self.ip = ip
     self.objs = requests.get('http://{ip}/_gr/objs'.format(ip=ip), timeout=10).json()
     self.state = self.read_state()
+    self.geodata = Geo()
 
   def listimages(self, dirname):
     """ Get the images from the camera """
@@ -60,6 +61,17 @@ class Grimage(object):
       sys.exit(1)
     return False
 
+  def get_gps_data(self, image_timestamp):
+    """ Return a hash with all the tags gps related for this time """
+    return self.geodata(image_timestamp)
+
+  def geotag_image(self, image_file):
+    """ Attempt to geo tag photo """
+    a = Grimageexif(image_file)
+    image_timestamp = a.get_taken_time()
+    gps_data = self.get_gps_data(image_timestamp)
+    a.write_gps_data(gps_data)
+
   def download_all(self):
     """ Download all images """
     for d in self.listdirs():
@@ -85,6 +97,3 @@ class Grimage(object):
     except Exception as e:
       print e.message
     return False
-
-
- 
