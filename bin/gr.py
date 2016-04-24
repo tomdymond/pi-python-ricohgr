@@ -7,6 +7,7 @@ os.sys.path.append('{}/lib/'.format(cwd))
 os.sys.path.append('{}/../lib/'.format(cwd))
 from piricohmotoWifi import Wifishit
 from piricohmoto import Grimage
+from piricohmotoExif import Grimageexif
 
 a = Wifishit(camera_ssid=os.environ["RICOH_SSID"])
 
