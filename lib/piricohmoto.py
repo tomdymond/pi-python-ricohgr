@@ -4,6 +4,7 @@ import requests
 import os
 import sys
 import datetime
+from piricohmotoGeo import Geo
 
 STATE_FILE='/tmp/state'
 DOWNLOAD_DIR='/tmp'
@@ -13,7 +14,7 @@ class Grimage(object):
     self.ip = ip
     self.objs = requests.get('http://{ip}/_gr/objs'.format(ip=ip), timeout=10).json()
     self.state = self.read_state()
-    self.geodata = Geo()
+    self.geodata = Geo("foo")
 
   def listimages(self, dirname):
     """ Get the images from the camera """
