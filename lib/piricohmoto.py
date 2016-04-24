@@ -33,6 +33,8 @@ class Grimage(object):
 
   def getimage(self, dirname, filename, size='full'):
     """ Download an image """
+    if filename in self.state:
+      return True
     try:
       r = requests.get('http://{ip}/v1/photos/{dirname}/{filename}?size={size}'.format(ip=self.ip, dirname=dirname, filename=filename, size=size), timeout=10)
       with open('{}/{}'.format(DOWNLOAD_DIR, filename), 'wb') as f:
@@ -57,7 +59,7 @@ class Grimage(object):
     """ Register what's been download """
     try:
       with open(STATE_FILE, 'ab') as f:
-        f.write(image)
+        f.write("{}\n".format(image))
       return True
     except Exception as e:
       print e.message
