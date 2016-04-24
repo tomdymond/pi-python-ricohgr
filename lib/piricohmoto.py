@@ -17,14 +17,13 @@ DOWNLOAD_DIR='/tmp'
 
 class Grimage(object):
   def __init__(self, config_file='/etc/piricohmoto.yml'):
-
-    self.objs = requests.get('http://{ip}/_gr/objs'.format(ip=ip), timeout=10).json()
     self.state_download = self.read_state(STATE_FILE_DOWNLOAD)
     self.state_upload = self.read_state(STATE_FILE_UPLOAD)
     self.geodata = Geo("foo")
     self.config = self.load_config(config_file)
     self.ip = self.config['ip']
     self.access_token = self.config['access_token']
+    self.objs = requests.get('http://{ip}/_gr/objs'.format(ip=ip), timeout=10).json()
 
   def load_config(self, config_file):
     """ Load config """
@@ -88,6 +87,7 @@ class Grimage(object):
       print "Skipping {}. Already uploaded".format(filename)
       return True
     try:
+      print "Uploading photo {} to dropbox".format(filename)
       client = dropbox.client.DropboxClient(self.access_token)
       f = open('{}/{}'.format(DOWNLOAD_DIR, filename), 'rb')
       response = client.put_file('/{}'.format(filename), f)
