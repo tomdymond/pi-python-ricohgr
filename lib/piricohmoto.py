@@ -2,6 +2,7 @@
 
 import requests
 import os
+import sys
 
 STATE_FILE='/tmp/state'
 DOWNLOAD_DIR='/tmp'
@@ -46,7 +47,16 @@ class Grimage(object):
       return True
     except Exception as e:
       print e.message
+      sys.exit(1)
     return False
+
+  def download_all(self):
+    """ Download all images """
+    for d in self.listdirs():
+      for i in self.listimages(d):
+        for j in i:
+          self.getimage(d, j['n'])
+          print j['n']
 
   def read_state(self):
     """ Just use a text file for now. Return a list of images """
