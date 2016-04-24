@@ -113,10 +113,12 @@ class Grimage(object):
 
   def download_all(self):
     """ Download all images """
-    for d in self.listdirs():
+    for foldername in self.listdirs():
       for i in self.listimages(d):
         for j in i:
-          self.getimage(d, j['n'])
+          filename = j['n']
+          self.getimage(foldername, filename)
+          self.upload_image_to_dropbox(filename)
           print j['n']
 
   def read_state(self, state_file):
