@@ -5,16 +5,36 @@ import os
 import sys
 import datetime
 from piricohmotoGeo import Geo
+import dropbox
+import yaml
 
-STATE_FILE='/tmp/state'
+# Register the files already uploaded. Mark them in database to they 
+# don't get downloaded from the camera again but also not uploaded again
+
+STATE_FILE_DOWNLOAD='/tmp/state'
+STATE_FILE_UPLOAD='/tmp/state_upload'
 DOWNLOAD_DIR='/tmp'
 
 class Grimage(object):
-  def __init__(self, ip='192.168.0.1'):
-    self.ip = ip
+  def __init__(self, config_file='/etc/piricohmoto.yml'):
+
     self.objs = requests.get('http://{ip}/_gr/objs'.format(ip=ip), timeout=10).json()
-    self.state = self.read_state()
+    self.state_download = self.read_state(STATE_FILE_DOWNLOAD)
+    self.state_upload = self.read_state(STATE_FILE_UPLOAD)
     self.geodata = Geo("foo")
+    self.config = self.load_config(config_file)
+    self.ip = self.config['ip']
+    self.access_token = self.config['access_token']
+
+  def load_config(self, config_file):
+    """ Load config """
+    if os.path.exists(config_file):
+      with open(config_file) as config:
+        config = yaml.load(config)
+      return config
+    else:
+      print "Cannot find config file. Create one and copy it to /etc/piricohmoto.yml"
+      sys.exit(1)
 
   def listimages(self, dirname):
     """ Get the images from the camera """
@@ -37,7 +57,7 @@ class Grimage(object):
 
   def getimage(self, dirname, filename, size='full'):
     """ Download an image """
-    if filename in self.state:
+    if filename in self.state_download:
       print "Skipping {}. Already downloaded".format(filename)
       return True
     try:
@@ -48,7 +68,7 @@ class Grimage(object):
           if chunk: # filter out keep-alive new chunks
             f.write(chunk)
       timestamp_2 = int(datetime.datetime.now().strftime('%s'))
-      self.update_state(filename)
+      self.update_state(STATE_FILE_DOWNLOAD, filename)
 
       # This code is shit and i would expect requests is already giving me this
       size_on_disk = int(os.path.getsize('{}/{}'.format(DOWNLOAD_DIR, filename)))
@@ -60,6 +80,24 @@ class Grimage(object):
     except Exception as e:
       print e.message
       sys.exit(1)
+    return False
+
+  def upload_image_to_dropbox(self, filename):
+    """ Upload the picture to dropbox """
+    if filename in self.state_upload:
+      print "Skipping {}. Already uploaded".format(filename)
+      return True
+    try:
+      client = dropbox.client.DropboxClient(self.access_token)
+      f = open('{}/{}'.format(DOWNLOAD_DIR, filename) 'rb')
+      response = client.put_file('/{}'.format(filename), f)
+      #print "uploaded:", response
+      # Share it
+      # response = client.share('/{}'.format(filename), short_url=False).
+      self.update_state(STATE_FILE_UPLOAD, filename)
+      return True
+    except Exception as e:
+      print e.message
     return False
 
   def get_gps_data(self, image_timestamp):
@@ -81,18 +119,18 @@ class Grimage(object):
           self.getimage(d, j['n'])
           print j['n']
 
-  def read_state(self):
+  def read_state(self, state_file):
     """ Just use a text file for now. Return a list of images """
-    if os.path.exists(STATE_FILE):
-      with open(STATE_FILE, 'r') as f:
+    if os.path.exists(state_file):
+      with open(state_file, 'r') as f:
         return f.read().split('\n')
     else:
       return []
 
-  def update_state(self, image):
+  def update_state(self, state_file, image):
     """ Register what's been download """
     try:
-      with open(STATE_FILE, 'ab') as f:
+      with open(state_file, 'ab') as f:
         f.write("{}\n".format(image))
       return True
     except Exception as e:
