@@ -114,7 +114,7 @@ class Grimage(object):
   def download_all(self):
     """ Download all images """
     for foldername in self.listdirs():
-      for i in self.listimages(d):
+      for i in self.listimages(foldername):
         for j in i:
           filename = j['n']
           self.getimage(foldername, filename)
