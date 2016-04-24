@@ -34,6 +34,7 @@ class Grimage(object):
   def getimage(self, dirname, filename, size='full'):
     """ Download an image """
     if filename in self.state:
+      print "Skipping {}. Already downloaded".format(filename)
       return True
     try:
       r = requests.get('http://{ip}/v1/photos/{dirname}/{filename}?size={size}'.format(ip=self.ip, dirname=dirname, filename=filename, size=size), timeout=10)
