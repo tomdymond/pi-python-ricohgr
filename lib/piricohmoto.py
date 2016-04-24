@@ -1,11 +1,16 @@
 #!/usr/bin/env python
 
 import requests
+import os
+
+STATE_FILE='/tmp/state'
+DOWNLOAD_DIR='/tmp'
 
 class Grimage(object):
   def __init__(self, ip='192.168.0.1'):
     self.ip = ip
     self.objs = requests.get('http://{ip}/_gr/objs'.format(ip=ip), timeout=10).json()
+    self.state = self.read_state()
 
   def listimages(self, dirname):
     """ Get the images from the camera """
@@ -28,9 +33,35 @@ class Grimage(object):
 
   def getimage(self, dirname, filename, size='full'):
     """ Download an image """
-    r = requests.get('http://{ip}/v1/photos/{dirname}/{filename}?size={size}'.format(ip=self.ip, dirname=dirname, filename=filename, size=size))
-    with open('/tmp/{}'.format(filename), 'wb') as f:
-      for chunk in r.iter_content(chunk_size=1024): 
-        if chunk: # filter out keep-alive new chunks
-          f.write(chunk)
+    try:
+      r = requests.get('http://{ip}/v1/photos/{dirname}/{filename}?size={size}'.format(ip=self.ip, dirname=dirname, filename=filename, size=size), timeout=10)
+      with open('{}/{}'.format(DOWNLOAD_DIR, filename), 'wb') as f:
+        for chunk in r.iter_content(chunk_size=1024): 
+          if chunk: # filter out keep-alive new chunks
+            f.write(chunk)
+      self.update_state(filename)
+      return True
+    except Exception as e:
+      print e.message
+    return False
+
+  def read_state(self):
+    """ Just use a text file for now. Return a list of images """
+    if os.path.exists(STATE_FILE):
+      with open(STATE_FILE, 'r') as f:
+        return f.read().split('\n')
+    else:
+      return []
+
+  def update_state(self, image):
+    """ Register what's been download """
+    try:
+      with open(STATE_FILE, 'ab') as f:
+        f.write(image)
+      return True
+    except Exception as e:
+      print e.message
+    return False
+
+
  
