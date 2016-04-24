@@ -89,7 +89,7 @@ class Grimage(object):
       return True
     try:
       client = dropbox.client.DropboxClient(self.access_token)
-      f = open('{}/{}'.format(DOWNLOAD_DIR, filename) 'rb')
+      f = open('{}/{}'.format(DOWNLOAD_DIR, filename), 'rb')
       response = client.put_file('/{}'.format(filename), f)
       #print "uploaded:", response
       # Share it
