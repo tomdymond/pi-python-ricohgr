@@ -23,7 +23,7 @@ class Grimage(object):
     self.config = self.load_config(config_file)
     self.ip = self.config['ip']
     self.access_token = self.config['access_token']
-    self.objs = requests.get('http://{ip}/_gr/objs'.format(ip=ip), timeout=10).json()
+    self.objs = requests.get('http://{ip}/_gr/objs'.format(ip=self.ip), timeout=10).json()
 
   def load_config(self, config_file):
     """ Load config """
