@@ -3,6 +3,7 @@
 import requests
 import os
 import sys
+import datetime
 
 STATE_FILE='/tmp/state'
 DOWNLOAD_DIR='/tmp'
@@ -38,12 +39,15 @@ class Grimage(object):
       print "Skipping {}. Already downloaded".format(filename)
       return True
     try:
+      timestamp_1 = datetime.datetime.now().strftime('%s')
       r = requests.get('http://{ip}/v1/photos/{dirname}/{filename}?size={size}'.format(ip=self.ip, dirname=dirname, filename=filename, size=size), timeout=10)
       with open('{}/{}'.format(DOWNLOAD_DIR, filename), 'wb') as f:
         for chunk in r.iter_content(chunk_size=1024): 
           if chunk: # filter out keep-alive new chunks
             f.write(chunk)
+      timestamp_2 = datetime.datetime.now().strftime('%s')
       self.update_state(filename)
+      print "Download took {} seconds".format(timestamp_2 - timestamp_1)
       return True
     except Exception as e:
       print e.message

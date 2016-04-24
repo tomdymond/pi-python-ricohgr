@@ -65,8 +65,8 @@ class Wifishit(object):
   def connect_to_camera_ssid(self):
     """ Return true if connected to camera SSID """
     if self.get_current_ssid() != self.camera_ssid:
-      print self.get_current_ssid()
-      print self.camera_ssid
+      print "Trying to connect to camera ssid {}".format(self.camera_ssid)
+      print "Current SSID: {}".format(self.get_current_ssid())
       self.restart_interface()
       print "Waiting for interface"
       time.sleep(2)
@@ -79,7 +79,7 @@ class Wifishit(object):
           sys.exit(1)
         i += 1
 
-    print "current SSID is good!"
+    print "Connected to Camera SSID"
     if self.get_current_ssid() == self.camera_ssid:
       return True
     else:
