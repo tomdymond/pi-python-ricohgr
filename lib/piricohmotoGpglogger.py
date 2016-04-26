@@ -52,9 +52,9 @@ if __name__ == '__main__':
         d['utc'] = gpsd.utc
 
         with open(LOGGER_FILE, 'ab') as f:
-          w = csv.DictWriter(f, gpsvalues.keys())
+          w = csv.DictWriter(f, d.keys())
           w.writeheader()
-          w.writerow(gpsvalues)
+          w.writerow(d)
 
       time.sleep(REFRESH_TIME) 
 
