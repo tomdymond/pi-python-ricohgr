@@ -9,6 +9,7 @@ from time import *
 import time
 import threading
 import csv
+import datetime
 
 gpsd = None #seting the global variable
 
@@ -35,6 +36,8 @@ if __name__ == '__main__':
     gpsp.start() # start it up
     while True:
       if gpsd.fix.latitude:
+        d = gpsd.fix.__dict__
+        d['localtime'] = datetime.datetime.now().strftime('%s')
         if not os.path.exists(LOGGER_FILE):
           with open(LOGGER_FILE, 'wb') as f:
             w = csv.DictWriter(f, gpsd.fix.__dict__.keys())
