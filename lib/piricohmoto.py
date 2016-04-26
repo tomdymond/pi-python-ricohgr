@@ -83,9 +83,6 @@ class Grimage(object):
 
   def upload_image_to_dropbox(self, filename):
     """ Upload the picture to dropbox """
-    if filename in self.state_upload:
-      print "Skipping {}. Already uploaded".format(filename)
-      return True
     try:
       print "Uploading photo {} to dropbox".format(filename)
       client = dropbox.client.DropboxClient(self.access_token)
@@ -117,9 +114,16 @@ class Grimage(object):
       for i in self.listimages(foldername):
         for j in i:
           filename = j['n']
+          print filename
           self.getimage(foldername, filename)
-          self.upload_image_to_dropbox(filename)
-          print j['n']
+          self.geotag_image(filename)
+
+  def upload_all(self):
+    """ Upload all images if jpeg """
+    for f in state_download:
+      if f not in self.state_upload:
+        self.upload_image_to_dropbox(filename)
+      print "Skipping {}. Already uploaded".format(f)
 
   def read_state(self, state_file):
     """ Just use a text file for now. Return a list of images """
