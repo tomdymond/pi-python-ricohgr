@@ -35,26 +35,15 @@ if __name__ == '__main__':
     gpsp.start() # start it up
     while True:
       if gpsd.fix.latitude:
-        d = {}
-        d['time'] = gpsd.fix.time
-        d['latitude'] = gpsd.fix.latitude
-        d['longitude'] = gpsd.fix.longitude
-        d['altitude'] = gpsd.fix.altitude
-        d['eps'] = gpsd.fix.eps
-        d['epx'] = gpsd.fix.epx
-        d['epv'] = gpsd.fix.epv
-        d['ept'] = gpsd.fix.ept
-        d['speed'] = gpsd.fix.speed
-        d['climb'] = gpsd.fix.climb
-        d['track'] = gpsd.fix.track
-        d['mode'] = gpsd.fix.mode
-        d['sats'] = gpsd.satellites
-        d['utc'] = gpsd.utc
-
-        with open(LOGGER_FILE, 'ab') as f:
-          w = csv.DictWriter(f, d.keys())
-          w.writeheader()
-          w.writerow(d)
+        if not os.path.exists(LOGGER_FILE):
+          with open(LOGGER_FILE, 'wb') as f:
+            w = csv.DictWriter(f, gpsd.fix.__dict__.keys())
+            w.writeheader()
+            w.writerow(gpsd.fix.__dict__)
+        else:
+          with open(LOGGER_FILE, 'ab') as f:
+            w = csv.DictWriter(f, gpsd.fix.__dict__.keys())
+            w.writerow(gpsd.fix.__dict__)
 
       time.sleep(REFRESH_TIME) 
 
