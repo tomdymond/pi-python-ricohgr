@@ -28,12 +28,6 @@ class GpsPoller(threading.Thread):
     while gpsp.running:
       gpsd.next() #this will continue to loop and grab EACH set of gpsd info to clear the buffer
 
-  def update_csv(self, gpsvalues):
-    """ Write GPS values to CSV file """
-    with open(LOGGER_FILE, 'ab') as f:
-      w = csv.DictWriter(f, gpsvalues.keys())
-      w.writeheader()
-      w.writerow(gpsvalues)
 
 if __name__ == '__main__':
   gpsp = GpsPoller() # create the thread
@@ -57,7 +51,10 @@ if __name__ == '__main__':
         d['sats'] = gpsd.satellites
         d['utc'] = gpsd.utc
 
-        self.update_csv(d)
+        with open(LOGGER_FILE, 'ab') as f:
+          w = csv.DictWriter(f, gpsvalues.keys())
+          w.writeheader()
+          w.writerow(gpsvalues)
 
       time.sleep(REFRESH_TIME) 
 
