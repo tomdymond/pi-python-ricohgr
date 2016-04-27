@@ -37,13 +37,13 @@ class App():
           d['localtime'] = datetime.datetime.now().strftime('%s')
           if not path.exists(LOGGER_FILE):
             with open(LOGGER_FILE, 'wb') as f:
-              w = csv.DictWriter(f, gpsd.fix.__dict__.keys())
+              w = csv.DictWriter(f, gpsp.gpsd.fix.__dict__.keys())
               w.writeheader()
-              w.writerow(gpsd.fix.__dict__)
+              w.writerow(gpsp.gpsd.fix.__dict__)
           else:
             with open(LOGGER_FILE, 'ab') as f:
-              w = csv.DictWriter(f, gpsd.fix.__dict__.keys())
-              w.writerow(gpsd.fix.__dict__)
+              w = csv.DictWriter(f, gpsp.gpsd.fix.__dict__.keys())
+              w.writerow(gpsp.gpsd.fix.__dict__)
 
         logger.debug("Debug message")
         logger.info("Info message")
