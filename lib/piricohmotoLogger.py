@@ -13,7 +13,7 @@ import datetime
 cwd = path.dirname(path.abspath(__file__))
 sys.path.append('{}/lib/'.format(cwd))
 sys.path.append('{}/../lib/'.format(cwd))
-from pirocohmotoGpslogger import GpsPoller
+from piricohmotoGpslogger import GpsPoller
 
 class App():
   def __init__(self, sleep_time=5):
