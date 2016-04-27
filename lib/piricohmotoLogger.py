@@ -18,7 +18,7 @@ import threading
 cwd = path.dirname(path.abspath(__file__))
 sys.path.append('{}/lib/'.format(cwd))
 sys.path.append('{}/../lib/'.format(cwd))
-from piricohmotoGpslogger import GpsPoller
+
 
 LOGGER_FILE='/tmp/gpslog'
 
