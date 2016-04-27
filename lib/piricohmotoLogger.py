@@ -15,6 +15,7 @@ sys.path.append('{}/lib/'.format(cwd))
 sys.path.append('{}/../lib/'.format(cwd))
 from piricohmotoGpslogger import GpsPoller
 
+LOGGER_FILE='/tmp/gpslog'
 
 class App():
   def __init__(self, sleep_time=5):
