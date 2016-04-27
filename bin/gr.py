@@ -15,6 +15,7 @@ if a.is_camera_on():
   if a.connect_to_camera_ssid():
     b = Grimage()
     b.download_all()
+    b.geotag_all()
     b.upload_all()
 
 
