@@ -15,6 +15,7 @@ sys.path.append('{}/lib/'.format(cwd))
 sys.path.append('{}/../lib/'.format(cwd))
 from piricohmotoGpslogger import GpsPoller
 
+
 class App():
   def __init__(self, sleep_time=5):
     self.stdin_path = '/dev/null'
@@ -29,8 +30,8 @@ class App():
     try:
       gpsp.start() # start it up
       while True:
-        if gpsd.fix.latitude:
-          d = gpsd.fix.__dict__
+        if gpsp.gpsd.fix.latitude:
+          d = gpsp.gpsd.fix.__dict__
           d['localtime'] = datetime.datetime.now().strftime('%s')
           if not path.exists(LOGGER_FILE):
             with open(LOGGER_FILE, 'wb') as f:
