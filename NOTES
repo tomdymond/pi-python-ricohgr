@@ -1,0 +1,23 @@
+ansible playbook for :
+
+- wpa_supplicant.conf
+- install packages
+- user ssh key
+- clone project files
+- generate config
+- configure cron tab
+
+- order status indicator light
+- punch hole in case
+
+status codes:
+ - flashing: GPS satellites not found
+ - blue: Wifi connected to camera
+ - yellow: No network connection
+ - green: Connected to internet
+ - red: A service is not running
+ 
+
+
+
+

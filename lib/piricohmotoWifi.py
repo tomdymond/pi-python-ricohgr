@@ -72,7 +72,6 @@ class Wifishit(object):
       time.sleep(2)
       i = 0
       while self.get_current_ssid() != self.camera_ssid:
-        print self.get_current_ssid()
         time.sleep(1)
         if i > 20:
           print "Error connecting to the camera"

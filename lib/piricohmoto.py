@@ -4,15 +4,36 @@ import requests
 import os
 import sys
 import datetime
+from piricohmotoGeo import Geo
+import dropbox
+import yaml
 
-STATE_FILE='/tmp/state'
+# Register the files already uploaded. Mark them in database to they 
+# don't get downloaded from the camera again but also not uploaded again
+
+STATE_FILE_DOWNLOAD='/tmp/state'
+STATE_FILE_UPLOAD='/tmp/state_upload'
 DOWNLOAD_DIR='/tmp'
 
 class Grimage(object):
-  def __init__(self, ip='192.168.0.1'):
-    self.ip = ip
-    self.objs = requests.get('http://{ip}/_gr/objs'.format(ip=ip), timeout=10).json()
-    self.state = self.read_state()
+  def __init__(self, config_file='/etc/piricohmoto.yml'):
+    self.state_download = self.read_state(STATE_FILE_DOWNLOAD)
+    self.state_upload = self.read_state(STATE_FILE_UPLOAD)
+    self.geodata = Geo()
+    self.config = self.load_config(config_file)
+    self.ip = self.config['ip']
+    self.access_token = self.config['access_token']
+    self.objs = requests.get('http://{ip}/_gr/objs'.format(ip=self.ip), timeout=10).json()
+
+  def load_config(self, config_file):
+    """ Load config """
+    if os.path.exists(config_file):
+      with open(config_file) as config:
+        config = yaml.load(config)
+      return config
+    else:
+      print "Cannot find config file. Create one and copy it to /etc/piricohmoto.yml"
+      sys.exit(1)
 
   def listimages(self, dirname):
     """ Get the images from the camera """
@@ -35,7 +56,7 @@ class Grimage(object):
 
   def getimage(self, dirname, filename, size='full'):
     """ Download an image """
-    if filename in self.state:
+    if filename in self.state_download:
       print "Skipping {}. Already downloaded".format(filename)
       return True
     try:
@@ -46,7 +67,7 @@ class Grimage(object):
           if chunk: # filter out keep-alive new chunks
             f.write(chunk)
       timestamp_2 = int(datetime.datetime.now().strftime('%s'))
-      self.update_state(filename)
+      self.update_state(STATE_FILE_DOWNLOAD, filename)
 
       # This code is shit and i would expect requests is already giving me this
       size_on_disk = int(os.path.getsize('{}/{}'.format(DOWNLOAD_DIR, filename)))
@@ -60,31 +81,70 @@ class Grimage(object):
       sys.exit(1)
     return False
 
-  def download_all(self):
-    """ Download all images """
-    for d in self.listdirs():
-      for i in self.listimages(d):
-        for j in i:
-          self.getimage(d, j['n'])
-          print j['n']
-
-  def read_state(self):
-    """ Just use a text file for now. Return a list of images """
-    if os.path.exists(STATE_FILE):
-      with open(STATE_FILE, 'r') as f:
-        return f.read().split('\n')
-    else:
-      return []
-
-  def update_state(self, image):
-    """ Register what's been download """
+  def upload_image_to_dropbox(self, filename):
+    """ Upload the picture to dropbox """
     try:
-      with open(STATE_FILE, 'ab') as f:
-        f.write("{}\n".format(image))
+      print "Uploading photo {} to dropbox".format(filename)
+      client = dropbox.client.DropboxClient(self.access_token)
+      f = open('{}/{}'.format(DOWNLOAD_DIR, filename), 'rb')
+      response = client.put_file('/{}'.format(filename), f)
+      #print "uploaded:", response
+      # Share it
+      # response = client.share('/{}'.format(filename), short_url=False).
+      self.update_state(STATE_FILE_UPLOAD, filename)
       return True
     except Exception as e:
       print e.message
     return False
 
+  def get_gps_data(self, image_timestamp):
+    """ Return a hash with all the tags gps related for this time """
+    print self.geodata(image_timestamp)
 
- 
+  def geotag_image(self, image_file):
+    """ Attempt to geo tag photo """
+    a = Grimageexif(image_file)
+    image_timestamp = a.get_taken_time()
+    gps_data = self.get_gps_data(image_timestamp)
+    latitude = gps_data['latitude']
+    longitude = gps_data['longitude']
+    a.set_gps_location(image_file, latitude, longitude)
+
+  def download_all(self):
+    """ Download all images """
+    for foldername in self.listdirs():
+      for i in self.listimages(foldername):
+        for j in i:
+          filename = j['n']
+          print filename
+          self.getimage(foldername, filename)
+          
+  def geotag_all(self):
+    """ Upload all images if jpeg """
+    for f in state_download:
+      self.geotag_image(filename)
+
+  def upload_all(self):
+    """ Upload all images if jpeg """
+    for f in state_download:
+      if f not in self.state_upload:
+        self.upload_image_to_dropbox(filename)
+      print "Skipping {}. Already uploaded".format(f)
+
+  def read_state(self, state_file):
+    """ Just use a text file for now. Return a list of images """
+    if os.path.exists(state_file):
+      with open(state_file, 'r') as f:
+        return f.read().split('\n')
+    else:
+      return []
+
+  def update_state(self, state_file, image):
+    """ Register what's been download """
+    try:
+      with open(state_file, 'ab') as f:
+        f.write("{}\n".format(image))
+      return True
+    except Exception as e:
+      print e.message
+    return False
