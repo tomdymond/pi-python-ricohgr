@@ -5,6 +5,7 @@ import fractions
 from PIL import Image
 from PIL.ExifTags import TAGS
 import sys
+import datetime
 
 # http://exiv2.org/tags.html
 
@@ -27,6 +28,11 @@ class Grimageexif(object):
     min = int(t1)
     sec = round((t1 - min)* 60, 5)
     return (deg, min, sec, loc_value)
+
+  def get_taken_time(self):
+    """ Return an epochs timestamp of when the picture was taken """
+    t =  self.metadata['Exif.Image.DateTime'].value
+    return t.strftime('%s')
 
   def view_gps_location(self, file_name, lat, lng):
     """Adds GPS position as EXIF metadata

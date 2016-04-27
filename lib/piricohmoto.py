@@ -19,7 +19,7 @@ class Grimage(object):
   def __init__(self, config_file='/etc/piricohmoto.yml'):
     self.state_download = self.read_state(STATE_FILE_DOWNLOAD)
     self.state_upload = self.read_state(STATE_FILE_UPLOAD)
-    self.geodata = Geo("foo")
+    self.geodata = Geo()
     self.config = self.load_config(config_file)
     self.ip = self.config['ip']
     self.access_token = self.config['access_token']
@@ -99,14 +99,16 @@ class Grimage(object):
 
   def get_gps_data(self, image_timestamp):
     """ Return a hash with all the tags gps related for this time """
-    return self.geodata(image_timestamp)
+    print self.geodata(image_timestamp)
 
   def geotag_image(self, image_file):
     """ Attempt to geo tag photo """
     a = Grimageexif(image_file)
     image_timestamp = a.get_taken_time()
     gps_data = self.get_gps_data(image_timestamp)
-    a.write_gps_data(gps_data)
+    latitude = gps_data['latitude']
+    longitude = gps_data['longitude']
+    a.set_gps_location(image_file, latitude, longitude)
 
   def download_all(self):
     """ Download all images """
@@ -116,7 +118,11 @@ class Grimage(object):
           filename = j['n']
           print filename
           self.getimage(foldername, filename)
-          self.geotag_image(filename)
+          
+  def geotag_all(self):
+    """ Upload all images if jpeg """
+    for f in state_download:
+      self.geotag_image(filename)
 
   def upload_all(self):
     """ Upload all images if jpeg """

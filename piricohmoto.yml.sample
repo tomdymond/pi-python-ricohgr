@@ -3,3 +3,10 @@ ip: 192.168.0.1
 access_token: xxxxxxxxx
 camera_ssid: RICOH_000000
 
+gps:
+  gpslog: /tmp/gpslogger
+  refresh_time: 5
+
+
+
+
