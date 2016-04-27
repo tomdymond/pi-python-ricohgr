@@ -14,6 +14,8 @@ from gps import *
 from time import *
 import time
 import threading
+import redis
+
 
 cwd = path.dirname(path.abspath(__file__))
 sys.path.append('{}/lib/'.format(cwd))
@@ -44,21 +46,14 @@ class App():
             
   def run(self):
     gpsp = GpsPoller() # create the thread
+    r = redis.StrictRedis(host='localhost')
     try:
       gpsp.start() # start it up
       while True:
         if gpsp.gpsd.fix.latitude:
           d = gpsp.gpsd.fix.__dict__
-          d['localtime'] = datetime.datetime.now().strftime('%s')
-          if not path.exists(LOGGER_FILE):
-            with open(LOGGER_FILE, 'wb') as f:
-              w = csv.DictWriter(f, gpsp.gpsd.fix.__dict__.keys())
-              w.writeheader()
-              w.writerow(gpsp.gpsd.fix.__dict__)
-          else:
-            with open(LOGGER_FILE, 'ab') as f:
-              w = csv.DictWriter(f, gpsp.gpsd.fix.__dict__.keys())
-              w.writerow(gpsp.gpsd.fix.__dict__)
+          localtime = datetime.datetime.now().strftime('%s')
+          r.hmset(localtime, d)
 
         logger.debug("Debug message")
         logger.info("Info message")
