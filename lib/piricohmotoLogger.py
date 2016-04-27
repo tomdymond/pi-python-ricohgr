@@ -61,7 +61,7 @@ if __name__ == "__main__":
   if len(sys.argv) > 2:
     sleep_time = int(sys.argv[2])
   else:
-    sleep_time = 60
+    sleep_time = 5
   app = App(sleep_time=sleep_time)
   logger = logging.getLogger("DaemonLog")
   logger.setLevel(logging.INFO)
