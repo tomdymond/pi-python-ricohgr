@@ -5,10 +5,11 @@ import os
 import sys
 import datetime
 import redis
+from piricohmotoConfig import Config
 
-class Geo(object):
+class Geo(Config):
   def __init__(self):
-    self.foo = 'foo'
+    super(self.__class__, self).__init__(**kwargs)
 
   def get_geo_payload_from_google(self, latitude, longitude):
     """ Retrive information on the location from google """

@@ -4,13 +4,15 @@ import pyexiv2
 import fractions
 from PIL import Image
 from PIL.ExifTags import TAGS
+from piricohmotoConfig import Config
 import sys
 import datetime
 
 # http://exiv2.org/tags.html
 
-class Grimageexif(object):
+class Grimageexif(Config):
   def __init__(self, image_file):
+    super(self.__class__, self).__init__(**kwargs)
     self.image_file = image_file
     self.metadata = pyexiv2.ImageMetadata(self.image_file)
     self.metadata.read()
@@ -90,11 +92,3 @@ class Grimageexif(object):
     exiv_image.write()
     # set_gps_location(sys.argv[1], float(sys.argv[2]), float(sys.argv[3]))
 
-  def return_tags(self):
-    """ Just for testing, return the tags """
-    return self.metadata.keys()
-
-  def update_add_key(self, k, v):
-    """ Update metadata """
-    self.metadata[k] = v
-    self.metadata.write()

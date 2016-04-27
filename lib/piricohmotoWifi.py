@@ -4,10 +4,12 @@ import sh
 import re
 import sys
 import time
+from piricohmotoConfig import Config
 
-class Wifishit(object):
-  def __init__(self, camera_ssid):
-    self.camera_ssid = camera_ssid
+class Wifi(Config):
+  def __init__(self):
+    super(self.__class__, self).__init__(**kwargs)
+    self.camera_ssid = config['camera_ssid']
 
   def get_ssids(self):
     """ Return a list of access points """

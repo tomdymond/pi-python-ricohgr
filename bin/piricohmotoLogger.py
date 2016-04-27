@@ -9,20 +9,15 @@ import time
 from daemon import runner
 from os import sys, path
 import datetime
-import csv
 from gps import *
 from time import *
 import time
 import threading
 import redis
 
-
 cwd = path.dirname(path.abspath(__file__))
 sys.path.append('{}/lib/'.format(cwd))
 sys.path.append('{}/../lib/'.format(cwd))
-
-
-LOGGER_FILE='/tmp/gpslog'
 
 class GpsPoller(threading.Thread):
   def __init__(self):
