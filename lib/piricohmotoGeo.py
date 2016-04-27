@@ -10,9 +10,9 @@ class Geo(object):
   def __init__(self):
     self.foo = 'foo'
 
-  def get_geo_payload_from_google(self):
+  def get_geo_payload_from_google(self, latitude, longitude):
     """ Retrive information on the location from google """
-    a = requests.get('http://maps.googleapis.com/maps/api/geocode/json?latlng={},{}&sensor=true'.format(gpsd.fix.latitude, gpsd.fix.longitude)).json()
+    a = requests.get('http://maps.googleapis.com/maps/api/geocode/json?latlng={},{}&sensor=true'.format(latitude, longitude)).json()
 
   def get_nearest_number(self, n, numberlist):
     """ From list of numbers, return the closest number """
