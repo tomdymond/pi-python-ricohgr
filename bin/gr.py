@@ -17,6 +17,6 @@ if a.is_camera_on():
     b = Ricoh()
     b.download_all()
 
-b = Image()
+b = Dosomething()
 b.geotag_all()
 b.upload_all()
