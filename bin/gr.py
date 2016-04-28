@@ -8,7 +8,7 @@ os.sys.path.append('{}/../lib/'.format(cwd))
 from piricohmotoWifi import Wifi
 from piricohmoto import Image
 from piricohmotoExif import Exif
-from piricohmotoCamera import Ricoh
+from piricohmotoRicoh import Ricoh
 
 a = Wifi()
 

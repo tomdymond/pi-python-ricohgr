@@ -6,7 +6,7 @@ import sys
 import datetime
 from piricohmotoConfig import Config
 from piricohmotoImage import Image
-from piricohmoto import Camera
+from piricohmotoCamera import Camera
 import redis
 import json
 
