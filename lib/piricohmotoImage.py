@@ -33,6 +33,13 @@ class Image(Config):
       print e.message
     return False
 
+  def is_uploaded(self):
+    r = redis.StrictRedis(host='localhost')
+    j = json.loads(self.redis_connection.hget('IMAGES', self.filename))
+    if j['UPLOAD']:
+      return True
+    return False
+
   def exifdata(self):
     """ Return exif data """
     exif = Exif(self.filename)

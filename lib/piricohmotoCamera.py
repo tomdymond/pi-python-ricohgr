@@ -6,6 +6,7 @@ import sys
 import datetime
 from piricohmotoConfig import Config
 from piricohmotoImage import Image
+from piricohmoto import Camera
 import redis
 import json
 
@@ -43,15 +44,13 @@ class RicohImage(Image):
   def already_downloaded(self):
     """ Bool. If the image is already downloaded """
     r = redis.StrictRedis(host='localhost')
-    if self.filename in r.hgetall('IMAGES'):
-      return True
-    return True
+    return r.hexists('IMAGES', self.filename)
 
   def size(self):
     """ Return image size """
     return int(os.path.getsize('{}/{}'.format(self.download_dir, filename)))
 
-class Ricoh(Config):
+class Ricoh(Camera):
   def __init__(self):
     super(self.__class__, self).__init__(**kwargs)
     self.ip = self.config['ip']
