@@ -14,6 +14,7 @@ from time import *
 import time
 import threading
 import redis
+import json
 
 cwd = path.dirname(path.abspath(__file__))
 sys.path.append('{}/lib/'.format(cwd))
@@ -46,9 +47,8 @@ class App():
       gpsp.start() # start it up
       while True:
         if gpsp.gpsd.fix.latitude:
-          d = gpsp.gpsd.fix.__dict__
           localtime = datetime.datetime.now().strftime('%s')
-          r.hmset(localtime, d)
+          r.hmset('GPS', localtime: json.dumps(gpsp.gpsd.fix.__dict__))
 
         logger.debug("Debug message")
         logger.info("Info message")

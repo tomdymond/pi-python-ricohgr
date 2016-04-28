@@ -5,6 +5,7 @@ from piricohmotoGeo import Geo
 from piricohmotoConfig import Config
 from piricohmotoExif import Exif
 import dropbox
+import redis
 
 class Image(Config):
   def __init__(self, filename):
@@ -13,17 +14,20 @@ class Image(Config):
     self.access_token = self.config['access_token']
     self.download_dir = self.config['download_dir']
 
-  def upload_image_to_dropbox(self):
+  def upload_to_dropbox(self):
     """ Upload the picture to dropbox """
     try:
       print "Uploading photo {} to dropbox".format(self.filename)
       client = dropbox.client.DropboxClient(self.access_token)
       f = open('{}/{}'.format(self.download_dir, self.filename), 'rb')
       response = client.put_file('/{}'.format(self.filename), f)
-      #print "uploaded:", response
+      print "uploaded:", response
       # Share it
-      # response = client.share('/{}'.format(filename), short_url=False).
-      self.update_state(self.state_file_upload, self.filename)
+       response = client.share('/{}'.format(filename), short_url=False).
+       r = redis.StrictRedis(host='localhost')
+       j = json.loads(r.hget('IMAGES', self.filename))
+       j['UPLOAD'] = True
+       r.hmset('IMAGES', {self.filename: json.dumps(j)})
       return True
     except Exception as e:
       print e.message
@@ -36,10 +40,17 @@ class Image(Config):
 
   def geodata(self):
     """ Return geo data """
-    exif = exifdata()
-    image_timestamp = exif.get_taken_time()
-    geo = Geo(image_timestamp)
-    return geo 
+    r = redis.StrictRedis(host='localhost')
+    j = json.loads(r.hget('IMAGES', self.filename))
+    location = j['GPS']
+    if not location:
+      exif = exifdata()
+      image_timestamp = exif.get_taken_time()
+      geo = Geo(image_timestamp)
+      location = geo.get_current_location()
+      j['GPS'] = location
+      r.hmset('IMAGES', {self.filename: json.dumps(j)})
+    return location
 
   def geotag_image(self):
     """ Attempt to geo tag photo """
