@@ -37,6 +37,9 @@ class Ricoh(Config):
     if filename in self.state_download:
       print "Skipping {}. Already downloaded".format(filename)
       return True
+      
+    # Remove this try statement and kill the sys exit. not good.
+    # Too much code in this function. break it up. 
     try:
       timestamp_1 = int(datetime.datetime.now().strftime('%s'))
       r = requests.get('http://{ip}/v1/photos/{dirname}/{filename}?size={size}'.format(ip=self.ip, dirname=dirname, filename=filename, size=size), timeout=10)
