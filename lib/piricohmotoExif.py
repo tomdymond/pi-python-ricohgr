@@ -10,7 +10,7 @@ import datetime
 
 # http://exiv2.org/tags.html
 
-class Grimageexif(Config):
+class Exif(Config):
   def __init__(self, image_file):
     super(self.__class__, self).__init__(**kwargs)
     self.image_file = image_file

@@ -5,9 +5,9 @@ import os
 cwd = os.path.dirname(os.path.abspath(__file__))
 os.sys.path.append('{}/lib/'.format(cwd))
 os.sys.path.append('{}/../lib/'.format(cwd))
-from piricohmotoWifi import Wifishit
+from piricohmotoWifi import Wifi
 from piricohmoto import Image
-from piricohmotoExif import Grimageexif
+from piricohmotoExif import Exif
 from piricohmotoCamera import Ricoh
 
 a = Wifi()

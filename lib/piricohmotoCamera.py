@@ -12,8 +12,6 @@ class Ricoh(Config):
     self.ip = self.config['ip']
     self.objs = requests.get('http://{ip}/_gr/objs'.format(ip=self.ip), timeout=10).json()
     self.download_dir = self.config['download_dir ']
-    self.state_file_download = self.config['state_file_download']
-    self.state_download = self.read_state(self.state_file_download)
 
   def listimages(self, dirname):
     """ Get the images from the camera """
@@ -61,29 +59,4 @@ class Ricoh(Config):
       sys.exit(1)
     return False
 
-  def download_all(self):
-    """ Download all images """
-    for foldername in self.listdirs():
-      for i in self.listimages(foldername):
-        for j in i:
-          filename = j['n']
-          print filename
-          self.getimage(foldername, filename)
 
-  def read_state(self, state_file):
-    """ Just use a text file for now. Return a list of images """
-    if os.path.exists(state_file):
-      with open(state_file, 'r') as f:
-        return f.read().split('\n')
-    else:
-      return []
-
-  def update_state(self, state_file, image):
-    """ Register what's been download """
-    try:
-      with open(state_file, 'ab') as f:
-        f.write("{}\n".format(image))
-      return True
-    except Exception as e:
-      print e.message
-    return False

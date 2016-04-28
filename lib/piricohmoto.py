@@ -1,60 +1,55 @@
 #!/usr/bin/env python
 
-import requests
 import os
-import sys
-import datetime
-from piricohmotoGeo import Geo
 from piricohmotoConfig import Config
-import dropbox
+from piricohmotoCamera import Ricoh
 
-class Image(Config):
+class Dosomething(Config):
   def __init__(self):
     super(self.__class__, self).__init__(**kwargs)
     self.state_file_upload = self.config['state_file_upload']
     self.state_upload = self.read_state(self.state_file_upload)
-    self.geodata = Geo()
-    self.access_token = self.config['access_token']
-    self.download_dir = self.config['download_dir']
+    self.state_file_download = self.config['state_file_download']
+    self.state_download = self.read_state(self.state_file_download)
+    self.camera = Ricoh()
 
-  def upload_image_to_dropbox(self, filename):
-    """ Upload the picture to dropbox """
+  def geotag_all(self):
+    """ Upload all images if jpeg """
+    for f in self.state_download:
+      image = Image(f)
+      image.geotag_image()
+
+  def download_all(self):
+    """ Download all images """
+    for foldername in self.camera.listdirs():
+      for i in self.camera.listimages(foldername):
+        for j in i:
+          filename = j['n']
+          print filename
+          self.camera.getimage(foldername, filename)
+
+  def upload_all(self):
+    """ Upload all images if jpeg """
+    for f in self.state_download:
+      if f not in self.state_upload:
+        image = Image(f)
+        image.upload_image_to_dropbox()
+      print "Skipping {}. Already uploaded".format(f)
+
+  def read_state(self, state_file):
+    """ Just use a text file for now. Return a list of images """
+    if os.path.exists(state_file):
+      with open(state_file, 'r') as f:
+        return f.read().split('\n')
+    else:
+      return []
+
+  def update_state(self, state_file, image):
+    """ Register what's been download """
     try:
-      print "Uploading photo {} to dropbox".format(filename)
-      client = dropbox.client.DropboxClient(self.access_token)
-      f = open('{}/{}'.format(self.download_dir, filename), 'rb')
-      response = client.put_file('/{}'.format(filename), f)
-      #print "uploaded:", response
-      # Share it
-      # response = client.share('/{}'.format(filename), short_url=False).
-      self.update_state(self.state_file_upload, filename)
+      with open(state_file, 'ab') as f:
+        f.write("{}\n".format(image))
       return True
     except Exception as e:
       print e.message
     return False
-
-  def get_gps_data(self, image_timestamp):
-    """ Return a hash with all the tags gps related for this time """
-    print self.geodata(image_timestamp)
-
-  def geotag_image(self, image_file):
-    """ Attempt to geo tag photo """
-    a = Grimageexif(image_file)
-    image_timestamp = a.get_taken_time()
-    gps_data = self.get_gps_data(image_timestamp)
-    latitude = gps_data['latitude']
-    longitude = gps_data['longitude']
-    a.set_gps_location(image_file, latitude, longitude)
-      
-  def geotag_all(self):
-    """ Upload all images if jpeg """
-    for f in state_download:
-      self.geotag_image(filename)
-
-  def upload_all(self):
-    """ Upload all images if jpeg """
-    for f in state_download:
-      if f not in self.state_upload:
-        self.upload_image_to_dropbox(filename)
-      print "Skipping {}. Already uploaded".format(f)
-
