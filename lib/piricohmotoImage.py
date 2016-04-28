@@ -6,7 +6,6 @@ from piricohmotoConfig import Config
 from piricohmotoExif import Exif
 import dropbox
 
-
 class Image(Config):
   def __init__(self, filename):
     super(self.__class__, self).__init__(**kwargs)
@@ -30,15 +29,23 @@ class Image(Config):
       print e.message
     return False
 
+  def exifdata(self):
+    """ Return exif data """
+    exif = Exif(self.filename)
+    return exif
+
+  def geodata(self):
+    """ Return geo data """
+    exif = exifdata()
+    image_timestamp = exif.get_taken_time()
+    geo = Geo(image_timestamp)
+    return geo 
+
   def geotag_image(self):
     """ Attempt to geo tag photo """
-    exif = Exif(self.filename)
-    geodata = Geo()
-    image_timestamp = exif.get_taken_time()
-    gps_data = geodata(image_timestamp)
-    latitude = gps_data['latitude']
-    longitude = gps_data['longitude']
+    geo_data = self.geodata()
+    exif = exifdata()
+    latitude = geo_data['latitude']
+    longitude = geo_data['longitude']
     exif.set_gps_location(self.filename, latitude, longitude)
       
-
-
