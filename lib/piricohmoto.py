@@ -26,6 +26,7 @@ class Dosomething(Config):
         for j in i:
           filename = j['n']
           print filename
+          # getimage should return an image object with it's own methods (for example write)
           self.camera.getimage(foldername, filename)
 
   def upload_all(self):
