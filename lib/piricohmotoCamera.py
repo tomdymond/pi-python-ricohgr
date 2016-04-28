@@ -5,6 +5,17 @@ import os
 import sys
 import datetime
 from piricohmotoConfig import Config
+from piricohmotoImage import Image
+
+class RicohImage(Image):
+  def __init__(self, filename):
+    super(self.__class__, self, filename).__init__
+    self.name = name
+    self.filename = filename
+    
+  def download(self):
+    
+  
 
 class Ricoh(Config):
   def __init__(self):
@@ -15,6 +26,8 @@ class Ricoh(Config):
 
   def listimages(self, dirname):
     """ Get the images from the camera """
+    
+    # This should return a list of image objects rather than just primitives
     f = []
     files = []
     for i in self.objs['dirs']:
@@ -32,8 +45,10 @@ class Ricoh(Config):
       d.append(i['name'])
     return d
 
-  def getimage(self, dirname, filename, size='full'):
+  def download_image(self, dirname, filename, size='full'):
     """ Download an image """
+    # This function should download the photo from the camera and store it into the image class 
+    
     if filename in self.state_download:
       print "Skipping {}. Already downloaded".format(filename)
       return True
