@@ -10,7 +10,6 @@ class RicohWifi(Wifi):
   def __init__(self):
     super(self.__class__, self).__init__
 
-
 class RicohImage(Image):
   def __init__(self, dirname, filename):
     super(self.__class__, self, filename).__init__
