@@ -24,12 +24,11 @@ class Camera(Config):
       for i in self.listimages(foldername):
         for j in i:
           filename = j['n']
-          print filename
-          if filename not in images_downloaded:
-            images.append(self.getimage(foldername, filename))
+          images.append(self.getimage(foldername, filename))
     for image in images:
-      image.download()
-      image.save()
+      if not image.is_downloaded():
+        image.download()
+        image.save()
 
   def upload_all(self):
     """ Upload all images if jpeg """

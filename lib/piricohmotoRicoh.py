@@ -1,14 +1,9 @@
 #!/usr/bin/env python
 
 import requests
-import os
 import sys
-import datetime
-from piricohmotoConfig import Config
 from piricohmotoImage import Image
 from piricohmotoCamera import Camera
-import redis
-import json
 
 class RicohImage(Image):
   def __init__(self, dirname, filename):
@@ -18,37 +13,10 @@ class RicohImage(Image):
     self.dirname = dirname
     
   def download(self, size='full'):
-    """ Download an image """
-    try:
-      #timestamp_1 = int(datetime.datetime.now().strftime('%s'))
-      request = requests.get('http://{ip}/v1/photos/{dirname}/{filename}?size={size}'.format(ip=self.ip, dirname=dirname, filename=filename, size=size), timeout=10)
-      #timestamp_2 = int(datetime.datetime.now().strftime('%s'))
-      #size_on_disk = self.size()
-      #total_time = timestamp_2 - timestamp_1
-      #download_speed = ( size_on_disk / total_time )
-      #print "Download took {} seconds. Speed={} Bytes/s".format(total_time, download_speed)
-      return request
-    except Exception as e:
-      print e.message
-    return False
-
-  def save(self, request_response):
-    """ Save the requests reponse to disk """
-    with open('{}/{}'.format(self.download_dir, self.filename), 'wb') as f:
-      for chunk in request_response.iter_content(chunk_size=1024): 
-        if chunk: # filter out keep-alive new chunks
-          f.write(chunk)
-    r = redis.StrictRedis(host='localhost')
-    r.hmset('IMAGES', {self.filename: json.dumps({'UPLOAD': False, 'GPS': {}}}))
-
-  def already_downloaded(self):
-    """ Bool. If the image is already downloaded """
-    r = redis.StrictRedis(host='localhost')
-    return r.hexists('IMAGES', self.filename)
-
-  def size(self):
-    """ Return image size """
-    return int(os.path.getsize('{}/{}'.format(self.download_dir, filename)))
+    """ Download an image. 
+        For now just return the requests object. keep is simple
+    """
+    return requests.get('http://{ip}/v1/photos/{dirname}/{filename}?size={size}'.format(ip=self.ip, dirname=dirname, filename=filename, size=size), timeout=10)
 
 class Ricoh(Camera):
   def __init__(self):
