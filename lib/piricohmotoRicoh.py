@@ -4,6 +4,12 @@ import requests
 import sys
 from piricohmotoImage import Image
 from piricohmotoCamera import Camera
+from piricohmotoWifi import Wifi
+
+class RicohWifi(Wifi):
+  def __init__(self):
+    super(self.__class__, self).__init__
+
 
 class RicohImage(Image):
   def __init__(self, dirname, filename):
@@ -24,6 +30,12 @@ class Ricoh(Camera):
     self.ip = self.config['ip']
     self.objs = requests.get('http://{ip}/_gr/objs'.format(ip=self.ip), timeout=10).json()
     self.download_dir = self.config['download_dir ']
+
+  def connection(self):
+    """
+      Boolean. Return a Wifi object
+    """
+    return RicohWifi()
 
   def listimages(self, dirname):
     """ Get the images from the camera """
