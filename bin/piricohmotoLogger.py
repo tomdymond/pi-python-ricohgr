@@ -30,13 +30,13 @@ class Notifier(threading.Thread):
 
   def run(self):
     while self.running:
-      if colour == 'green':
+      if self.colour == 'green':
         self.piglow.green(100)
-      if colour == 'red':
+      if self.colour == 'red':
         self.piglow.red(100)
-      if colour == 'orange':
+      if self.colour == 'orange':
         self.piglow.orange(100)
-      if colour == 'blue':
+      if self.colour == 'blue':
         self.piglow.blue(100)
       self.piglow.show()
       time.sleep(0.5)
