@@ -31,13 +31,13 @@ class Notifier(threading.Thread):
   def run(self):
     while self.running:
       if colour == 'green':
-        self.piglow.green()
+        self.piglow.green(100)
       if colour == 'red':
-        self.piglow.red()
+        self.piglow.red(100)
       if colour == 'orange':
-        self.piglow.orange()
+        self.piglow.orange(100)
       if colour == 'blue':
-        self.piglow.blue()
+        self.piglow.blue(100)
       self.piglow.show()
       time.sleep(0.5)
       self.piglow.clear()
@@ -73,7 +73,7 @@ class App():
         if gpsp.gpsd.fix.latitude:
           notifier = Notifier('green')
           localtime = datetime.datetime.now().strftime('%s')
-          r.hmset('GPS', localtime: json.dumps(gpsp.gpsd.fix.__dict__))
+          r.hmset('GPS', {localtime: json.dumps(gpsp.gpsd.fix.__dict__)})
 
         logger.debug("Debug message")
         logger.info("Info message")
