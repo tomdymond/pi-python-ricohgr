@@ -2,6 +2,7 @@
 
 import os
 from piricohmotoConfig import Config
+
 import redis
 
 class Camera(Config):
