@@ -21,28 +21,6 @@ cwd = path.dirname(path.abspath(__file__))
 sys.path.append('{}/lib/'.format(cwd))
 sys.path.append('{}/../lib/'.format(cwd))
 
-class Notifier(threading.Thread):
-  def __init__(self, colour):
-    threading.Thread.__init__(self)
-    self.colour = colour
-    self.piglow = piglow
-    self.running = True
-
-  def run(self):
-    while self.running:
-      if self.colour == 'green':
-        self.piglow.green(100)
-      if self.colour == 'red':
-        self.piglow.red(100)
-      if self.colour == 'orange':
-        self.piglow.orange(100)
-      if self.colour == 'blue':
-        self.piglow.blue(100)
-      self.piglow.show()
-      time.sleep(0.5)
-      self.piglow.clear()
-      self.piglow.show()
-      time.sleep(0.5)
 
 class GpsPoller(threading.Thread):
   def __init__(self):
@@ -71,7 +49,6 @@ class App():
       gpsp.start() # start it up
       while True:
         if gpsp.gpsd.fix.latitude:
-          notifier = Notifier('green')
           localtime = datetime.datetime.now().strftime('%s')
           r.hmset('GPS', {localtime: json.dumps(gpsp.gpsd.fix.__dict__)})
 
@@ -83,7 +60,6 @@ class App():
 
     except (KeyboardInterrupt, SystemExit): #when you press ctrl+c
       print "\nKilling Thread..."
-      notifier.running = False
       gpsp.running = False
       gpsp.join() # wait for the thread to finish what it's doing
     print "Done.\nExiting."
