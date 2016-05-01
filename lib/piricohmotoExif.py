@@ -46,8 +46,8 @@ class Exif(Config):
     lat_deg = to_deg(lat, ["S", "N"])
     lng_deg = to_deg(lng, ["W", "E"])
     
-    print lat_deg
-    print lng_deg
+    print (lat_deg)
+    print (lng_deg)
     
     # convert decimal coordinates into degrees, munutes and seconds
     exiv_lat = (pyexiv2.Rational(lat_deg[0]*60+lat_deg[1],60),pyexiv2.Rational(lat_deg[2]*100,6000))
@@ -58,7 +58,7 @@ class Exif(Config):
     exif_keys = exiv_image.exifKeys() 
     
     for key in exif_keys:
-      print key, [exiv_image[key]]
+      print (key, [exiv_image[key]])
     
   def set_gps_location(self, file_name, lat, lng):
     """Adds GPS position as EXIF metadata
@@ -70,8 +70,8 @@ class Exif(Config):
     lat_deg = to_deg(lat, ["S", "N"])
     lng_deg = to_deg(lng, ["W", "E"])
     
-    print lat_deg
-    print lng_deg
+    print (lat_deg)
+    print (lng_deg)
     
     # convert decimal coordinates into degrees, munutes and seconds
     exiv_lat = (pyexiv2.Rational(lat_deg[0]*60+lat_deg[1],60),pyexiv2.Rational(lat_deg[2]*100,6000), pyexiv2.Rational(0, 1))

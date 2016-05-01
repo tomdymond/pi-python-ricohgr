@@ -17,20 +17,20 @@ class Image(Config):
   def upload_to_dropbox(self):
     """ Upload the picture to dropbox """
     try:
-      print "Uploading photo {} to dropbox".format(self.filename)
+      print ("Uploading photo {} to dropbox".format(self.filename))
       client = dropbox.client.DropboxClient(self.access_token)
       f = open('{}/{}'.format(self.download_dir, self.filename), 'rb')
       response = client.put_file('/{}'.format(self.filename), f)
-      print "uploaded:", response
+      print ("uploaded:", response)
       # Share it
-       response = client.share('/{}'.format(filename), short_url=False).
-       r = redis.StrictRedis(host='localhost')
-       j = json.loads(r.hget('IMAGES', self.filename))
-       j['UPLOAD'] = True
-       r.hmset('IMAGES', {self.filename: json.dumps(j)})
+      response = client.share('/{}'.format(filename), short_url=False)
+      r = redis.StrictRedis(host='localhost')
+      j = json.loads(r.hget('IMAGES', self.filename))
+      j['UPLOAD'] = True
+      r.hmset('IMAGES', {self.filename: json.dumps(j)})
       return True
     except Exception as e:
-      print e.message
+      print (e.message)
     return False
 
   def is_uploaded(self):
@@ -52,7 +52,8 @@ class Image(Config):
         if chunk: # filter out keep-alive new chunks
           f.write(chunk)
     r = redis.StrictRedis(host='localhost')
-    r.hmset('IMAGES', {self.filename: json.dumps({'UPLOAD': False, 'GPS': {}}}))
+    gg = {'UPLOAD': False, 'GPS': {}}
+    r.hmset('IMAGES', {self.filename: json.dumps(gg)})
 
   def size(self):
     """ Return image size """

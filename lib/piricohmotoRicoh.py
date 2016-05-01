@@ -1,18 +1,20 @@
 #!/usr/bin/env python
+# 
 
 import requests
 import sys
 from piricohmotoImage import Image
 from piricohmotoCamera import Camera
+from piricohmotoConfig import Config
 from piricohmotoWifi import Wifi
 
 class RicohWifi(Wifi):
   def __init__(self):
-    super(self.__class__, self).__init__
+    Wifi.__init__(self)
 
 class RicohImage(Image):
   def __init__(self, dirname, filename):
-    super(self.__class__, self, filename).__init__
+    super(self.__class__, self, filename).__init__()
     self.name = name
     self.filename = filename
     self.dirname = dirname
@@ -24,11 +26,19 @@ class RicohImage(Image):
     return requests.get('http://{ip}/v1/photos/{dirname}/{filename}?size={size}'.format(ip=self.ip, dirname=dirname, filename=filename, size=size), timeout=10)
 
 class Ricoh(Camera):
-  def __init__(self):
-    super(self.__class__, self).__init__(**kwargs)
+  def __init__(self, **kwargs):
+    #super(self.__class__, self).__init__(**kwargs)
+    Camera.__init__(self, **kwargs)
     self.ip = self.config['ip']
-    self.objs = requests.get('http://{ip}/_gr/objs'.format(ip=self.ip), timeout=10).json()
-    self.download_dir = self.config['download_dir ']
+    self.download_dir = self.config['download_dir']
+    self.objs = []
+
+  def get_objs(self):
+    """ Return objects """
+    if not self.objs:
+      a = requests.get('http://{ip}/_gr/objs'.format(ip=self.ip), timeout=10).json()
+      self.objs = a
+    return self.objs
 
   def connection(self):
     """
@@ -41,7 +51,7 @@ class Ricoh(Camera):
     # This should return a list of image objects rather than just primitives
     f = []
     files = []
-    for i in self.objs['dirs']:
+    for i in self.get_objs()['dirs']:
       if i['name'] == dirname:
         for image_file in i['files']:
           if image_file['n'].split('.')[1] == 'JPG':
@@ -52,7 +62,7 @@ class Ricoh(Camera):
   def listdirs(self):
     """ Return the list of directories on the SD card """
     d = []
-    for i in self.objs['dirs']:
+    for i in self.get_objs()['dirs']:
       d.append(i['name'])
     return d
 

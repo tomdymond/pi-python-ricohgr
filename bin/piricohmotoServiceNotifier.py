@@ -21,13 +21,13 @@ class Notifier(threading.Thread):
     self.event= True
 
   def stop(self):
-    self.running=False
     self.piglow.clear()
     self.piglow.show()
+    self.running=False
 
   def run(self):
     """ Make it start """
-    print "run"
+    print ("run")
     while self.running:
       if self.flashing:
         self.piglow.clear()
@@ -62,7 +62,7 @@ if __name__ == '__main__':
     while True:
       app.run()
   except (KeyboardInterrupt, SystemExit): #when you press ctrl+c
-    print "\nKilling Thread..."
+    print ("\nKilling Thread...")
     a.running = False
     a.join() # wait for the thread to finish what it's doing
-  print "Done.\nExiting."
+  print ("Done.\nExiting.")

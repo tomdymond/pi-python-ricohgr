@@ -59,10 +59,10 @@ class App():
         time.sleep(self.sleep_time)
 
     except (KeyboardInterrupt, SystemExit): #when you press ctrl+c
-      print "\nKilling Thread..."
+      print ("\nKilling Thread...")
       gpsp.running = False
       gpsp.join() # wait for the thread to finish what it's doing
-    print "Done.\nExiting."
+    print ("Done.\nExiting.")
 
 if __name__ == "__main__":
   if len(sys.argv) > 2:
