@@ -62,7 +62,7 @@ class Image(Config):
     j = json.loads(r.hget('IMAGES', self.filename))
     location = j['GPS']
     if not location:
-      exif = exifdata()
+      exif = self.exifdata()
       image_timestamp = exif.get_taken_time()
       geo = Geo(image_timestamp)
       location = geo.get_current_location()
