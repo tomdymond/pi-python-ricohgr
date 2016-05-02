@@ -8,7 +8,7 @@ os.sys.path.append('{}/../lib/'.format(cwd))
 
 from piricohmotoRicoh import Ricoh
 
-flow = Ricoh()
+flow = Ricoh(config_file='/etc/piricohmoto.yml')
 connection = flow.connection()
 
 if connection.is_camera_on():
