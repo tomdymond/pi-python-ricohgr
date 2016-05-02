@@ -9,20 +9,18 @@ import time
 from daemon import runner
 from os import sys, path
 import datetime
-import csv
 from gps import *
 from time import *
 import time
 import threading
 import redis
-
+import json
+import piglow
 
 cwd = path.dirname(path.abspath(__file__))
 sys.path.append('{}/lib/'.format(cwd))
 sys.path.append('{}/../lib/'.format(cwd))
 
-
-LOGGER_FILE='/tmp/gpslog'
 
 class GpsPoller(threading.Thread):
   def __init__(self):
@@ -51,9 +49,8 @@ class App():
       gpsp.start() # start it up
       while True:
         if gpsp.gpsd.fix.latitude:
-          d = gpsp.gpsd.fix.__dict__
           localtime = datetime.datetime.now().strftime('%s')
-          r.hmset(localtime, d)
+          r.hmset('GPS', {localtime: json.dumps(gpsp.gpsd.fix.__dict__)})
 
         logger.debug("Debug message")
         logger.info("Info message")
@@ -62,10 +59,10 @@ class App():
         time.sleep(self.sleep_time)
 
     except (KeyboardInterrupt, SystemExit): #when you press ctrl+c
-      print "\nKilling Thread..."
+      print ("\nKilling Thread...")
       gpsp.running = False
       gpsp.join() # wait for the thread to finish what it's doing
-    print "Done.\nExiting."
+    print ("Done.\nExiting.")
 
 if __name__ == "__main__":
   if len(sys.argv) > 2:

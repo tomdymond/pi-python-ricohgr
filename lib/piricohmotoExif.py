@@ -1,17 +1,20 @@
 #!/usr/bin/env python
+# piricohmotoExif.py
 
 import pyexiv2
 import fractions
 from PIL import Image
 from PIL.ExifTags import TAGS
+from piricohmotoConfig import Config
 import sys
 import datetime
 
 # http://exiv2.org/tags.html
 
-class Grimageexif(object):
-  def __init__(self, image_file):
-    self.image_file = image_file
+class Exif(Config):
+  def __init__(self, **kwargs):
+    Config.__init__(self, **kwargs)
+    self.image_file = kwargs['image_file']
     self.metadata = pyexiv2.ImageMetadata(self.image_file)
     self.metadata.read()
 
@@ -44,8 +47,8 @@ class Grimageexif(object):
     lat_deg = to_deg(lat, ["S", "N"])
     lng_deg = to_deg(lng, ["W", "E"])
     
-    print lat_deg
-    print lng_deg
+    print (lat_deg)
+    print (lng_deg)
     
     # convert decimal coordinates into degrees, munutes and seconds
     exiv_lat = (pyexiv2.Rational(lat_deg[0]*60+lat_deg[1],60),pyexiv2.Rational(lat_deg[2]*100,6000))
@@ -56,7 +59,7 @@ class Grimageexif(object):
     exif_keys = exiv_image.exifKeys() 
     
     for key in exif_keys:
-      print key, [exiv_image[key]]
+      print (key, [exiv_image[key]])
     
   def set_gps_location(self, file_name, lat, lng):
     """Adds GPS position as EXIF metadata
@@ -68,8 +71,8 @@ class Grimageexif(object):
     lat_deg = to_deg(lat, ["S", "N"])
     lng_deg = to_deg(lng, ["W", "E"])
     
-    print lat_deg
-    print lng_deg
+    print (lat_deg)
+    print (lng_deg)
     
     # convert decimal coordinates into degrees, munutes and seconds
     exiv_lat = (pyexiv2.Rational(lat_deg[0]*60+lat_deg[1],60),pyexiv2.Rational(lat_deg[2]*100,6000), pyexiv2.Rational(0, 1))
@@ -90,11 +93,3 @@ class Grimageexif(object):
     exiv_image.write()
     # set_gps_location(sys.argv[1], float(sys.argv[2]), float(sys.argv[3]))
 
-  def return_tags(self):
-    """ Just for testing, return the tags """
-    return self.metadata.keys()
-
-  def update_add_key(self, k, v):
-    """ Update metadata """
-    self.metadata[k] = v
-    self.metadata.write()

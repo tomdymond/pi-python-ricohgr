@@ -1,13 +1,16 @@
 #!/usr/bin/env python
+# piricohmotoWifi.py
 
 import sh
 import re
 import sys
 import time
+from piricohmotoConfig import Config
 
-class Wifishit(object):
-  def __init__(self, camera_ssid):
-    self.camera_ssid = camera_ssid
+class Wifi(Config):
+  def __init__(self, **kwargs):
+    Config.__init__(self, **kwargs)
+    self.camera_ssid = self.config['camera_ssid']
 
   def get_ssids(self):
     """ Return a list of access points """
@@ -20,7 +23,7 @@ class Wifishit(object):
           if ssid:
             ssids.append(ssid)
     except Exception as e:
-      print e.message
+      print (e.message)
     return ssids
 
   def get_current_ssid(self):
@@ -38,9 +41,9 @@ class Wifishit(object):
   def is_camera_on(self):
     """ Return true if the camera is turned on """
     if self.camera_ssid in self.get_ssids():
-      print "Camera is ON!"
+      print ("Camera is ON!")
       return True
-    print "Camera is OFF!"
+    print ("Camera is OFF!")
     return False
 
   def manage_wlan0(self, action="up"):
@@ -54,7 +57,7 @@ class Wifishit(object):
       sh.sudo(if_script, 'wlan0')
       return True
     except Exception as e:
-      print e.message
+      print (e.message)
       return False
 
   def restart_interface(self):
@@ -65,22 +68,22 @@ class Wifishit(object):
   def connect_to_camera_ssid(self):
     """ Return true if connected to camera SSID """
     if self.get_current_ssid() != self.camera_ssid:
-      print "Trying to connect to camera ssid {}".format(self.camera_ssid)
-      print "Current SSID: {}".format(self.get_current_ssid())
+      print ("Trying to connect to camera ssid {}".format(self.camera_ssid))
+      print ("Current SSID: {}".format(self.get_current_ssid()))
       self.restart_interface()
-      print "Waiting for interface"
+      print ("Waiting for interface")
       time.sleep(2)
       i = 0
       while self.get_current_ssid() != self.camera_ssid:
         time.sleep(1)
         if i > 20:
-          print "Error connecting to the camera"
+          print ("Error connecting to the camera")
           sys.exit(1)
         i += 1
 
-    print "Connected to Camera SSID"
+    print ("Connected to Camera SSID")
     if self.get_current_ssid() == self.camera_ssid:
       return True
     else:
-      print "Problem connecting to SSID {}".format(self.camera_ssid)
+      print ("Problem connecting to SSID {}".format(self.camera_ssid))
     return False
