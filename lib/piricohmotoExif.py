@@ -15,7 +15,8 @@ class Exif(Config):
   def __init__(self, **kwargs):
     Config.__init__(self, **kwargs)
     self.image_file = kwargs['filename']
-    self.metadata = pyexiv2.ImageMetadata(self.image_file)
+    self.download_dir = self.config['download_dir']
+    self.metadata = pyexiv2.ImageMetadata("{}/{}".format(self.download_dir, self.image_file))
     self.metadata.read()
 
   def to_deg(self, value, loc):
