@@ -76,7 +76,7 @@ class Image(Config):
   def geotag_image(self):
     """ Attempt to geo tag photo """
     geo_data = self.geodata()
-    exif = exifdata()
+    exif = self.exifdata()
     latitude = geo_data['latitude']
     longitude = geo_data['longitude']
     exif.set_gps_location(self.filename, latitude, longitude)
