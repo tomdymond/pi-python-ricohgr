@@ -8,6 +8,7 @@ import sys
 class Config(object):
   def __init__(self, **kwargs):
     self.config = self.load_config(kwargs['config_file'])
+    self.config_file = kwargs['config_file']
 
   def load_config(self, config_file):
     """ Load config """
