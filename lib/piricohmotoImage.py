@@ -7,6 +7,7 @@ from piricohmotoConfig import Config
 from piricohmotoExif import Exif
 import dropbox
 import redis
+import json
 
 class Image(Config):
   def __init__(self, **kwargs):
