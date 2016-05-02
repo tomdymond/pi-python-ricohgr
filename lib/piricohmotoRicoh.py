@@ -9,15 +9,15 @@ from piricohmotoConfig import Config
 from piricohmotoWifi import Wifi
 
 class RicohWifi(Wifi):
-  def __init__(self):
-    Wifi.__init__(self)
+  def __init__(self, **kwargs):
+    Wifi.__init__(self, **kwargs)
 
 class RicohImage(Image):
-  def __init__(self, dirname, filename):
-    Image.__init__(self, filename)
+  def __init__(self, **kwargs):
+    Image.__init__(self, **kwargs)
     self.name = name
-    self.filename = filename
-    self.dirname = dirname
+    self.filename = kwargs['filename']
+    self.dirname = kwargs['dirname']
     
   def download(self, size='full'):
     """ Download an image. 
