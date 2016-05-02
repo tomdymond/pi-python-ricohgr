@@ -79,7 +79,7 @@ class Exif(Config):
     exiv_lat = (pyexiv2.Rational(lat_deg[0]*60+lat_deg[1],60),pyexiv2.Rational(lat_deg[2]*100,6000), pyexiv2.Rational(0, 1))
     exiv_lng = (pyexiv2.Rational(lng_deg[0]*60+lng_deg[1],60),pyexiv2.Rational(lng_deg[2]*100,6000), pyexiv2.Rational(0, 1))
 
-    exiv_image = pyexiv2.ImageMetadata(file_name)
+    exiv_image = pyexiv2.ImageMetadata("{}/{}".format(self.download_dir, file_name))
     exiv_image.read()
     exif_keys = exiv_image.exif_keys
     
