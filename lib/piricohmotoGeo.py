@@ -34,7 +34,7 @@ class Geo(Config):
   def get_current_location(self):
     """ Return timestamp and current location """
     r = redis.StrictRedis(host='localhost')
-    time_keys = r.keys()
+    time_keys = r.hkeys('GPS')
     print "self_timestamp={}".format(self.timestamp)
     timestamp = self._get_nearest_number(self.timestamp, time_keys)
     return json.loads(r.hget('GPS', timestamp))
