@@ -45,16 +45,6 @@ class Image(Config):
     r = redis.StrictRedis(host='localhost')
     return r.hexists('IMAGES', self.filename)
 
-  def save(self, request_response):
-    """ Save the requests reponse to disk """
-    with open('{}/{}'.format(self.download_dir, self.filename), 'wb') as f:
-      for chunk in request_response.iter_content(chunk_size=1024): 
-        if chunk: # filter out keep-alive new chunks
-          f.write(chunk)
-    r = redis.StrictRedis(host='localhost')
-    gg = {'UPLOAD': False, 'GPS': {}}
-    r.hmset('IMAGES', {self.filename: json.dumps(gg)})de`
-
   def size(self):
     """ Return image size """
     return int(os.path.getsize('{}/{}'.format(self.download_dir, filename)))

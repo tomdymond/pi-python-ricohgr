@@ -30,7 +30,6 @@ class Camera(Config):
     for image in images:
       if not image.is_downloaded():
         image.download()
-        image.save()
 
   def upload_all(self):
     """ Upload all images if jpeg """

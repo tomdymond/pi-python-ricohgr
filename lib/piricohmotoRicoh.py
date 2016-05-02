@@ -21,9 +21,19 @@ class RicohImage(Image):
     
   def download(self, size='full'):
     """ Download an image. 
-        For now just return the requests object. keep is simple
+        Return true if successful
     """
-    return requests.get('http://{ip}/v1/photos/{dirname}/{filename}?size={size}'.format(ip=self.ip, dirname=dirname, filename=filename, size=size), timeout=10)
+    a =  requests.get('http://{ip}/v1/photos/{dirname}/{filename}?size={size}'.format(ip=self.ip, dirname=dirname, filename=filename, size=size), timeout=10)
+    if a.status_code == '200':
+      with open('{}/{}'.format(self.download_dir, self.filename), 'wb') as f:
+        for chunk in request_response.iter_content(chunk_size=1024): 
+          if chunk: # filter out keep-alive new chunks
+            f.write(chunk)
+      r = redis.StrictRedis(host='localhost')
+      gg = {'UPLOAD': False, 'GPS': {}}
+      r.hmset('IMAGES', {self.filename: json.dumps(gg)})
+      return True
+    Return False
 
 class Ricoh(Camera):
   def __init__(self, **kwargs):
