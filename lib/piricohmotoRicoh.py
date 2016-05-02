@@ -76,4 +76,4 @@ class Ricoh(Camera):
 
   def getimage(self, dirname, filename):
     """ Return an Image object """
-    return RicohImage(dirname, filename, config_file=self.config_file)
+    return RicohImage(config_file=self.config_file, dirname=dirname, filename=filename)
