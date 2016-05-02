@@ -26,7 +26,8 @@ class RicohImage(Image):
     print "Starting download of {}".format(self.filename)
     a =  requests.get('http://{ip}/v1/photos/{dirname}/{filename}?size={size}'.format(ip=self.ip, dirname=self.dirname, filename=self.filename, size=size), timeout=10)
     print a.status_code
-    if a.status_code == '200':
+    if a.status_code == 200:
+      print "saving file..."
       with open('{}/{}'.format(self.download_dir, self.filename), 'wb') as f:
         for chunk in request_response.iter_content(chunk_size=1024): 
           if chunk: # filter out keep-alive new chunks
