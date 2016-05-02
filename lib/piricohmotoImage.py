@@ -67,7 +67,7 @@ class Image(Config):
     if not location:
       exif = self.exifdata()
       image_timestamp = exif.get_taken_time()
-      geo = Geo(image_timestamp)
+      geo = Geo(config_file=self.config_file, image_timestamp=image_timestamp)
       location = geo.get_current_location()
       j['GPS'] = location
       r.hmset('IMAGES', {self.filename: json.dumps(j)})
