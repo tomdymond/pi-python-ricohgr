@@ -8,6 +8,7 @@ from piricohmotoCamera import Camera
 from piricohmotoConfig import Config
 from piricohmotoWifi import Wifi
 import redis
+import json
 
 class RicohWifi(Wifi):
   def __init__(self, **kwargs):
