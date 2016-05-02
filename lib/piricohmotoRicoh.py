@@ -24,12 +24,12 @@ class RicohImage(Image):
         Return true if successful
     """
     print "Starting download of {}".format(self.filename)
-    a =  requests.get('http://{ip}/v1/photos/{dirname}/{filename}?size={size}'.format(ip=self.ip, dirname=self.dirname, filename=self.filename, size=size), timeout=10)
-    print a.status_code
-    if a.status_code == 200:
+    reponse =  requests.get('http://{ip}/v1/photos/{dirname}/{filename}?size={size}'.format(ip=self.ip, dirname=self.dirname, filename=self.filename, size=size), timeout=10)
+    print reponse.status_code
+    if reponse.status_code == 200:
       print "saving file..."
       with open('{}/{}'.format(self.download_dir, self.filename), 'wb') as f:
-        for chunk in request_response.iter_content(chunk_size=1024): 
+        for chunk in reponse.iter_content(chunk_size=1024): 
           if chunk: # filter out keep-alive new chunks
             f.write(chunk)
       r = redis.StrictRedis(host='localhost')
@@ -48,6 +48,7 @@ class Ricoh(Camera):
   def get_objs(self):
     """ Return objects """
     if not self.objs:
+      print "Downloading objects"
       a = requests.get('http://{ip}/_gr/objs'.format(ip=self.ip), timeout=10).json()
       self.objs = a
     return self.objs
