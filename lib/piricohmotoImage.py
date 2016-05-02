@@ -45,7 +45,9 @@ class Image(Config):
   def is_downloaded(self):
     """ Bool. If the image is already downloaded """
     r = redis.StrictRedis(host='localhost')
-    return r.hexists('IMAGES', self.filename)
+    if r.hexists('IMAGES', self.filename) and os.path.exists('{}/{}'.format(self.download_dir, self.filename)):
+      return True
+    return False
 
   def size(self):
     """ Return image size """
