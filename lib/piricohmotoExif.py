@@ -69,8 +69,8 @@ class Exif(Config):
     lat -- latitude (as float)
     lng -- longitude (as float)
     """
-    lat_deg = to_deg(lat, ["S", "N"])
-    lng_deg = to_deg(lng, ["W", "E"])
+    lat_deg = self.to_deg(lat, ["S", "N"])
+    lng_deg = self.to_deg(lng, ["W", "E"])
     
     print (lat_deg)
     print (lng_deg)
