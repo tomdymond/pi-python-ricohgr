@@ -40,5 +40,5 @@ class Geo(Config):
     print "self_timestamp={}".format(self.timestamp)
     timestamp = self._get_nearest_number(self.timestamp, time_keys)
     print "closest timestamp is {}".format(timestamp)
-    print r.hgetall('GPS', timestamp)
+    print r.hget('GPS', timestamp)
     return json.loads(r.hgetall('GPS', timestamp))
