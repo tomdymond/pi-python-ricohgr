@@ -8,6 +8,7 @@ from piricohmotoExif import Exif
 import dropbox
 import redis
 import json
+import os
 
 class Image(Config):
   def __init__(self, **kwargs):
