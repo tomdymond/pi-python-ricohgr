@@ -14,7 +14,7 @@ import datetime
 class Exif(Config):
   def __init__(self, **kwargs):
     Config.__init__(self, **kwargs)
-    self.image_file = kwargs['image_file']
+    self.image_file = kwargs['filename']
     self.metadata = pyexiv2.ImageMetadata(self.image_file)
     self.metadata.read()
 
