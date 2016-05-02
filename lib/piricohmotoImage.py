@@ -49,11 +49,11 @@ class Image(Config):
 
   def size(self):
     """ Return image size """
-    return int(os.path.getsize('{}/{}'.format(self.download_dir, filename)))
+    return int(os.path.getsize('{}/{}'.format(self.download_dir, self.filename)))
 
   def exifdata(self):
     """ Return exif data """
-    exif = Exif(self.filename)
+    exif = Exif(config_file=self.config_file, filename=self.filename)
     return exif
 
   def geodata(self):
