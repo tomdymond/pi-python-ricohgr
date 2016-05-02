@@ -15,7 +15,6 @@ class RicohWifi(Wifi):
 class RicohImage(Image):
   def __init__(self, **kwargs):
     Image.__init__(self, **kwargs)
-    self.name = name
     self.filename = kwargs['filename']
     self.dirname = kwargs['dirname']
     
