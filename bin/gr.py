@@ -35,21 +35,22 @@ flow = Ricoh(config_file='/etc/piricohmoto.yml')
 
 conn = flow.connection()
 
-if conn.is_camera_on():
-  if conn.connect_to_camera_ssid():
-    print "ff"
-    try:
+try:
+  b = Tag_all(flow)
+  b.start()
+
+  if conn.is_camera_on():
+    if conn.connect_to_camera_ssid():
       a = Download_all(flow)
       a.start()
-      b = Tag_all(flow)
-      b.start()
-    except (KeyboardInterrupt, SystemExit): #when you press ctrl+c
-      print ("\nKilling Threads...")
-      a.running = False
-      b.running = False
-      a.join() # wait for the thread to finish what it's doing
-      b.join() # wait for the thread to finish what it's doing
-    print ("Done.\nExiting.")
+
+except (KeyboardInterrupt, SystemExit): #when you press ctrl+c
+  print ("\nKilling Threads...")
+  a.running = False
+  b.running = False
+  a.join() # wait for the thread to finish what it's doing
+  b.join() # wait for the thread to finish what it's doing
+print ("Done.\nExiting.")
 
 
 #  flow.upload_all()
