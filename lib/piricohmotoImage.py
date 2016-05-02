@@ -50,6 +50,15 @@ class Image(Config):
       return True
     return False
 
+  def is_geotagged(self):
+    """ Bool. If the image is already geo tagged """
+    r = redis.StrictRedis(host='localhost')
+    if r.hexists('IMAGES', self.filename):
+      j = json.loads(r.hget('IMAGES', self.filename))
+      if j['GPS']:
+        return True
+    return False
+
   def size(self):
     """ Return image size """
     return int(os.path.getsize('{}/{}'.format(self.download_dir, self.filename)))
