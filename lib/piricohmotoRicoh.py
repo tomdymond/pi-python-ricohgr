@@ -17,6 +17,7 @@ class RicohImage(Image):
     Image.__init__(self, **kwargs)
     self.filename = kwargs['filename']
     self.dirname = kwargs['dirname']
+    self.ip = self.config['ip']
     
   def download(self, size='full'):
     """ Download an image. 
