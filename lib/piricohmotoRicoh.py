@@ -23,7 +23,7 @@ class RicohImage(Image):
     """ Download an image. 
         Return true if successful
     """
-    a =  requests.get('http://{ip}/v1/photos/{dirname}/{filename}?size={size}'.format(ip=self.ip, dirname=dirname, filename=filename, size=size), timeout=10)
+    a =  requests.get('http://{ip}/v1/photos/{dirname}/{filename}?size={size}'.format(ip=self.ip, dirname=self.dirname, filename=self.filename, size=size), timeout=10)
     if a.status_code == '200':
       with open('{}/{}'.format(self.download_dir, self.filename), 'wb') as f:
         for chunk in request_response.iter_content(chunk_size=1024): 
