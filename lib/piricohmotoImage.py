@@ -8,6 +8,7 @@ from piricohmotoExif import Exif
 import dropbox
 import redis
 import json
+import os
 
 class Image(Config):
   def __init__(self, **kwargs):
@@ -45,15 +46,17 @@ class Image(Config):
   def is_downloaded(self):
     """ Bool. If the image is already downloaded """
     r = redis.StrictRedis(host='localhost')
-    return r.hexists('IMAGES', self.filename)
+    if r.hexists('IMAGES', self.filename) and os.path.exists('{}/{}'.format(self.download_dir, self.filename)):
+      return True
+    return False
 
   def size(self):
     """ Return image size """
-    return int(os.path.getsize('{}/{}'.format(self.download_dir, filename)))
+    return int(os.path.getsize('{}/{}'.format(self.download_dir, self.filename)))
 
   def exifdata(self):
     """ Return exif data """
-    exif = Exif(self.filename)
+    exif = Exif(config_file=self.config_file, filename=self.filename)
     return exif
 
   def geodata(self):
@@ -62,9 +65,9 @@ class Image(Config):
     j = json.loads(r.hget('IMAGES', self.filename))
     location = j['GPS']
     if not location:
-      exif = exifdata()
+      exif = self.exifdata()
       image_timestamp = exif.get_taken_time()
-      geo = Geo(image_timestamp)
+      geo = Geo(config_file=self.config_file, image_timestamp=image_timestamp)
       location = geo.get_current_location()
       j['GPS'] = location
       r.hmset('IMAGES', {self.filename: json.dumps(j)})
@@ -73,7 +76,7 @@ class Image(Config):
   def geotag_image(self):
     """ Attempt to geo tag photo """
     geo_data = self.geodata()
-    exif = exifdata()
+    exif = self.exifdata()
     latitude = geo_data['latitude']
     longitude = geo_data['longitude']
     exif.set_gps_location(self.filename, latitude, longitude)
