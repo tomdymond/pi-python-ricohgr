@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+# piricohmotoCamera.py
 
 import os
 from piricohmotoConfig import Config

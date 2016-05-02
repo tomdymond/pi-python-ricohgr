@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+# piricohmotoExif.py
 
 import pyexiv2
 import fractions

@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# 
+# piricohmotoRicoh.py
 
 import requests
 import sys
@@ -53,7 +53,7 @@ class Ricoh(Camera):
     """
       Boolean. Return a Wifi object
     """
-    return RicohWifi()
+    return RicohWifi(config_file=self.config_file)
 
   def listimages(self, dirname):
     """ Get the images from the camera """
@@ -77,4 +77,4 @@ class Ricoh(Camera):
 
   def getimage(self, dirname, filename):
     """ Return an Image object """
-    return RicohImage(dirname, filename)
+    return RicohImage(config_file=self.config_file, dirname, filename)
