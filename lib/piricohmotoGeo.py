@@ -22,7 +22,7 @@ class Geo(Config):
     """ From list of numbers, return the closest number """
     best = 999999
     for gps_timestamp in numberlist:
-      time_diff = (gps_timestamp - image_timestamp)
+      time_diff = (int(gps_timestamp) - int(image_timestamp))
       if time_diff < 0:
         time_diff = time_diff * -1
       if time_diff < best:
