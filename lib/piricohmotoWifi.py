@@ -9,7 +9,7 @@ from piricohmotoConfig import Config
 class Wifi(Config):
   def __init__(self, **kwargs):
     Config.__init__(self, **kwargs)
-    self.camera_ssid = config['camera_ssid']
+    self.camera_ssid = self.config['camera_ssid']
 
   def get_ssids(self):
     """ Return a list of access points """

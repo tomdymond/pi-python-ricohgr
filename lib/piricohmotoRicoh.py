@@ -33,7 +33,7 @@ class RicohImage(Image):
       gg = {'UPLOAD': False, 'GPS': {}}
       r.hmset('IMAGES', {self.filename: json.dumps(gg)})
       return True
-    Return False
+    return False
 
 class Ricoh(Camera):
   def __init__(self, **kwargs):
