@@ -31,7 +31,7 @@ class Camera(Config):
           filename = j['n']
           images.append(self.getimage(foldername, filename))
     for image in images:
-      if not image.is_downloaded():
+      if not image.is_downloaded() and not image.is_uploaded():
         image.download()
 
   def upload_all(self):
