@@ -29,6 +29,13 @@ class Test(unittest.TestCase):
     print (a.listdirs())
     self.assertTrue(a.listdirs)
 
+  def test_listimages(self):
+    """ test_listdirs """
+    a = Ricoh(config_file=CONFIG_FILE)
+    a.objs = self.mock_camera_objs()
+    print (a.listimages('875RICOH'))
+    self.assertTrue(a.listimages('875RICOH'))
+
 
 
 

@@ -11,9 +11,9 @@ import datetime
 # http://exiv2.org/tags.html
 
 class Exif(Config):
-  def __init__(self, image_file):
-    super(self.__class__, self).__init__(**kwargs)
-    self.image_file = image_file
+  def __init__(self, **kwargs):
+    Config.__init__(self, **kwargs)
+    self.image_file = kwargs['image_file']
     self.metadata = pyexiv2.ImageMetadata(self.image_file)
     self.metadata.read()
 

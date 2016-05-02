@@ -14,7 +14,7 @@ class RicohWifi(Wifi):
 
 class RicohImage(Image):
   def __init__(self, dirname, filename):
-    super(self.__class__, self, filename).__init__()
+    Image.__init__(self, filename)
     self.name = name
     self.filename = filename
     self.dirname = dirname
@@ -27,7 +27,6 @@ class RicohImage(Image):
 
 class Ricoh(Camera):
   def __init__(self, **kwargs):
-    #super(self.__class__, self).__init__(**kwargs)
     Camera.__init__(self, **kwargs)
     self.ip = self.config['ip']
     self.download_dir = self.config['download_dir']

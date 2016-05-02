@@ -8,9 +8,9 @@ import dropbox
 import redis
 
 class Image(Config):
-  def __init__(self, filename):
-    super(self.__class__, self).__init__(**kwargs)
-    self.filename = filename
+  def __init__(self, **kwargs):
+    Config.__init__(self, **kwargs)
+    self.filename = kwargs['filename']
     self.access_token = self.config['access_token']
     self.download_dir = self.config['download_dir']
 
@@ -53,7 +53,7 @@ class Image(Config):
           f.write(chunk)
     r = redis.StrictRedis(host='localhost')
     gg = {'UPLOAD': False, 'GPS': {}}
-    r.hmset('IMAGES', {self.filename: json.dumps(gg)})
+    r.hmset('IMAGES', {self.filename: json.dumps(gg)})de`
 
   def size(self):
     """ Return image size """

@@ -7,8 +7,8 @@ import time
 from piricohmotoConfig import Config
 
 class Wifi(Config):
-  def __init__(self):
-    super(self.__class__, self).__init__(**kwargs)
+  def __init__(self, **kwargs):
+    Config.__init__(self, **kwargs)
     self.camera_ssid = config['camera_ssid']
 
   def get_ssids(self):

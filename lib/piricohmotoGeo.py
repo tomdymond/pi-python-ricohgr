@@ -9,9 +9,9 @@ import json
 from piricohmotoConfig import Config
 
 class Geo(Config):
-  def __init__(self, timestamp):
-    super(self.__class__, self).__init__(**kwargs)
-    self.timestamp = timestamp
+  def __init__(self, **kwargs):
+    Config.__init__(self, **kwargs)
+    self.timestamp = kwargs['timestamp']
 
   def get_geo_payload_from_google(self, latitude, longitude):
     """ Retrive information on the location from google """
