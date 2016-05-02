@@ -15,5 +15,5 @@ if connection.is_camera_on():
   if connection.connect_to_camera_ssid():
     flow.download_all()
 
-flow.geotag_all()
-flow.upload_all()
+  flow.geotag_all()
+  flow.upload_all()
