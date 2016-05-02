@@ -25,7 +25,7 @@ class Geo(Config):
     print "numberlist={}".format(numberlist)
     for gps_timestamp in numberlist:
       time_diff = (int(gps_timestamp) - int(image_timestamp))
-      print "time_diff={}".format(time_diff)
+      print "time_diff={}".format(time_diaaaaff)
       if time_diff < 0:
         time_diff = time_diff * -1
       if time_diff < best:
@@ -40,4 +40,5 @@ class Geo(Config):
     print "self_timestamp={}".format(self.timestamp)
     timestamp = self._get_nearest_number(self.timestamp, time_keys)
     print "closest timestamp is {}".format(timestamp)
-    return json.loads(r.hget('GPS', timestamp))
+    print r.hgetall('GPS', timestamp)
+    return json.loads(r.hgetall('GPS', timestamp))
