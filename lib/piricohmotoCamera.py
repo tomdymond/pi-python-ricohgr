@@ -3,6 +3,7 @@
 
 import os
 from piricohmotoConfig import Config
+from piricohmotoImage import Image
 
 import redis
 
@@ -16,7 +17,7 @@ class Camera(Config):
     """ Upload all images if jpeg """
     for image in self.redis_connection.hgetall('IMAGES').keys():
       if 'GEO' not in self.redis_connection.hget('IMAGES', image):
-        image = Image(f)
+        image = Image(config_file=self.config_file, image=image)
         image.geotag_image()
 
   def download_all(self):
