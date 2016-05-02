@@ -21,6 +21,7 @@ class Geo(Config):
   def _get_nearest_number(self, image_timestamp, numberlist):
     """ From list of numbers, return the closest number """
     best = 999999
+    print "numberlist={}".format(numberlist)
     for gps_timestamp in numberlist:
       time_diff = (int(gps_timestamp) - int(image_timestamp))
       if time_diff < 0:
