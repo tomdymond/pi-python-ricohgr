@@ -30,7 +30,7 @@ class Geo(Config):
         time_diff = time_diff * -1
       if time_diff < best:
         best = time_diff
-        best_time = time_diff
+        best_time = gps_timestamp
     return best_time
 
   def get_current_location(self):
