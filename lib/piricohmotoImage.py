@@ -57,7 +57,9 @@ class Image(Config):
     r = redis.StrictRedis(host='localhost')
     if r.hexists('IMAGES', self.filename):
       j = json.loads(r.hget('IMAGES', self.filename))
-      if not j['GPS']:
+      print j
+      if j['GPS']:
+        print "Image already geotagged"
         return True
     return False
 
