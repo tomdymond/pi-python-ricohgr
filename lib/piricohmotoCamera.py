@@ -13,6 +13,8 @@ class Camera(Config):
     Config.__init__(self, **kwargs)
     self.redis_connection = redis.StrictRedis(host='localhost')
 
+
+
   def geotag_all(self):
     """ Upload all images if jpeg """
     for image in self.redis_connection.hgetall('IMAGES').keys():
