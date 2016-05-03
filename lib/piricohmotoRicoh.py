@@ -9,6 +9,7 @@ from piricohmotoConfig import Config
 from piricohmotoWifi import Wifi
 import redis
 import json
+from os import path
 
 class RicohWifi(Wifi):
   def __init__(self, **kwargs):
@@ -27,7 +28,7 @@ class RicohImage(Image):
     """
     print "Starting download of {}".format(self.filename)
     r = redis.StrictRedis(host='localhost')
-    if os.path.exists('{}/{}'.format(self.download_dir, self.filename)):
+    if path.exists('{}/{}'.format(self.download_dir, self.filename)):
       r.hmset('IMAGES', {self.filename: json.dumps({'UPLOAD': False, 'GPS': {}})})
       return True
     reponse = requests.get('http://{ip}/v1/photos/{dirname}/{filename}?size={size}'.format(ip=self.ip, dirname=self.dirname, filename=self.filename, size=size), timeout=10)
