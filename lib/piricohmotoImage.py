@@ -40,10 +40,11 @@ class Image(Config):
 
   def is_uploaded(self):
     r = redis.StrictRedis(host='localhost')
-    j = json.loads(r.hget('IMAGES', self.filename))
-    if j['UPLOAD']:
-      print "j['UPLOAD'] is {}".format(j['UPLOAD'])
-      return True
+    if r.keys('IMAGES'):
+      j = json.loads(r.hget('IMAGES', self.filename))
+      if j['UPLOAD']:
+        print "j['UPLOAD'] is {}".format(j['UPLOAD'])
+        return True
     return False
 
   def is_downloaded(self):
