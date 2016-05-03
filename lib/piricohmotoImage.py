@@ -26,7 +26,7 @@ class Image(Config):
       response = client.put_file('/{}'.format(self.filename), f)
       print ("uploaded:", response)
       # Share it
-      response = client.share('/{}'.format(filename), short_url=False)
+      response = client.share('/{}'.format(self.filename), short_url=False)
       r = redis.StrictRedis(host='localhost')
       j = json.loads(r.hget('IMAGES', self.filename))
       j['UPLOAD'] = True
