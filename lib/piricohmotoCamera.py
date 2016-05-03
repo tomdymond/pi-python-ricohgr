@@ -13,12 +13,14 @@ class Camera(Config):
     Config.__init__(self, **kwargs)
     self.redis_connection = redis.StrictRedis(host='localhost')
 
+
+
   def geotag_all(self):
     """ Upload all images if jpeg """
     for image in self.redis_connection.hgetall('IMAGES').keys():
       if 'GEO' not in self.redis_connection.hget('IMAGES', image):
         image = Image(config_file=self.config_file, filename=image)
-        if image.is_downloaded():
+        if image.is_downloaded() and not image.is_geotagged():
           image.geotag_image()
 
   def download_all(self):
@@ -31,13 +33,13 @@ class Camera(Config):
           filename = j['n']
           images.append(self.getimage(foldername, filename))
     for image in images:
-      if not image.is_downloaded():
+      if not image.is_downloaded() and not image.is_uploaded():
         image.download()
 
   def upload_all(self):
     """ Upload all images if jpeg """
-    for k in self.redis_connection.hkeys('IMAGES'):
-      image = Image(f)
+    for filename in self.redis_connection.hkeys('IMAGES'):
+      image = Image(config_file=self.config_file, filename=filename)
       if not image.is_uploaded():
-        image.upload_image_to_dropbox()
-      print ("Skipping {}. Already uploaded".format(f))
+        image.upload_to_dropbox()
+      print ("Skipping {}. Already uploaded".format(filename))

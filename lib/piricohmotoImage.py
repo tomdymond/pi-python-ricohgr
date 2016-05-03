@@ -26,20 +26,23 @@ class Image(Config):
       response = client.put_file('/{}'.format(self.filename), f)
       print ("uploaded:", response)
       # Share it
-      response = client.share('/{}'.format(filename), short_url=False)
+      response = client.share('/{}'.format(self.filename), short_url=False)
       r = redis.StrictRedis(host='localhost')
       j = json.loads(r.hget('IMAGES', self.filename))
       j['UPLOAD'] = True
       r.hmset('IMAGES', {self.filename: json.dumps(j)})
+      self.notify(colour='blue', flashing=True, duration=2)
       return True
     except Exception as e:
+      self.notify(colour='red', flashing=True, duration=2)
       print (e.message)
     return False
 
   def is_uploaded(self):
     r = redis.StrictRedis(host='localhost')
-    j = json.loads(self.redis_connection.hget('IMAGES', self.filename))
+    j = json.loads(r.hget('IMAGES', self.filename))
     if j['UPLOAD']:
+      print "j['UPLOAD'] is {}".format(j['UPLOAD'])
       return True
     return False
 
@@ -48,6 +51,17 @@ class Image(Config):
     r = redis.StrictRedis(host='localhost')
     if r.hexists('IMAGES', self.filename) and os.path.exists('{}/{}'.format(self.download_dir, self.filename)):
       return True
+    return False
+
+  def is_geotagged(self):
+    """ Bool. If the image is already geo tagged """
+    r = redis.StrictRedis(host='localhost')
+    if r.hexists('IMAGES', self.filename):
+      j = json.loads(r.hget('IMAGES', self.filename))
+      #print j
+      if j['GPS']:
+        print "Image {} already geotagged".format(self.filename)
+        return True
     return False
 
   def size(self):
@@ -75,9 +89,11 @@ class Image(Config):
 
   def geotag_image(self):
     """ Attempt to geo tag photo """
+    print "About to geotag {}".format(self.filename)
     geo_data = self.geodata()
     exif = self.exifdata()
     latitude = geo_data['latitude']
     longitude = geo_data['longitude']
     exif.set_gps_location(self.filename, latitude, longitude)
+    self.notify(colour='green', flashing=False, duration=2)
       

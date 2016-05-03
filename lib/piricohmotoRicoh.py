@@ -57,7 +57,7 @@ class Ricoh(Camera):
 
   def connection(self):
     """
-      Boolean. Return a Wifi object
+      Return a Wifi object
     """
     return RicohWifi(config_file=self.config_file)
 

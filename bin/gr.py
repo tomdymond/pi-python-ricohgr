@@ -31,8 +31,17 @@ class Tag_all(threading.Thread):
     """ Make it start """
     self.flow.geotag_all()
 
-flow = Ricoh(config_file='/etc/piricohmoto.yml')
+class Upload_all(threading.Thread):
+  def __init__(self, flow):
+    threading.Thread.__init__(self)
+    self.flow = flow
+    self.running = True
 
+  def run(self):
+    """ Make it start """
+    self.flow.upload_all()
+
+flow = Ricoh(config_file='/etc/piricohmoto.yml')
 conn = flow.connection()
 
 try:
@@ -43,6 +52,9 @@ try:
     if conn.connect_to_camera_ssid():
       a = Download_all(flow)
       a.start()
+  else:
+    c = Upload_all(flow)
+    c.start()
 
 except (KeyboardInterrupt, SystemExit): #when you press ctrl+c
   print ("\nKilling Threads...")
@@ -51,6 +63,3 @@ except (KeyboardInterrupt, SystemExit): #when you press ctrl+c
   a.join() # wait for the thread to finish what it's doing
   b.join() # wait for the thread to finish what it's doing
 print ("Done.\nExiting.")
-
-
-#  flow.upload_all()
