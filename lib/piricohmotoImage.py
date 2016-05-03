@@ -19,15 +19,20 @@ class Image(Config):
 
   def upload_to_dropbox(self):
     """ Upload the picture to dropbox """
+    r = redis.StrictRedis(host='localhost')
     try:
       print ("Uploading photo {} to dropbox".format(self.filename))
       client = dropbox.client.DropboxClient(self.access_token)
-      f = open('{}/{}'.format(self.download_dir, self.filename), 'rb')
-      response = client.put_file('/{}'.format(self.filename), f)
-      print ("uploaded:", response)
-      # Share it
-      response = client.share('/{}'.format(self.filename), short_url=False)
-      r = redis.StrictRedis(host='localhost')
+      remote_list = []
+      for i in  client.metadata('/')['contents']:
+        remote_list.add(i['path'].split('/')[1])
+      if self.filename not in remote_list:
+        f = open('{}/{}'.format(self.download_dir, self.filename), 'rb')
+        response = client.put_file('/{}'.format(self.filename), f)
+        print ("uploaded:", response)
+        # Share it
+        response = client.share('/{}'.format(self.filename), short_url=False)
+        
       j = json.loads(r.hget('IMAGES', self.filename))
       j['UPLOAD'] = True
       r.hmset('IMAGES', {self.filename: json.dumps(j)})
