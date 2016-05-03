@@ -2,12 +2,14 @@
 """ 
 Service for logging gps coordinates
 
+Store the GPS coordinates in Redis under the hkey GPS for retreival later. 
+
 """
 
 import logging
 import time
 from daemon import runner
-from os import sys, path
+from os import sys, path, mkdir
 import datetime
 from gps import *
 from time import *
@@ -15,7 +17,6 @@ import time
 import threading
 import redis
 import json
-import piglow
 
 cwd = path.dirname(path.abspath(__file__))
 sys.path.append('{}/lib/'.format(cwd))
@@ -38,6 +39,8 @@ class App():
     self.stdin_path = '/dev/null'
     self.stdout_path = '/dev/stdout'
     self.stderr_path = '/dev/stderr'
+    if not path.exists('/var/run/piricohmoto/'):
+      mkdir('/var/run/piricohmoto/')
     self.pidfile_path =  '/var/run/piricohmoto/piricohmotoGpslogger.pid'
     self.pidfile_timeout = 5
     self.sleep_time = sleep_time
