@@ -42,6 +42,7 @@ class Image(Config):
     r = redis.StrictRedis(host='localhost')
     j = json.loads(r.hget('IMAGES', self.filename))
     if j['UPLOAD']:
+      print "j['UPLOAD'] is {}".format(j['UPLOAD'])
       return True
     return False
 
@@ -57,9 +58,9 @@ class Image(Config):
     r = redis.StrictRedis(host='localhost')
     if r.hexists('IMAGES', self.filename):
       j = json.loads(r.hget('IMAGES', self.filename))
-      print j
+      #print j
       if j['GPS']:
-        print "Image already geotagged"
+        print "Image {} already geotagged".format(self.filename)
         return True
     return False
 
