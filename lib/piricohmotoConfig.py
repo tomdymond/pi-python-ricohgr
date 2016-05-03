@@ -14,7 +14,7 @@ class Config(object):
     """ Send a request to the notificatin daemon """
     if flashing:
       c = 'flashing'
-    else
+    else:
       c = 'fixed'
     try:
       response = requests.get('http://127.0.0.1/piglow/{}/{}/{}'.format(colour, c, duration))
