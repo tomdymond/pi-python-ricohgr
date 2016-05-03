@@ -42,4 +42,4 @@ class Camera(Config):
       image = Image(config_file=self.config_file, filename=filename)
       if not image.is_uploaded():
         image.upload_to_dropbox()
-      print ("Skipping {}. Already uploaded".format(f))
+      print ("Skipping {}. Already uploaded".format(filename))

@@ -86,6 +86,7 @@ class Image(Config):
 
   def geotag_image(self):
     """ Attempt to geo tag photo """
+    print "About to geotag {}".format(self.filename)
     geo_data = self.geodata()
     exif = self.exifdata()
     latitude = geo_data['latitude']
