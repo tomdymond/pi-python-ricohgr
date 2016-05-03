@@ -41,5 +41,5 @@ class Camera(Config):
     for filename in self.redis_connection.hkeys('IMAGES'):
       image = Image(config_file=self.config_file, filename=filename)
       if not image.is_uploaded():
-        image.upload_image_to_dropbox()
+        image.upload_to_dropbox()
       print ("Skipping {}. Already uploaded".format(f))
