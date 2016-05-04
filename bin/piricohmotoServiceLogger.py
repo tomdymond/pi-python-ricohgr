@@ -37,8 +37,8 @@ class GpsPoller(threading.Thread):
 class App():
   def __init__(self, sleep_time=5):
     self.stdin_path = '/dev/null'
-    self.stdout_path = '/dev/stdout'
-    self.stderr_path = '/dev/stderr'
+    self.stdout_path = '/dev/null'
+    self.stderr_path = '/dev/null'
     if not path.exists('/var/run/piricohmoto/'):
       mkdir('/var/run/piricohmoto/')
     self.pidfile_path =  '/var/run/piricohmoto/piricohmotoGpslogger.pid'
