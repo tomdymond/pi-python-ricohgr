@@ -23,18 +23,12 @@ class Image(Config):
     try:
       print ("Uploading photo {} to dropbox".format(self.filename))
       client = dropbox.client.DropboxClient(self.access_token)
-      remote_list = set()
-      for i in  client.metadata('/')['contents']:
-        remote_list.add(i['path'].split('/')[1])
-      if self.filename not in remote_list:
-        f = open('{}/{}'.format(self.download_dir, self.filename), 'rb')
-        response = client.put_file('/{}'.format(self.filename), f)
-        print ("uploaded:", response)
-        # Share it
-        response = client.share('/{}'.format(self.filename), short_url=False)
-      else:
-        print "Image was already uploaded"
-        
+      f = open('{}/{}'.format(self.download_dir, self.filename), 'rb')
+      response = client.put_file('/{}'.format(self.filename), f)
+      print ("uploaded:", response)
+      # Share it
+      response = client.share('/{}'.format(self.filename), short_url=False)
+
       j = json.loads(r.hget('IMAGES', self.filename))
       j['UPLOAD'] = True
       r.hmset('IMAGES', {self.filename: json.dumps(j)})
