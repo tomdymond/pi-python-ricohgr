@@ -49,6 +49,11 @@ class Camera(Config):
     """ Upload all images if jpeg """
     for filename in self.redis_connection.hkeys('IMAGES'):
       image = Image(config_file=self.config_file, filename=filename)
-      if not image.is_uploaded() and filename not in self.dropbox_images:
-        image.upload_to_dropbox()
+      if not image.is_uploaded():
+        if filename in self.dropbox_images:
+          j = json.loads(self.redis_connection.hget('IMAGES', filename))
+          j['UPLOAD'] = True
+          r.hmset('IMAGES', {self.filename: json.dumps(j)})
+        else:
+          image.upload_to_dropbox()
       print ("Skipping {}. Already uploaded".format(filename))
