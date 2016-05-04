@@ -12,6 +12,7 @@ class Camera(Config):
     #super(self.__class__, self).__init__(**kwargs)
     Config.__init__(self, **kwargs)
     self.redis_connection = redis.StrictRedis(host='localhost')
+    self.access_token = self.config['access_token']
     self.dropbox_images = self.get_dropbox_images()
 
 
