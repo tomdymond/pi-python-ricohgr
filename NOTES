@@ -17,6 +17,9 @@ status codes:
  - green: Connected to internet
  - red: A service is not running
  
+ 
+ docker build -t test5 .
+ docker run -it -v /root/config:/config test5
 
 
 
