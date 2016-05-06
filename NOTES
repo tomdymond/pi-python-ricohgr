@@ -19,7 +19,7 @@ status codes:
  
  
  docker build -t test5 .
- docker run -it -v /root/config:/config test5
+ docker run -it -v /root/config:/config --privileged -v /dev/bus/usb:/dev/bus/usb test5
 
 
 
