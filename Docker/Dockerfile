@@ -1,7 +1,7 @@
 FROM tomdymond/xenial-armv7l
 COPY ./98C1A6920E0CE4DC.gpgkey /tmp/98C1A6920E0CE4DC.gpgkey
 RUN useradd --create-home appuser
-COPY ./sudoers.d/appuser.sudo /etc/sudoers.d/appuser
+COPY ./appuser.sudo /etc/sudoers.d/appuser
 COPY ./start.sh /opt/start.sh
 RUN chmod 755 /opt/start.sh
 RUN apt-key add /tmp/98C1A6920E0CE4DC.gpgkey
