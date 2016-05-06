@@ -41,7 +41,7 @@ class Upload_all(threading.Thread):
     """ Make it start """
     self.flow.upload_all()
 
-flow = Ricoh(config_file='/etc/piricohmoto.yml')
+flow = Ricoh(config_file='/config/piricohmoto.yml')
 conn = flow.connection()
 
 try:
