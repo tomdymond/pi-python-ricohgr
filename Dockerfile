@@ -9,8 +9,10 @@ COPY ./sources.list /etc/apt/sources.list
 COPY ./ubuntu-pi-flavour-makers-ubuntu-ppa-xenial.list /etc/apt/sources.list.d/ubuntu-pi-flavour-makers-ubuntu-ppa-xenial.list
 RUN apt-get update && apt-get -y install libexiv2-dev python-redis python-yaml python-flask python-pil git vim python-pip python-pyexiv2 monit redis-server
 RUN pip install piglow requests dropbox sh
-COPY ./monit/redis /etc/monit/conf-available
+COPY ./monit/redis /etc/monit/conf-available/redis
+COPY ./monit/gr /etc/monit/conf-available/gr
 RUN ln -s /etc/monit/conf-available/redis /etc/monit/conf-enabled/redis
+RUN ln -s /etc/monit/conf-available/gr /etc/monit/conf-enabled/gr
 RUN git clone https://github.com/tomdymond/pi-python-ricohgr /opt/pi-python-ricohgr
 RUN cd /opt/pi-python-ricohgr && git checkout devel && chmod 755 ./bin/gr.py
 CMD su -m appuser -c /opt/start.sh
