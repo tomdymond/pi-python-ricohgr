@@ -1,0 +1,1 @@
+appuser ALL=NOPASSWD: /sbin/iwlist, /sbin/ifup, /sbin/ifdown, /sbin/iwgetid
