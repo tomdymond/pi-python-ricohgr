@@ -8,7 +8,7 @@ RUN chmod 755 /opt/start.sh
 RUN apt-key add /tmp/98C1A6920E0CE4DC.gpgkey
 COPY ./sources.list /etc/apt/sources.list
 COPY ./ubuntu-pi-flavour-makers-ubuntu-ppa-xenial.list /etc/apt/sources.list.d/ubuntu-pi-flavour-makers-ubuntu-ppa-xenial.list
-RUN apt-get update && apt-get -y install --no-install-recommends libexiv2-dev python-redis python-yaml python-flask python-pil git vim python-pip python-pyexiv2 monit redis-server gpsd gpsd-clients python-gps python-smbus python-setuptools nginx wireless-tools wpasupplicant && rm -rf /var/cache/apt
+RUN apt-get update && apt-get -y install --no-install-recommends libexiv2-dev python-redis python-yaml python-flask python-pil git vim python-pip python-pyexiv2 monit redis-server gpsd gpsd-clients python-gps python-smbus python-setuptools nginx wireless-tools wpasupplicant net-tools && rm -rf /var/cache/apt
 RUN pip install piglow requests dropbox sh ipython
 COPY ./monit/redis /etc/monit/conf-available/redis
 COPY ./monit/gr /etc/monit/conf-available/gr
