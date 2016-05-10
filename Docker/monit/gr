@@ -1,7 +1,5 @@
-#!/usr/bin/env bash
-
-export PATH="/home/appuser/bin:/usr/local/bin:$PATH"
-
-cd /opt/pi-python-ricohgr
-git pull
-./bin/gr.py
+check process pi-python-ricohgr
+    with pidfile "/var/run/pi-python-ricohgr.pid"
+    start program = "/etc/init.d/pi-python-ricohgr start"
+    stop program = "/etc/init.d/pi-python-ricohgr stop"
+    if 2 restarts within 3 cycles then timeout
