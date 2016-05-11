@@ -15,6 +15,7 @@ COPY ./monit/gpsd /etc/monit/conf-available/gpsd
 COPY ./monit/gr /etc/monit/conf-available/gr
 RUN ln -s /etc/monit/conf-available/redis /etc/monit/conf-enabled/redis
 RUN ln -s /etc/monit/conf-available/gr /etc/monit/conf-enabled/gr
+RUN ln -s /etc/monit/conf-available/gpsd /etc/monit/conf-enabled/gpsd
 RUN git clone https://github.com/tomdymond/pi-python-ricohgr /opt/pi-python-ricohgr
 RUN cd /opt/pi-python-ricohgr && git checkout devel && chmod -r 755 ./bin/
 CMD su -m appuser -c /opt/start.sh
