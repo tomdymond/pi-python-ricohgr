@@ -1,0 +1,9 @@
+[Unit]
+Description=GPS Logger
+
+[Service]
+Type=oneshot
+ExecStart=/opt/pi-python-ricohgr/bin/piricohmotoServiceLogger.sh
+
+[Install]
+WantedBy=multi-user.target
