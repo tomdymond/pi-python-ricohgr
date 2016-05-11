@@ -1,4 +1,5 @@
 check process piricohmotoGpslogger
+    DEPENDS on service gpsd
     with pidfile "/var/run/piricohmoto/piricohmotoGpslogger.pid"
     start program = "/opt/pi-python-ricohgr/bin/piricohmotoServiceLogger.py start"
     stop program = "/opt/pi-python-ricohgr/bin/piricohmotoServiceLogger.py stop"
