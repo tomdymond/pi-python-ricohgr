@@ -1,0 +1,5 @@
+check process piricohmotoGpslogger
+    with pidfile "/var/run/piricohmoto/piricohmotoGpslogger.pid"
+    start program = "/opt/pi-python-ricohgr/bin/piricohmotoServiceLogger.py start"
+    stop program = "/opt/pi-python-ricohgr/bin/piricohmotoServiceLogger.py stop"
+    if 2 restarts within 3 cycles then timeout
