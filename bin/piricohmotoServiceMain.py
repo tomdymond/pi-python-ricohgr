@@ -57,7 +57,7 @@ class App():
     self.stderr_path = '/dev/null'
     if not path.exists('/var/run/piricohmoto/'):
       mkdir('/var/run/piricohmoto/')
-    self.pidfile_path =  '/var/run/piricohmoto/piricohmotoMain.pid'
+    self.pidfile_path =  '/var/run/piricohmoto/piricohmotoServiceMain.pid'
     self.pidfile_timeout = 5
     self.sleep_time = sleep_time
             
