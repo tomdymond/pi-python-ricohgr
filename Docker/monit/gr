@@ -1,5 +1,6 @@
-check process pi-python-ricohgr
-    with pidfile "/var/run/pi-python-ricohgr.pid"
-    start program = "/etc/init.d/pi-python-ricohgr start"
-    stop program = "/etc/init.d/pi-python-ricohgr stop"
+check process piricohmotoMain
+    DEPENDS on service redis
+    with pidfile "/var/run/piricohmotoMain.pid"
+    start program = "/opt/pi-python-ricohgr/bin/piricohmotoMain.py start"
+    stop program = "/opt/pi-python-ricohgr/bin/piricohmotoMain.py stop"
     if 2 restarts within 3 cycles then timeout
