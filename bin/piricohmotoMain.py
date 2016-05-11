@@ -51,7 +51,7 @@ class Upload_all(threading.Thread):
 
 
 class App():
-  def __init__(self, sleep_time=5):
+  def __init__(self, sleep_time=20):
     self.stdin_path = '/dev/null'
     self.stdout_path = '/dev/null'
     self.stderr_path = '/dev/null'
@@ -97,7 +97,7 @@ if __name__ == "__main__":
   if len(sys.argv) > 2:
     sleep_time = int(sys.argv[2])
   else:
-    sleep_time = 5
+    sleep_time = 20
   app = App(sleep_time=sleep_time)
   logger = logging.getLogger("DaemonLog")
   logger.setLevel(logging.INFO)
