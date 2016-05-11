@@ -3,4 +3,4 @@ check process piricohmotoServiceMain
     start program = "/opt/pi-python-ricohgr/bin/piricohmotoServiceMain.py start"
     stop program = "/opt/pi-python-ricohgr/bin/piricohmotoServiceMain.py stop"
     if 2 restarts within 3 cycles then timeout
-    depends on redis
+    depends on redis-server
