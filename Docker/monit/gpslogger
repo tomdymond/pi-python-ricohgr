@@ -3,5 +3,5 @@ check process piricohmotoGpslogger
     start program = "/opt/pi-python-ricohgr/bin/piricohmotoServiceLogger.py start"
     stop program = "/opt/pi-python-ricohgr/bin/piricohmotoServiceLogger.py stop"
     if 2 restarts within 3 cycles then timeout
-    depends on service gpsd
-    depends on service redis
+    depends on gpsd
+    depends on redis
