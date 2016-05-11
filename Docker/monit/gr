@@ -1,5 +1,5 @@
 check process piricohmotoServiceMain
-    DEPENDS on service redis
+    depend on service redis
     with pidfile "/var/run/piricohmotoServiceMain.pid"
     start program = "/opt/pi-python-ricohgr/bin/piricohmotoServiceMain.py start"
     stop program = "/opt/pi-python-ricohgr/bin/piricohmotoServiceMain.py stop"
