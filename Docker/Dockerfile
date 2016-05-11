@@ -16,7 +16,7 @@ COPY ./monit/gpsd /etc/monit/conf-available/gpsd
 COPY ./monit/gr /etc/monit/conf-available/gr
 COPY ./monit/gpslogger /etc/monit/conf-available/gpslogger
 
-RUN ln -s /etc/monit/conf-available/redis /etc/monit/conf-enabled/redis-server
+RUN ln -s /etc/monit/conf-available/redis-server /etc/monit/conf-enabled/redis-server
 RUN ln -s /etc/monit/conf-available/gr /etc/monit/conf-enabled/gr
 RUN ln -s /etc/monit/conf-available/gpsd /etc/monit/conf-enabled/gpsd
 RUN ln -s /etc/monit/conf-available/gpslogger /etc/monit/conf-enabled/gpslogger
