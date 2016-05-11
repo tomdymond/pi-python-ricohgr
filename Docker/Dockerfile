@@ -4,6 +4,7 @@ RUN useradd --create-home appuser
 COPY ./appuser.sudo /etc/sudoers.d/appuser
 COPY ./start.sh /opt/start.sh
 COPY ./interfaces /etc/network/interfaces
+COPY ./pi-python-ricohgr.init.sh /etc/init.d/pi-python-ricohgr
 RUN chmod 755 /opt/start.sh
 RUN apt-key add /tmp/98C1A6920E0CE4DC.gpgkey
 COPY ./sources.list /etc/apt/sources.list
