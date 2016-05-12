@@ -10,11 +10,12 @@ import datetime
 from time import *
 import os
 import threading
-from piricohmotoRicoh import Ricoh
 
 cwd = path.dirname(path.abspath(__file__))
 sys.path.append('{}/lib/'.format(cwd))
 sys.path.append('{}/../lib/'.format(cwd))
+
+from piricohmotoRicoh import Ricoh
 
 class Download_all(threading.Thread):
   def __init__(self, flow):
