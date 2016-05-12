@@ -1,6 +1,6 @@
 [program:piricohmotoServiceMain]
 command=/opt/pi-python-ricohgr/bin/piricohmotoServiceMain.py
 directory=/tmp
-user=app-user
+user=appuser
 autostart=true
 autorestart=true
