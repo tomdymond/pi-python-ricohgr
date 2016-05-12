@@ -17,9 +17,9 @@ RUN apt-get update && apt-get -y install --no-install-recommends \
 RUN pip install --upgrade pip
 RUN pip install piglow requests dropbox sh ipython
 
-COPY ./etc/supervisor/piricohmotoServiceMain /etc/supervisor/piricohmotoServiceMain
-COPY ./etc/supervisor/piricohmotoServiceLogger /etc/supervisor/piricohmotoServiceLogger
-COPY ./etc/supervisor/piricohmotoServiceNotifier /etc/supervisor/piricohmotoServiceNotifier
+COPY ./etc/supervisor/piricohmotoServiceMain /etc/supervisor/conf.d/piricohmotoServiceMain.conf
+COPY ./etc/supervisor/piricohmotoServiceLogger /etc/supervisor/conf.d/piricohmotoServiceLogger.conf
+COPY ./etc/supervisor/piricohmotoServiceNotifier /etc/supervisor/conf.d/piricohmotoServiceNotifier.conf
 
 RUN git clone https://github.com/tomdymond/pi-python-ricohgr /opt/pi-python-ricohgr
 RUN cd /opt/pi-python-ricohgr && git checkout devel && chmod -R 755 ./bin/
