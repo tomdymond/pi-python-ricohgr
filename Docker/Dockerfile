@@ -14,6 +14,7 @@ RUN apt-get update && apt-get -y install --no-install-recommends \
   python-redis python-yaml python-flask python-pil python-pip python-pyexiv2 python-gps python-smbus python-setuptools \
   redis-server gpsd-clients nginx wireless-tools wpasupplicant net-tools ifupdown isc-dhcp-client \
   && rm -rf /var/cache/apt
+RUN pip install --upgrade pip
 RUN pip install piglow requests dropbox sh ipython
 
 COPY ./etc/supervisor/piricohmotoServiceMain /etc/supervisor/piricohmotoServiceMain
