@@ -1,5 +1,0 @@
-check process gpsd
-    with pidfile "/run/gpsd/gpsd.pid"
-    start program = "/etc/init.d/gpsd start"
-    stop program = "/etc/init.d/gpsd stop"
-    if 2 restarts within 3 cycles then timeout
