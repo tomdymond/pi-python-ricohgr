@@ -1,6 +1,6 @@
 [program:piricohmotoServiceNotifier]
 command=/opt/pi-python-ricohgr/bin/piricohmotoServiceNotifier.py
 directory=/tmp
-user=app-user
+user=appuser
 autostart=true
 autorestart=true
