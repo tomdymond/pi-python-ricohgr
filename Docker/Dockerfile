@@ -5,6 +5,7 @@ COPY ./appuser.sudo /etc/sudoers.d/appuser
 COPY ./start.sh /opt/start.sh
 COPY ./interfaces /etc/network/interfaces
 RUN chmod 755 /opt/start.sh
+RUN mkdir /var/log/piricohmoto && chown appuser /var/log/piricohmoto
 RUN apt-key add /tmp/98C1A6920E0CE4DC.gpgkey
 COPY ./sources.list /etc/apt/sources.list
 COPY ./ubuntu-pi-flavour-makers-ubuntu-ppa-xenial.list /etc/apt/sources.list.d/ubuntu-pi-flavour-makers-ubuntu-ppa-xenial.list
