@@ -11,7 +11,7 @@ COPY ./sources.list /etc/apt/sources.list
 COPY ./ubuntu-pi-flavour-makers-ubuntu-ppa-xenial.list /etc/apt/sources.list.d/ubuntu-pi-flavour-makers-ubuntu-ppa-xenial.list
 RUN apt-get update && apt-get -y install --no-install-recommends \
   supervisor \
-  git vim less \
+  git vim less curl \
   python-redis python-yaml python-flask python-pil python-pip python-pyexiv2 python-gps python-smbus python-setuptools \
   redis-server gpsd-clients nginx wireless-tools wpasupplicant net-tools ifupdown isc-dhcp-client \
   && rm -rf /var/cache/apt
