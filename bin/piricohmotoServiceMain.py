@@ -1,11 +1,19 @@
 #!/usr/bin/env python
+""" 
+Main service 
+"""
 
+import logging
+import time
+from os import sys, path, mkdir
+import datetime
+from time import *
 import os
 import threading
 
-cwd = os.path.dirname(os.path.abspath(__file__))
-os.sys.path.append('{}/lib/'.format(cwd))
-os.sys.path.append('{}/../lib/'.format(cwd))
+cwd = path.dirname(path.abspath(__file__))
+sys.path.append('{}/lib/'.format(cwd))
+sys.path.append('{}/../lib/'.format(cwd))
 
 from piricohmotoRicoh import Ricoh
 
@@ -41,7 +49,10 @@ class Upload_all(threading.Thread):
     """ Make it start """
     self.flow.upload_all()
 
-flow = Ricoh(config_file='/etc/piricohmoto.yml')
+
+
+      
+flow = Ricoh(config_file='/config/piricohmoto.yml')
 conn = flow.connection()
 
 try:
@@ -62,4 +73,4 @@ except (KeyboardInterrupt, SystemExit): #when you press ctrl+c
   b.running = False
   a.join() # wait for the thread to finish what it's doing
   b.join() # wait for the thread to finish what it's doing
-print ("Done.\nExiting.")
+print ("Done.\nExiting.")      

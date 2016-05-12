@@ -9,6 +9,7 @@ from piricohmotoConfig import Config
 from piricohmotoWifi import Wifi
 import redis
 import json
+from os import path
 
 class RicohWifi(Wifi):
   def __init__(self, **kwargs):
@@ -26,7 +27,11 @@ class RicohImage(Image):
         Return true if successful
     """
     print "Starting download of {}".format(self.filename)
-    reponse =  requests.get('http://{ip}/v1/photos/{dirname}/{filename}?size={size}'.format(ip=self.ip, dirname=self.dirname, filename=self.filename, size=size), timeout=10)
+    r = redis.StrictRedis(host='localhost')
+    if path.exists('{}/{}'.format(self.download_dir, self.filename)):
+      r.hmset('IMAGES', {self.filename: json.dumps({'UPLOAD': False, 'GPS': {}})})
+      return True
+    reponse = requests.get('http://{ip}/v1/photos/{dirname}/{filename}?size={size}'.format(ip=self.ip, dirname=self.dirname, filename=self.filename, size=size), timeout=10)
     print reponse.status_code
     if reponse.status_code == 200:
       print "saving file..."
@@ -34,9 +39,7 @@ class RicohImage(Image):
         for chunk in reponse.iter_content(chunk_size=1024): 
           if chunk: # filter out keep-alive new chunks
             f.write(chunk)
-      r = redis.StrictRedis(host='localhost')
-      gg = {'UPLOAD': False, 'GPS': {}}
-      r.hmset('IMAGES', {self.filename: json.dumps(gg)})
+      r.hmset('IMAGES', {self.filename: json.dumps({'UPLOAD': False, 'GPS': {}})})
       return True
     return False
 

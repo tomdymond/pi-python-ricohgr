@@ -16,7 +16,30 @@ status codes:
  - yellow: No network connection
  - green: Connected to internet
  - red: A service is not running
+
+
+
+Create base image:
+ debootstrap xenial xenial
+ sudo tar -C xenial -c . | docker import - xenial
+
+This image is too far. Find a way to create a smaller image. maybe the way debootstrap is used?
+
+
+Add to /etc/modules:
+
+i2c-dev
+i2c-bcm2708
+
+Add to /boot/config
+
+dtparam=i2c_arm=on
+
+
+
  
+ docker build -t test5 .
+ docker run -it -v /root/config:/config --privileged -v /dev/bus/usb:/dev/bus/usb test5
 
 
 
