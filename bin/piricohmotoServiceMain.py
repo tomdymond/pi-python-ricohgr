@@ -71,6 +71,8 @@ except (KeyboardInterrupt, SystemExit): #when you press ctrl+c
   print ("\nKilling Threads...")
   a.running = False
   b.running = False
+  c.running = False
   a.join() # wait for the thread to finish what it's doing
   b.join() # wait for the thread to finish what it's doing
+  c.join()
 print ("Done.\nExiting.")      
