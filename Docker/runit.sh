@@ -6,9 +6,7 @@ NAME="${1}"
 
 COMMAND=$1
 
-mkdir -p /persist/${NAME}/redis
-mkdir -p /persist/${NAME}/download
-mkdir -p /persist/${NAME}/logs
+mkdir -p /persist/${NAME}/{redis,download,logs}
 
 docker run -it --net=host \
   -v /root/config:/config \
