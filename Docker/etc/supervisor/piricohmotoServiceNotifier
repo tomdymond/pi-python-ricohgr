@@ -4,3 +4,6 @@ directory=/tmp
 user=appuser
 autostart=true
 autorestart=true
+startretries=3
+stderr_logfile=/var/log/piricohmoto/piricohmotoServiceNotifier.err.log
+stdout_logfile=/var/log/piricohmoto/piricohmotoServiceNotifier.out.log
