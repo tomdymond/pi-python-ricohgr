@@ -1,11 +1,16 @@
 #!/usr/bin/env bash
 
-mkdir -p /persist/redis
-mkdir -p /persist/download
+CONTAINER="test5"
+COMMAND=$1
+
+mkdir -p /persist/${CONTAINER}/redis
+mkdir -p /persist/${CONTAINER}/download
+mkdir -p /persist/${CONTAINER}/logs
 
 docker run -it --net=host \
   -v /root/config:/config \
-  -v /persist/redis:/var/lib/redis \
-  -v /persist/download:/download \
+  -v /persist/${CONTAINER}/redis:/var/lib/redis \
+  -v /persist/${CONTAINER}/download:/download \
+  -v /persist/${CONTAINER}/logs:/var/log/piricohmoto
   --privileged \
-  test5 $1
+  ${CONTAINER} ${COMMAND}
