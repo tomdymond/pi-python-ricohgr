@@ -1,18 +1,25 @@
 #!/usr/bin/env python
 """
-For now, a simple endpoint to display visual status of my Pi. It's a start...
+Service for displaying certain alert conditions
+
+colour/flashing/duration
+
+For example http://127.0.0.1/red/flashing/1
+
 """
 
 import piglow
 import time
 import threading
+from datetime import datetime
 
 from flask import Flask
 app = Flask(__name__)
 
 class Notifier(threading.Thread):
-  def __init__(self, colour='green', flashing=True, power=100):
+  def __init__(self, colour='green', flashing=True, power=100, duration=5):
     threading.Thread.__init__(self)
+    self.duration = duration
     self.colour = colour
     self.running = True
     self.piglow = piglow
@@ -28,7 +35,10 @@ class Notifier(threading.Thread):
   def run(self):
     """ Make it start """
     print ("run")
-    while self.running:
+    time_start=int(datetime.now().strftime('%s'))
+    time_actual=int(datetime.now().strftime('%s'))
+    while self.running and time_actual < self.duration:
+      time_actual=int(datetime.now().strftime('%s'))
       if self.flashing:
         self.piglow.clear()
         self.piglow.show()
