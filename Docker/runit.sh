@@ -2,9 +2,9 @@
 
 NAME="${1}"
 
-[ ! "${NAME}" ] && NAME="test5"
+[ ! "${NAME}" ] && echo "Must specify container name"; exit 1
 
-COMMAND=$1
+COMMAND="${2}"
 
 mkdir -p /persist/${NAME}/{redis,download,logs}
 
