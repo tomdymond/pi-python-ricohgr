@@ -16,7 +16,7 @@ RUN apt-get update && apt-get -y install --no-install-recommends \
 RUN pip install --upgrade pip
 RUN pip install piglow requests dropbox sh ipython
 
-COPY ./interfaces /etc/network/interfaces
+COPY ./etc/network/interfaces /etc/network/interfaces
 RUN useradd --create-home appuser
 
 COPY ./etc/sudoers.d/appuser.sudo /etc/sudoers.d/appuser
