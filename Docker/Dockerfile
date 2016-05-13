@@ -19,7 +19,7 @@ RUN pip install piglow requests dropbox sh ipython
 COPY ./interfaces /etc/network/interfaces
 RUN useradd --create-home appuser
 
-COPY ./appuser.sudo /etc/sudoers.d/appuser
+COPY ./etc/sudoers.d/appuser.sudo /etc/sudoers.d/appuser
 COPY ./start.sh /opt/start.sh
 RUN chmod 755 /opt/start.sh
 COPY ./etc/supervisor/piricohmotoServiceMain /etc/supervisor/conf.d/piricohmotoServiceMain.conf
