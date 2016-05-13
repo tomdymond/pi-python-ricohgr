@@ -1,10 +1,12 @@
 FROM tomdymond/xenial-armv7l
+MAINTAINER Tom Dymond
 
 RUN apt-key adv --keyserver keyserver.ubuntu.com --recv 0E0CE4DC
-#COPY ./98C1A6920E0CE4DC.gpgkey /tmp/98C1A6920E0CE4DC.gpgkey
-#RUN apt-key add /tmp/98C1A6920E0CE4DC.gpgkey
+
 COPY ./etc/apt/sources.list /etc/apt/sources.list
-COPY ./ubuntu-pi-flavour-makers-ubuntu-ppa-xenial.list /etc/apt/sources.list.d/ubuntu-pi-flavour-makers-ubuntu-ppa-xenial.list
+
+RUN echo "deb http://ppa.launchpad.net/ubuntu-pi-flavour-makers/ppa/ubuntu xenial main" | tee -a /etc/apt/sources.list.d/ubuntu-pi-flavour-makers-ubuntu-ppa-xenial.list
+
 RUN apt-get update && apt-get -y install --no-install-recommends \
   supervisor \
   git vim less curl \
