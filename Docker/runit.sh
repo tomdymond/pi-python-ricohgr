@@ -2,7 +2,7 @@
 
 NAME="${1}"
 
-[ ! "${NAME}" ] && echo "Must specify container name"; exit 1
+[ ! "${NAME}" ] && exit 1
 
 COMMAND="${2}"
 
