@@ -1,16 +1,19 @@
 #!/usr/bin/env bash
 
-CONTAINER="test5"
+NAME="${1}"
+
+[ ! "${NAME}" ] && NAME="test5"
+
 COMMAND=$1
 
-mkdir -p /persist/${CONTAINER}/redis
-mkdir -p /persist/${CONTAINER}/download
-mkdir -p /persist/${CONTAINER}/logs
+mkdir -p /persist/${NAME}/redis
+mkdir -p /persist/${NAME}/download
+mkdir -p /persist/${NAME}/logs
 
 docker run -it --net=host \
   -v /root/config:/config \
-  -v /persist/${CONTAINER}/redis:/var/lib/redis \
-  -v /persist/${CONTAINER}/download:/download \
-  -v /persist/${CONTAINER}/logs:/var/log/piricohmoto
+  -v /persist/${NAME}/redis:/var/lib/redis \
+  -v /persist/${NAME}/download:/download \
+  -v /persist/${NAME}/logs:/var/log/piricohmoto
   --privileged \
-  ${CONTAINER} ${COMMAND}
+  ${NAME} ${COMMAND}
