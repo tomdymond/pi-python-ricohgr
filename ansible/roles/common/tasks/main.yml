@@ -1,0 +1,8 @@
+---
+# file: roles/common/tasks/main.yml
+
+- name: be sure python is installed
+  apt: name=python state=installed
+  tags: python
+  become: true
+
