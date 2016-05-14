@@ -3,7 +3,7 @@
 
 
 - name: be sure python is installed
-  apt: name=python state=installed
+  apt: name={{ item }} state=installed
   tags: python
   with_items:
     - git
@@ -13,10 +13,14 @@
     - docker.io
 
 - name: Be sure certain folders are present
-  file: path=/persist owner=root group=root mode=0700
+  file: path=/persist owner=root group=root mode=0700 state=directory
 
 - name: Copy a base interfaces file that has a static IP
   template: src=templates/interfaces.j2 dest=/etc/network/interfaces owner=root group=root mode=0644
 
-
+- name: Copy files to get bluetooth internet kind of working
+  copy: src=files/{{ item }} dest=/root/{{ item }}
+  with_items:
+    - bt-network.sh
+    - bt-pan.py
 
