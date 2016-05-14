@@ -1,8 +1,16 @@
 ---
 # file: roles/common/tasks/main.yml
 
+
 - name: be sure python is installed
   apt: name=python state=installed
   tags: python
-  become: true
+  with_items:
+    - python
+    - docker.io
 
+#- name: Be sure certain folders are present
+#  file: path=/persist owner=root group=root mode=0700
+
+- name: Copy a base interfaces file that has a static IP
+  template: src=templates/interfaces.j2 dest=/etc/network/interfaces owner=root group=root mode=0644
