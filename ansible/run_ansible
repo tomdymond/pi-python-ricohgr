@@ -1,0 +1,1 @@
+ansible-playbook -i production site.yml --vault-password-file /Users/Tom/.vault_pass.txt

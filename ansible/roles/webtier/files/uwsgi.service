@@ -1,0 +1,17 @@
+[Unit]
+Description=uWSGI
+Documentation=man:uwsgi(1)
+
+[Service]
+Environment=statedir=/var/cache/uwsgi
+ExecStartPre=/bin/mkdir -p ${statedir}
+ExecStart=/home/venvs/piricohmoto/bin/uwsgi --master --emperor /etc/uwsgi/vassals --die-on-term --uid www-data --gid www-data --logto /var/log/uwsgi/emperor.log
+Restart=always
+KillSignal=SIGQUIT
+Type=notify
+StandardError=syslog
+NotifyAccess=all
+
+[Install]
+WantedBy=multi-user.target
+

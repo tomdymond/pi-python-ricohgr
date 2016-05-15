@@ -6,17 +6,52 @@
   apt: name={{ item }} state=installed
   tags: python
   with_items:
+    - jq
+    - htop
+    - dstat
+    - tmux
+    - build-essential
+    - python-dev
+    - unzip
+    - wget
     - git
     - bluez
+    - python-virtualenv
     - python-dbus
     - python
     - docker.io
+    - hostapd
+    - isc-dhcp-server
+
+- name: Create /home/venvs
+  file: path=/home/venvs state=directory
+
+- name: Manually create the initial virtualenv
+  command: virtualenv /home/venvs/piricohmoto -p /usr/bin/python2 creates="/home/venvs/piricohmoto"
 
 - name: Be sure certain folders are present
-  file: path=/persist owner=root group=root mode=0700 state=directory
+  file: path={{ item }} owner=root group=root mode=0700 state=directory
+  with_items:
+    - /persist
+    - /config
 
 - name: Copy a base interfaces file that has a static IP
-  template: src=templates/interfaces.j2 dest=/etc/network/interfaces owner=root group=root mode=0644
+  template: src=templates/interfaces.j2 dest=/etc/network/interfaces owner=root group=root mode=0644 backup=yes
+
+- name: Copy defaults hostapd configuration
+  copy: src=files/hostapd dest=/etc/default/hostapd owner=root group=root mode=0644 backup=yes
+  notify:
+    - restart hostapd
+
+- name: Copy the hostapd configuration
+  template: src=templates/hostapd.conf.j2 dest=/etc/hostapd/hostapd.conf owner=root group=root mode=0644 backup=yes
+  notify:
+    - restart hostapd
+
+- name: Copy the dhcp server config
+  template: src=templates/dhcpd.conf.j2 dest=/etc/dhcp/dhcpd.conf owner=root group=root mode=0644 backup=yes
+  notify:
+    - restart isc-dhcp-server
 
 - name: Copy files to get bluetooth internet kind of working
   copy: src=files/{{ item }} dest=/root/{{ item }}

@@ -1,0 +1,60 @@
+---
+- name: Ensure packages are installed
+  apt: name={{ item }} state=installed
+  tags: packages
+  with_items:
+    - nginx
+
+- name: Install some pip packages
+  pip: name={{ item }} state=latest virtualenv=/home/venvs/piricohmoto
+  with_items:
+    - flask
+    - uWSGI
+
+- name: Create nginx SSL dir
+  file: path=/etc/nginx/ssl state=directory owner=root group=root mode=0600
+
+- name: Copy over SSL PEM certificate
+  template: src=templates/piricohmoto.pem.j2 dest=/etc/nginx/ssl/piricohmoto.pem owner=root group=root mode=0600
+  notify: restart nginx
+
+- name: Create uWSGI log dir
+  file: path=/var/log/uwsgi state=directory owner=www-data group=www-data
+
+- name: Copy over nginx base config
+  copy: src=files/piricohmoto.conf dest=/etc/nginx/sites-available/piricohmoto owner=root group=root mode=0600
+  notify: restart nginx
+
+- name: Ensure my piricohmoto folder exists
+  file: path=/var/www/piricohmoto state=directory owner=root group=root mode=0755
+
+- name: Put a dummy flask file to see if stuff works
+  copy: src=files/hello.py dest=/var/www/piricohmoto/hello.py
+
+- name: Create some folders 
+  file: path={{ item }} state=directory owner=root group=root mode=755
+  with_items:
+    - /etc/uwsgi
+    - /etc/uwsgi/vassals
+
+- name: Copy over uWSGI config
+  copy: src=files/piricohmoto.uwsgi.ini dest=/var/www/piricohmoto/piricohmoto_uwsgi.ini owner=root group=root mode=0644
+  notify: restart nginx
+
+- name: Link config in vassals folder
+  file: dest=/etc/uwsgi/vassals/piricohmoto_uwsgi.ini src=/var/www/piricohmoto/piricohmoto_uwsgi.ini state=link 
+
+- name: Copy over the uwsgi.init systemd job
+  copy: src=files/uwsgi.service dest=/etc/systemd/system/uwsgi.service owner=root group=root mode=0644
+  notify:
+   - reload systemctl
+   - restart uwsgi
+
+- name: Link nginx base config
+  file: src=/etc/nginx/sites-available/piricohmoto dest=/etc/nginx/sites-enabled/piricohmoto state=link
+  notify: restart nginx
+
+- name: Give ownership of all files in folder to www-data
+  file: path=/var/www/piricohmoto owner=www-data group=www-data recurse=true
+
+
