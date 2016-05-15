@@ -8,11 +8,12 @@ def create_app():
   Bootstrap(app)
   return app
 
+app = create_app()
+
 @app.route("/")
 def hello():
   return render_template('test.html',testvar='foo')
 
 if __name__ == "__main__":
-  app = create_app()
   app.run(host='0.0.0.0', port=8080)
 
