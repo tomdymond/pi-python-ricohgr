@@ -9,6 +9,7 @@
   pip: name={{ item }} state=latest virtualenv=/home/venvs/piricohmoto
   with_items:
     - flask
+    - flask_bootstrap
     - uWSGI
 
 - name: Create nginx SSL dir

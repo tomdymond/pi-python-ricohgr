@@ -34,6 +34,7 @@
   with_items:
     - /persist
     - /config
+    - /code
 
 - name: Copy a base interfaces file that has a static IP
   template: src=templates/interfaces.j2 dest=/etc/network/interfaces owner=root group=root mode=0644 backup=yes
@@ -58,4 +59,12 @@
   with_items:
     - bt-network.sh
     - bt-pan.py
+
+- name: Check out piricohmoto project into /code folder
+  git: repo=https://github.com/tomdymond/pi-python-ricohgr
+       dest=/code/piricohmoto
+       version=devel update=yes
+
+- name: Create a symlink for the config_app
+  file: dest=/code/piricohmoto/config_app src=/var/www/piricohmoto/config_app state=link
 
