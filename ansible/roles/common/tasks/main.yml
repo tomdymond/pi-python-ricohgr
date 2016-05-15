@@ -30,11 +30,11 @@
   command: virtualenv /home/venvs/piricohmoto -p /usr/bin/python2 creates="/home/venvs/piricohmoto"
 
 - name: Be sure certain folders are present
-  file: path={{ item }} owner=root group=root mode=0700 state=directory
+  file: path={{ item.path }} owner=root group=root mode={{ item.perm }} state=directory
   with_items:
-    - /persist
-    - /config
-    - /code
+    - { path: '/persist', perm: '0600' }
+    - { path: '/config', perm: '0600' }
+    - { path: '/code', perm: '0755' }
 
 - name: Copy a base interfaces file that has a static IP
   template: src=templates/interfaces.j2 dest=/etc/network/interfaces owner=root group=root mode=0644 backup=yes
@@ -66,5 +66,5 @@
        version=devel update=yes
 
 - name: Create a symlink for the config_app
-  file: dest=/code/piricohmoto/config_app src=/var/www/piricohmoto/config_app state=link
+  file: src=/code/piricohmoto/config_app dest=/var/www/piricohmoto/config_app state=link
 

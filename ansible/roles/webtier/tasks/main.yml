@@ -56,6 +56,12 @@
   notify: restart nginx
 
 - name: Give ownership of all files in folder to www-data
-  file: path=/var/www/piricohmoto owner=www-data group=www-data recurse=true
+  file: path={{ item }} owner=www-data group=www-data recurse=true
+  with_items:
+    - /code/piricohmoto/config_app
+    - /var/www/piricohmoto
+
+- name: Create a symlink for the config_app
+  file: src=/code/piricohmoto/config_app dest=/var/www/piricohmoto/config_app state=link
 
 
