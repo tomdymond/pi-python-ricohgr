@@ -29,9 +29,6 @@
 - name: Ensure my piricohmoto folder exists
   file: path=/var/www/piricohmoto state=directory owner=root group=root mode=0755
 
-- name: Put a dummy flask file to see if stuff works
-  copy: src=files/hello.py dest=/var/www/piricohmoto/hello.py
-
 - name: Create some folders 
   file: path={{ item }} state=directory owner=root group=root mode=755
   with_items:

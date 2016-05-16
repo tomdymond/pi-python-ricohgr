@@ -10,7 +10,9 @@ auto eth0
 iface eth0 inet static
 address {{ host_ip }}
 netmask 255.255.255.0
-gateway 192.168.1.1
+up ip route del 192.168.1.0/24
+post-up ip route add 192.168.1.0/24 dev eth0 metric 1
+up route add default gw 192.168.1.1 metric 1
 dns-nameservers 8.8.8.8
 
 auto wlan0
@@ -18,4 +20,7 @@ iface wlan0 inet static
 address 10.0.0.1
 netmask 255.255.255.0
 
+auto wlan1
+iface wlan1 inet dhcp
+  wpa-conf /etc/wpa_supplicant/wpa_supplicant.conf
 
