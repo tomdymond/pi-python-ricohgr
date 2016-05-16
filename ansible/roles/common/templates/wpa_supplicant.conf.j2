@@ -1,0 +1,13 @@
+ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev
+update_config=1
+country=GB
+
+{% for network in networks %}
+network={
+        ssid="{{ network.ssid }}"
+        psk="{{ network.psk }}"
+        id_str="{{ network.id_str }}"
+        priority={{ network.priority}}
+}
+{% endfor %}
+
