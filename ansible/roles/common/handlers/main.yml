@@ -5,3 +5,6 @@
 - name: restart isc-dhcp-server
   service: name=isc-dhcp-server state=restarted
 
+- name: restart networking
+  service: name=networking state=restarted
+

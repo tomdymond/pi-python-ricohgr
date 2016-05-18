@@ -6,6 +6,7 @@
   apt: name={{ item }} state=installed
   tags: python
   with_items:
+    - wireless-tools
     - wpasupplicant
     - jq
     - htop
@@ -39,9 +40,19 @@
 
 - name: Copy a base interfaces file that has a static IP
   template: src=templates/interfaces.j2 dest=/etc/network/interfaces owner=root group=root mode=0644 backup=yes
+  notify:
+    - restart networking
+
+- name: Copy a base 10-network.rules file
+  template: src=templates/10-network.rules.j2 dest=/etc/udev/rules.d/10-network.rules owner=root group=root mode=0644 backup=yes
+
+- name: Copy iptables script
+  copy: src=files/iptables.sh dest=/etc/network/if-up.d/iptables owner=root group=root mode=0755
 
 - name: Copy a base wpa_supplicant file
   template: src=templates/wpa_supplicant.conf.j2 dest=/etc/wpa_supplicant/wpa_supplicant.conf owner=root group=root mode=0644 backup=yes
+  notify:
+    - restart networking
 
 - name: Copy defaults hostapd configuration
   copy: src=files/hostapd dest=/etc/default/hostapd owner=root group=root mode=0644 backup=yes
