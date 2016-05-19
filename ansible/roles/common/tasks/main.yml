@@ -29,6 +29,9 @@
 - name: Create /home/venvs
   file: path=/home/venvs state=directory
 
+- name: Copy file to disable sleep on wifi interface
+  file: src=files/8188cu.conf dest=/etc/modprobe.d/8188cu.conf
+
 - name: Manually create the initial virtualenv
   command: virtualenv /home/venvs/piricohmoto -p /usr/bin/python2 creates="/home/venvs/piricohmoto"
 
