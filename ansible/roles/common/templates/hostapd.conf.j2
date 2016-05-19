@@ -1,8 +1,8 @@
 # Managed by ansible
 
-interface=wlan0
+interface=wlan1
 driver=nl80211
-ssid={{ ansible_hostname }}
+ssid={{ inventory_hostname }}
 hw_mode=g
 channel=6
 macaddr_acl=0

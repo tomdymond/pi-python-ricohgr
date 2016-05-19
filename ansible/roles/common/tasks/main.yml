@@ -17,6 +17,7 @@
     - unzip
     - wget
     - git
+    - vim
     - bluez
     - python-virtualenv
     - python-dbus
@@ -43,11 +44,17 @@
   notify:
     - restart networking
 
+- name: Copy a hostname file
+  template: src=templates/hostname.j2 dest=/etc/hostname owner=root group=root mode=0644 backup=yes
+
+- name: Copy a hosts file
+  template: src=templates/hosts.j2 dest=/etc/hosts owner=root group=root mode=0644 backup=yes
+
 - name: Copy a base 10-network.rules file
   template: src=templates/10-network.rules.j2 dest=/etc/udev/rules.d/10-network.rules owner=root group=root mode=0644 backup=yes
 
 - name: Copy iptables script
-  copy: src=files/iptables.sh dest=/etc/network/if-up.d/iptables owner=root group=root mode=0755
+  copy: src=files/iptables dest=/etc/network/iptables owner=root group=root mode=0755
 
 - name: Copy a base wpa_supplicant file
   template: src=templates/wpa_supplicant.conf.j2 dest=/etc/wpa_supplicant/wpa_supplicant.conf owner=root group=root mode=0644 backup=yes
@@ -74,12 +81,3 @@
   with_items:
     - bt-network.sh
     - bt-pan.py
-
-- name: Check out piricohmoto project into /code folder
-  git: repo=https://github.com/tomdymond/pi-python-ricohgr
-       dest=/code/piricohmoto
-       version=devel update=yes
-
-- name: Create a symlink for the config_app
-  file: src=/code/piricohmoto/config_app dest=/var/www/piricohmoto/config_app state=link
-
