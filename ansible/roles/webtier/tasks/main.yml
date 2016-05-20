@@ -22,7 +22,7 @@
   user: name=appuser shell=/bin/bash groups=i2c
 
 - name: Copy sudoers.d file
-  copy: src=files/appuser.sudo dest=/etc/sudoers.d/appuser.sudo 
+  copy: src=files/appuser.sudo dest=/etc/sudoers.d/appuser 
 
 - name: Install some pip packages
   pip: name={{ item }} state=latest virtualenv=/home/venvs/piricohmoto
