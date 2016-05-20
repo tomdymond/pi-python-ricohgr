@@ -1,5 +1,5 @@
 [program:piricohmotoServiceMain]
-command=/opt/pi-python-ricohgr/bin/piricohmotoServiceMain.py
+command=/home/venvs/piricohmoto/bin/python /code/pi-python-ricohgr/bin/piricohmotoServiceMain.py
 directory=/tmp
 user=appuser
 autostart=true

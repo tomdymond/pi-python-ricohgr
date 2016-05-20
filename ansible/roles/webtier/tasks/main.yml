@@ -3,6 +3,12 @@
   apt: name={{ item }} state=installed
   tags: packages
   with_items:
+    - python-pil
+    - python-pip
+    - python-pyexiv2
+    - python-gps
+    - python-smbus
+    - gpsd-clients 
     - nginx
 
 - name: Check out piricohmoto project into /code folder
@@ -10,14 +16,33 @@
        dest=/code/piricohmoto
        version=devel update=yes
 
+- name: Ensure appuser exists
+  user: name=appuser shell=/bin/bash
 
+- name: Copy sudoers.d file
+  copy: src=files/appuser.sudo dest=/etc/sudoers.d/appuser.sudo 
 
 - name: Install some pip packages
   pip: name={{ item }} state=latest virtualenv=/home/venvs/piricohmoto
   with_items:
+    - redis
+    - PyYaml
     - flask
     - flask_bootstrap
     - uWSGI
+    - piglow
+    - requests
+    - dropbox
+    - sh
+
+- name: Copy supervisor files
+  copy: src={{ item }} dest=/etc/supervisor/conf.d/{{ item }}.conf
+  with_items:
+    - piricohmotoServiceMain
+    - piricohmotoServiceLogger
+    - piricohmotoServiceNotifier
+  notify:
+    - restart supervisor
 
 - name: Create nginx SSL dir
   file: path=/etc/nginx/ssl state=directory owner=root group=root mode=0600
@@ -36,11 +61,13 @@
 - name: Ensure my piricohmoto folder exists
   file: path=/var/www/piricohmoto state=directory owner=root group=root mode=0755
 
-- name: Create some folders 
-  file: path={{ item }} state=directory owner=root group=root mode=755
+- name: Be sure certain folders are present
+  file: path={{ item.path }} owner={{ item.owner }} group={{ item.group }} mode={{ item.mode }} state=directory
   with_items:
-    - /etc/uwsgi
-    - /etc/uwsgi/vassals
+    - { path: '/etc/uwsgi', owner: 'root', group: 'root', mode: '0700' }
+    - { path: '/etc/uwsgi/vassals', owner: 'root', group: 'root', mode: '0700' }
+    - { path: '/var/log/piricohmoto', owner: 'appuser', group: 'root', mode: '0755' }
+    - { path: '/download', owner: 'appuser', group: 'appuser', mode: '0700' }
 
 - name: Copy over uWSGI config
   copy: src=files/piricohmoto.uwsgi.ini dest=/var/www/piricohmoto/piricohmoto_uwsgi.ini owner=root group=root mode=0644
@@ -68,6 +95,5 @@
 - name: Create a symlink for the config_app
   file: src=/code/piricohmoto/config_app dest=/var/www/piricohmoto/config_app state=link
 
-
-
-
+- name: Copy over piricohmoto config 
+  template: src=templates/piricohmoto.yml.j2 dest=/config/piricohmoto.yml owner=appuser group=appuser mode=0600

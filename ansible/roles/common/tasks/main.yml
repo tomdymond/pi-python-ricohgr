@@ -1,11 +1,12 @@
 ---
 # file: roles/common/tasks/main.yml
 
-
 - name: be sure python is installed
-  apt: name={{ item }} state=installed
-  tags: python
+  apt: name={{ item }} state=present
+  tags: packages
   with_items:
+    - supervisor
+    - parallel
     - wireless-tools
     - wpasupplicant
     - jq
@@ -13,12 +14,12 @@
     - dstat
     - tmux
     - build-essential
-    - python-dev
     - unzip
     - wget
     - git
     - vim
     - bluez
+    - python-dev
     - python-virtualenv
     - python-dbus
     - python
@@ -26,21 +27,28 @@
     - hostapd
     - isc-dhcp-server
 
+- name: Install some pip packages
+  pip: name={{ item.name }} state={{ item.state }}
+  with_items:
+    - { name: ipython, state: latest }
+    - { name: ipdb, state: latest }
+    - { name: wifi, state: absent }
+
 - name: Create /home/venvs
   file: path=/home/venvs state=directory
 
 - name: Copy file to disable sleep on wifi interface
-  file: src=files/8188cu.conf dest=/etc/modprobe.d/8188cu.conf
+  copy: src=files/8192cu.conf dest=/etc/modprobe.d/8192cu.conf
 
 - name: Manually create the initial virtualenv
-  command: virtualenv /home/venvs/piricohmoto -p /usr/bin/python2 creates="/home/venvs/piricohmoto"
+  command: virtualenv /home/venvs/piricohmoto -p /usr/bin/python2 creates="/home/venvs/piricohmoto" --system-site-packages
 
 - name: Be sure certain folders are present
-  file: path={{ item.path }} owner=root group=root mode={{ item.perm }} state=directory
+  file: path={{ item.path }} owner={{ item.owner }} group={{ item.group }} mode={{ item.mode }} state=directory
   with_items:
-    - { path: '/persist', perm: '0600' }
-    - { path: '/config', perm: '0600' }
-    - { path: '/code', perm: '0755' }
+    - { path: '/persist', owner: 'root', group: 'root', mode: '0600' }
+    - { path: '/config', owner: 'root', group: 'root', mode: '0750' }
+    - { path: '/code', owner: 'root', group: 'root', mode: '0755' }
 
 - name: Copy a base interfaces file that has a static IP
   template: src=templates/interfaces.j2 dest=/etc/network/interfaces owner=root group=root mode=0644 backup=yes

@@ -10,7 +10,6 @@ class Config(object):
   def __init__(self, **kwargs):
     self.config = self.load_config(kwargs['config_file'])
     self.config_file = kwargs['config_file']
-    self.piglowclient = piglowClient(self)
 
   def notify(self, colour, duration=5, flashing=False):
     """ Send a request to the notificatin daemon """
