@@ -16,7 +16,7 @@ class Wifi(Config):
     """ Return a list of access points """
     ssids = []
     try:
-      output = sh.sudo('iwlist','wlan0','scan').stdout
+      output = sh.sudo('/sbin/iwlist','wlan0','scan').stdout
       for line in output.split('\n'):
         if "ESSID" in line:
           ssid = re.findall(r'"(.*?)"', line)[0]
@@ -29,7 +29,7 @@ class Wifi(Config):
   def get_current_ssid(self):
     """ Just return the current ssid """
     try:
-      output = sh.sudo('iwgetid').stdout
+      output = sh.sudo('/sbin/iwgetid').stdout
       if output:
         s = output.split()[1]
         ssid = re.findall(r'"(.*?)"', s)[0]
@@ -49,9 +49,9 @@ class Wifi(Config):
   def manage_wlan0(self, action="up"):
     """ Manage wlan0 """
     if action == 'up':
-      if_script = 'ifup'
+      if_script = '/sbin/ifup'
     else:
-      if_script = 'ifdown'
+      if_script = '/sbin/ifdown'
 
     try:
       sh.sudo(if_script, 'wlan0')

@@ -30,8 +30,8 @@
 - name: Install some pip packages
   pip: name={{ item.name }} state={{ item.state }}
   with_items:
-    - { name: ipython, state: latest }
-    - { name: ipdb, state: latest }
+    - { name: ipython, state: absent }
+    - { name: ipdb, state: absent }
     - { name: wifi, state: absent }
 
 - name: Create /home/venvs
@@ -47,7 +47,7 @@
   file: path={{ item.path }} owner={{ item.owner }} group={{ item.group }} mode={{ item.mode }} state=directory
   with_items:
     - { path: '/persist', owner: 'root', group: 'root', mode: '0600' }
-    - { path: '/config', owner: 'root', group: 'root', mode: '0750' }
+    - { path: '/config', owner: 'root', group: 'root', mode: '0755' }
     - { path: '/code', owner: 'root', group: 'root', mode: '0755' }
 
 - name: Copy a base interfaces file that has a static IP
@@ -92,3 +92,14 @@
   with_items:
     - bt-network.sh
     - bt-pan.py
+
+- name: Enable i2c
+  lineinfile: dest=/boot/config.txt line="dtparam=i2c_arm=on"
+
+- name: Enable i2c in modules
+  lineinfile: dest=/etc/modules line={{ item }}
+  with_items: 
+    - i2c-dev
+    - i2c-bcm2708
+
+

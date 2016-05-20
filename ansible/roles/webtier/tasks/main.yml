@@ -8,8 +8,10 @@
     - python-pyexiv2
     - python-gps
     - python-smbus
+    - gpsd
     - gpsd-clients 
     - nginx
+    - redis-server
 
 - name: Check out piricohmoto project into /code folder
   git: repo=https://github.com/tomdymond/pi-python-ricohgr
@@ -17,7 +19,7 @@
        version=devel update=yes
 
 - name: Ensure appuser exists
-  user: name=appuser shell=/bin/bash
+  user: name=appuser shell=/bin/bash groups=i2c
 
 - name: Copy sudoers.d file
   copy: src=files/appuser.sudo dest=/etc/sudoers.d/appuser.sudo 
@@ -34,6 +36,8 @@
     - requests
     - dropbox
     - sh
+    - ipython
+    - ipdb
 
 - name: Copy supervisor files
   copy: src={{ item }} dest=/etc/supervisor/conf.d/{{ item }}.conf
@@ -97,3 +101,15 @@
 
 - name: Copy over piricohmoto config 
   template: src=templates/piricohmoto.yml.j2 dest=/config/piricohmoto.yml owner=appuser group=appuser mode=0600
+
+- name: Ensure services are running
+  service: name=redis-server state=running enabled=yes
+  tags: services
+  with_items: 
+    - gpsd
+    - redis-server
+    - supervisor
+    - nginx
+    - uwsgi
+
+
