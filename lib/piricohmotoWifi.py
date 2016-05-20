@@ -16,7 +16,7 @@ class Wifi(Config):
     """ Return a list of access points """
     ssids = []
     try:
-      output = sh.sudo('/sbin/iwlist','wlan0','scan').stdout
+      output = sh.Command('/sbin/iwlist')('wlan0', 'scan').stdout
       for line in output.split('\n'):
         if "ESSID" in line:
           ssid = re.findall(r'"(.*?)"', line)[0]
