@@ -103,7 +103,7 @@
   template: src=templates/piricohmoto.yml.j2 dest=/config/piricohmoto.yml owner=appuser group=appuser mode=0600
 
 - name: Ensure services are running
-  service: name=redis-server state=running enabled=yes
+  service: name={{ item }} state=running enabled=yes
   tags: services
   with_items: 
     - gpsd

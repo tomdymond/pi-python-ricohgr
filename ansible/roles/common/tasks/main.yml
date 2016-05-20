@@ -1,6 +1,12 @@
 ---
 # file: roles/common/tasks/main.yml
 
+- name: Remove some packages
+  apt: name={{ item }} state=absent
+  tags: packages
+  with_items:
+    - docker.io
+
 - name: be sure python is installed
   apt: name={{ item }} state=present
   tags: packages
@@ -23,7 +29,6 @@
     - python-virtualenv
     - python-dbus
     - python
-    - docker.io
     - hostapd
     - isc-dhcp-server
 
@@ -101,5 +106,13 @@
   with_items: 
     - i2c-dev
     - i2c-bcm2708
+
+- name: Ensure services are running
+  service: name={{ item }} state=running enabled=yes
+  tags: services
+  with_items: 
+    - hostapd
+    - isc-dhcp-server
+
 
 
