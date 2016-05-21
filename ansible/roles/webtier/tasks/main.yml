@@ -39,6 +39,9 @@
     - ipython
     - ipdb
 
+- name: Ensure systemd file for supervisor is installed
+  copy: src=/lib/systemd/system/supervisor.service dest=/etc/systemd/system/supervisor.service remote_src=True
+
 - name: Copy supervisor files
   copy: src={{ item }} dest=/etc/supervisor/conf.d/{{ item }}.conf
   with_items:
@@ -111,5 +114,3 @@
     - supervisor
     - nginx
     - uwsgi
-
-

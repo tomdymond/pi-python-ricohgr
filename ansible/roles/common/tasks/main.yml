@@ -35,7 +35,8 @@
 - name: Install some pip packages
   pip: name={{ item.name }} state={{ item.state }}
   with_items:
-    - { name: ipython, state: absent }
+    - { name: wireless, state: present }
+    - { name: ipython, state: present }
     - { name: ipdb, state: absent }
     - { name: wifi, state: absent }
 

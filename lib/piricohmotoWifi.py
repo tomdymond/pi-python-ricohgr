@@ -5,12 +5,15 @@ import sh
 import re
 import sys
 import time
+import os
 from piricohmotoConfig import Config
+from wireless import Wireless
 
 class Wifi(Config):
   def __init__(self, **kwargs):
     Config.__init__(self, **kwargs)
     self.camera_ssid = self.config['camera_ssid']
+    os.environ['PATH'] += ":/sbin:/usr/sbin"
 
   def get_ssids(self):
     """ Return a list of access points """
