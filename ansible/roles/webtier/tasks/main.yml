@@ -12,9 +12,10 @@
     - gpsd-clients 
     - nginx
     - redis-server
+  ignore_errors: True
 
 - name: Check out piricohmoto project into /code folder
-  git: repo=https://github.com/tomdymond/pi-python-ricohgr
+  git: repo=/home/ubuntu/piricohmoto.git
        dest=/code/piricohmoto
        version=devel update=yes
   ignore_errors: True
@@ -26,7 +27,7 @@
   copy: src=files/appuser.sudo dest=/etc/sudoers.d/appuser 
 
 - name: Install some pip packages
-  pip: name={{ item }} state=latest virtualenv=/home/venvs/piricohmoto
+  pip: name={{ item }} state=latest virtualenv=/home/venvs/piricohmoto extra_args="--timeout=5"
   with_items:
     - redis
     - PyYaml
@@ -39,6 +40,7 @@
     - sh
     - ipython
     - ipdb
+  ignore_errors: True
 
 - name: Ensure systemd file for supervisor is installed
   copy: src=/lib/systemd/system/supervisor.service dest=/etc/systemd/system/supervisor.service remote_src=True
