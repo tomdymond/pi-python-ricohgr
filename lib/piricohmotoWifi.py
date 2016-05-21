@@ -7,19 +7,19 @@ import sys
 import time
 import os
 from piricohmotoConfig import Config
-from wireless import Wireless
 
 class Wifi(Config):
   def __init__(self, **kwargs):
     Config.__init__(self, **kwargs)
     self.camera_ssid = self.config['camera_ssid']
+    self.camera_interface = self.config['camera_interface']
     os.environ['PATH'] += ":/sbin:/usr/sbin"
 
   def get_ssids(self):
     """ Return a list of access points """
     ssids = []
     try:
-      output = sh.Command('/sbin/iwlist')('wlan0', 'scan').stdout
+      output = sh.Command('/sbin/iwlist')(self.camera_interface, 'scan').stdout
       for line in output.split('\n'):
         if "ESSID" in line:
           ssid = re.findall(r'"(.*?)"', line)[0]
@@ -49,31 +49,13 @@ class Wifi(Config):
     print ("Camera is OFF!")
     return False
 
-  def manage_wlan0(self, action="up"):
-    """ Manage wlan0 """
-    if action == 'up':
-      if_script = '/sbin/ifup'
-    else:
-      if_script = '/sbin/ifdown'
-
-    try:
-      sh.sudo(if_script, 'wlan0')
-      return True
-    except Exception as e:
-      print (e.message)
-      return False
-
-  def restart_interface(self):
-    """ Restart wlan0 interface """
-    self.manage_wlan0('down')
-    self.manage_wlan0('up')
-
   def connect_to_camera_ssid(self):
     """ Return true if connected to camera SSID """
     if self.get_current_ssid() != self.camera_ssid:
       print ("Trying to connect to camera ssid {}".format(self.camera_ssid))
       print ("Current SSID: {}".format(self.get_current_ssid()))
-      self.restart_interface()
+      sh.sudo.sudo('killall','wpa_supplicant')
+      sh.sudo('wpa_supplicant','-i{}'.format(self.camera_interface),'-c/etc/wpa_supplicant/wpa_supplicant.conf','-B')
       print ("Waiting for interface")
       time.sleep(2)
       i = 0
@@ -86,6 +68,7 @@ class Wifi(Config):
 
     print ("Connected to Camera SSID")
     if self.get_current_ssid() == self.camera_ssid:
+      sh.sudo('dhclient',self.camera_interface)
       return True
     else:
       print ("Problem connecting to SSID {}".format(self.camera_ssid))

@@ -35,9 +35,9 @@
 - name: Install some pip packages
   pip: name={{ item.name }} state={{ item.state }}
   with_items:
-    - { name: wireless, state: present }
+    - { name: wireless, state: absent }
     - { name: ipython, state: present }
-    - { name: ipdb, state: absent }
+    - { name: ipdb, state: present }
     - { name: wifi, state: absent }
 
 - name: Create /home/venvs

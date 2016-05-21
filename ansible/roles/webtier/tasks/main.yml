@@ -17,6 +17,7 @@
   git: repo=https://github.com/tomdymond/pi-python-ricohgr
        dest=/code/piricohmoto
        version=devel update=yes
+  ignore_errors: True
 
 - name: Ensure appuser exists
   user: name=appuser shell=/bin/bash groups=i2c
