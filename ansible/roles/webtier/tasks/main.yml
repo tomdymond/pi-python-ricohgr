@@ -1,4 +1,10 @@
 ---
+
+#- name: Initialise a bare repo in /home/ubuntu
+
+- name: Copy post receive hook
+  copy: src=files/post-receive dest=/home/ubuntu/piricohmoto.git/hooks owner=root group=root mode=0755
+
 - name: Ensure packages are installed
   apt: name={{ item }} state=installed
   tags: packages

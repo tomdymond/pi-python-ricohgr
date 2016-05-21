@@ -27,6 +27,7 @@ class Wifi(Config):
             ssids.append(ssid)
     except Exception as e:
       print (e.message)
+    print ssids
     return ssids
 
   def get_current_ssid(self):
