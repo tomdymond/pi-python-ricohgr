@@ -41,7 +41,7 @@ class Camera(Config):
     """ Return of list of images already uploaded """
     remote_list = set()
     try:
-      client = dropbox.client.DropboxClient(self.access_token, timeout=5)
+      client = dropbox.client.DropboxClient(self.access_token)
       for i in client.metadata('/')['contents']:
         remote_list.add(i['path'].split('/')[1])
     except Exception as e:
