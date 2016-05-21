@@ -55,7 +55,7 @@ class Wifi(Config):
     if self.get_current_ssid() != self.camera_ssid:
       print ("Trying to connect to camera ssid {}".format(self.camera_ssid))
       print ("Current SSID: {}".format(self.get_current_ssid()))
-      sh.sudo.sudo('killall','wpa_supplicant')
+      sh.sudo('killall','wpa_supplicant')
       sh.sudo('wpa_supplicant','-i{}'.format(self.camera_interface),'-c/etc/wpa_supplicant/wpa_supplicant.conf','-B')
       print ("Waiting for interface")
       time.sleep(2)
