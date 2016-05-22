@@ -32,6 +32,7 @@ class Wifi(Config):
 
   def restart_connection(self):
     """ Restart the wifi """
+      print "restart_connection"
       sh.sudo('killall','wpa_supplicant')     
       sh.sudo('wpa_supplicant', '-s', '-B', '-P', '/run/wpa_supplicant.{}.pid'.format(self.camera_interface), '-i', self.camera_interface, '-D', 'nl80211,wext', '-c', '/etc/wpa_supplicant/wpa_supplicant.conf')
       i = 0
