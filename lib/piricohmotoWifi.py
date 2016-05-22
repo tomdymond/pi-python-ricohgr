@@ -39,8 +39,10 @@ class Wifi(Config):
     while not self.get_current_ssid():
       time.sleep(2)
       if i > 20:
+        print "Timed out waiting for confirmation I was conncted to any AP"
         return False
-    sh.sudo('dhclient',self.camera_interface)
+    print "Running dhclient on {}".format(self.camera_interface)
+    sh.sudo('dhclient', self.camera_interface)
     return True
 
   def get_current_ssid(self):
