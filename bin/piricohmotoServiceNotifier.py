@@ -39,7 +39,9 @@ class Notifier(threading.Thread):
     time_actual=int(datetime.now().strftime('%s'))
     while self.running:
       time_actual=int(datetime.now().strftime('%s'))
+      print "LOOP"
       if self.flashing:
+        print "FLASH"
         self.piglow.clear()
         self.piglow.show()
         time.sleep(self.duration)
