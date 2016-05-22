@@ -1,1 +1,1 @@
-appuser ALL=NOPASSWD: /sbin/wpa_supplicant, /usr/bin/killall, /sbin/ifconfig, /sbin/iwlist, /sbin/ifup, /sbin/ifdown, /sbin/iwgetid
+appuser ALL=NOPASSWD: /sbin/wpa_supplicant, /usr/bin/killall, /sbin/ifconfig, /sbin/iwlist, /sbin/ifup, /sbin/ifdown, /sbin/iwgetid, /sbin/dhclient
