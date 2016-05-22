@@ -37,12 +37,12 @@ class Notifier(threading.Thread):
     print ("run")
     time_start=int(datetime.now().strftime('%s'))
     time_actual=int(datetime.now().strftime('%s'))
-    while self.running and time_actual < self.duration:
+    while self.running:
       time_actual=int(datetime.now().strftime('%s'))
       if self.flashing:
         self.piglow.clear()
         self.piglow.show()
-        time.sleep(0.5)
+        time.sleep(self.duration)
 
       if self.event or self.flashing:
         print "BEEP: EVENT IS TRUE."
@@ -52,7 +52,7 @@ class Notifier(threading.Thread):
         self.piglow.colour(self.colour, self.power)
         self.piglow.show()
         self.event = False
-      time.sleep(0.5)
+      time.sleep(self.duration)
 
 
 @app.route('/piglow/<colour>/<colourstate>/<duration>')
