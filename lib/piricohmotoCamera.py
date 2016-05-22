@@ -13,7 +13,7 @@ class Camera(Config):
     Config.__init__(self, **kwargs)
     self.redis_connection = redis.StrictRedis(host='localhost')
     self.access_token = self.config['access_token']
-    self.dropbox_images = self.get_dropbox_images()
+    
 
 
   def geotag_all(self):
@@ -50,6 +50,7 @@ class Camera(Config):
      
   def upload_all(self):
     """ Upload all images if jpeg """
+    self.dropbox_images = self.get_dropbox_images()
     for filename in self.redis_connection.hkeys('IMAGES'):
       image = Image(config_file=self.config_file, filename=filename)
       if not image.is_uploaded():
