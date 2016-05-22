@@ -54,10 +54,11 @@ class Notifier(threading.Thread):
       time.sleep(0.5)
 
 
-@app.route('/piglow/<colour>/<colourstate>')
-def change_colour(colour, colourstate):
+@app.route('/piglow/<colour>/<colourstate>/<duration>')
+def change_colour(colour, colourstate, duration=10):
   if colourstate == 'flashing':
     a.flashing = True
+    a.duration = duration
   else:
     a.flashing = False
   a.colour=colour
