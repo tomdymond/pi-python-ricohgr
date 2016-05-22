@@ -44,7 +44,7 @@ class Notifier(threading.Thread):
         print "FLASH"
         self.piglow.clear()
         self.piglow.show()
-        time.sleep(self.duration)
+        time.sleep(float(self.duration))
 
       if self.event or self.flashing:
         print "BEEP: EVENT IS TRUE."
@@ -54,7 +54,7 @@ class Notifier(threading.Thread):
         self.piglow.colour(self.colour, self.power)
         self.piglow.show()
         self.event = False
-      time.sleep(self.duration)
+      time.sleep(float(self.duration))
 
 
 @app.route('/piglow/<colour>/<colourstate>/<duration>')
