@@ -30,6 +30,18 @@ class Wifi(Config):
     print ssids
     return ssids
 
+  def restart_connection(self):
+    """ Restart the wifi """
+      sh.sudo('killall','wpa_supplicant')     
+      sh.sudo('wpa_supplicant', '-s', '-B', '-P', '/run/wpa_supplicant.{}.pid'.format(self.camera_interface), '-i', self.camera_interface, '-D', 'nl80211,wext', '-c', '/etc/wpa_supplicant/wpa_supplicant.conf')
+      i = 0
+      while not self.get_current_ssid():
+        time.sleep(2)
+        if i > 20:
+          return False
+      sh.sudo('dhclient',self.camera_interface)
+      return True
+
   def get_current_ssid(self):
     """ Just return the current ssid """
     try:
@@ -55,17 +67,9 @@ class Wifi(Config):
     if self.get_current_ssid() != self.camera_ssid:
       print ("Trying to connect to camera ssid {}".format(self.camera_ssid))
       print ("Current SSID: {}".format(self.get_current_ssid()))
-      sh.sudo('killall','wpa_supplicant')     
-      sh.sudo('wpa_supplicant', '-s', '-B', '-P', '/run/wpa_supplicant.{}.pid'.format(self.camera_interface), '-i', self.camera_interface, '-D', 'nl80211,wext', '-c', '/etc/wpa_supplicant/wpa_supplicant.conf')
+      self.restart_connection()
       print ("Waiting for interface")
-      time.sleep(2)
-      i = 0
-      while self.get_current_ssid() != self.camera_ssid:
-        time.sleep(1)
-        if i > 20:
-          print ("Error connecting to the camera")
-          sys.exit(1)
-        i += 1
+ 
 
     print ("Connected to Camera SSID")
     if self.get_current_ssid() == self.camera_ssid:

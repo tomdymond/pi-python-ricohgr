@@ -64,8 +64,9 @@ try:
       a = Download_all(flow)
       a.start()
   else:
-    c = Upload_all(flow)
-    c.start()
+    if conn.restart_connection():
+      c = Upload_all(flow)
+      c.start()
 
 except (KeyboardInterrupt, SystemExit): #when you press ctrl+c
   print ("\nKilling Threads...")
