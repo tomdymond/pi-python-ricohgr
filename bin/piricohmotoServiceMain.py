@@ -60,6 +60,7 @@ try:
   b.start()
 
   if conn.is_camera_on():
+    conn.notify('red')
     if conn.connect_to_camera_ssid():
       a = Download_all(flow)
       a.start()
