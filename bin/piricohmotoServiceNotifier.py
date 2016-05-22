@@ -45,6 +45,7 @@ class Notifier(threading.Thread):
         time.sleep(0.5)
 
       if self.event or self.flashing:
+        print "BEEP: EVENT IS TRUE."
         if self.colour not in ['red', 'green', 'blue', 'yellow', 'orange']:
           self.colour = 'red'
         self.piglow.clear()
