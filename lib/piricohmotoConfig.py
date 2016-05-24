@@ -21,8 +21,10 @@ class Config(object):
       response = requests.get('http://127.0.0.1:5000/piglow/{}/{}/{}'.format(colour, c, duration))
       if response.status_code == 200:
         return True
+      print response.status_code
       return False
     except Exception as e:
+      print e.message
       return False
 
   def load_config(self, config_file):
