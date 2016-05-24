@@ -18,7 +18,7 @@ class Config(object):
     else:
       c = 'fixed'
     try:
-      response = requests.get('http://127.0.0.1/piglow/{}/{}/{}'.format(colour, c, duration))
+      response = requests.get('http://127.0.0.1:5000/piglow/{}/{}/{}'.format(colour, c, duration))
       if response.status_code == 200:
         return True
       return False
