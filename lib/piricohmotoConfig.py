@@ -4,7 +4,7 @@
 import yaml
 import os
 import sys
-
+import requests
 
 class Config(object):
   def __init__(self, **kwargs):
