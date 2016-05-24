@@ -67,7 +67,7 @@ try:
       a.start()
   else:
     conn.notify('orange')
-    if conn.get_current_ssid == camera_ssid:
+    if conn.get_current_ssid == conn.camera_ssid:
       conn.restart_connection()
       print "foo"
       # c = Upload_all(flow)
