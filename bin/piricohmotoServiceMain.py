@@ -66,7 +66,9 @@ try:
       a = Download_all(flow)
       a.start()
   else:
-    if conn.restart_connection():
+    conn.notify('orange')
+    if conn.get_current_ssid == camera_ssid:
+      conn.restart_connection()
       print "foo"
       # c = Upload_all(flow)
       # c.start()
