@@ -61,12 +61,12 @@ try:
 
 
   if conn.is_camera_on():
-    conn.notify('blue')
+    conn.notify(led=16, duration=10, flashing=1)
     if conn.connect_to_camera_ssid():
       a = Download_all(flow)
       a.start()
   else:
-    conn.notify('orange')
+    conn.notify(led=17, duration=10, flashing=1)
     if not conn.get_current_ssid:
       conn.restart_connection()
       print "foo"

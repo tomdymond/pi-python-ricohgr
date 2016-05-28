@@ -32,10 +32,10 @@ class Image(Config):
       j = json.loads(r.hget('IMAGES', self.filename))
       j['UPLOAD'] = True
       r.hmset('IMAGES', {self.filename: json.dumps(j)})
-      self.notify(colour='blue', flashing=True, duration=2)
+      self.notify(led=1, flashing=1, duration=4)
       return True
     except Exception as e:
-      self.notify(colour='red', flashing=True, duration=2)
+      self.notify(led=2, flashing=1, duration=10)
       print (e.message)
     return False
 

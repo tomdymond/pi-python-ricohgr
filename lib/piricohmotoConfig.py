@@ -5,20 +5,18 @@ import yaml
 import os
 import sys
 import requests
+import json
 
 class Config(object):
   def __init__(self, **kwargs):
     self.config = self.load_config(kwargs['config_file'])
     self.config_file = kwargs['config_file']
 
-  def notify(self, colour, duration=5, flashing=False):
+  def notify(self, led, duration=5, flashing=0, power=100):
     """ Send a request to the notificatin daemon """
-    if flashing:
-      c = 'flashing'
-    else:
-      c = 'fixed'
     try:
-      response = requests.get('http://127.0.0.1:5000/piglow/{}/{}/{}'.format(colour, c, duration))
+      a=[flashing, led, power, duration]
+      response = requests.post('http://127.0.0.1:5000', json=json.dumps(a))
       if response.status_code == 200:
         return True
       print response.status_code
