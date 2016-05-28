@@ -6,6 +6,7 @@ import json
 class Notifier(object):
     def __init__(self, power=100, duration=100, flashing=False):
         self.power = power
+        self.payload = None
         self.leds=[]
         self.duration = duration
         self.flashing = flashing
@@ -32,6 +33,7 @@ class Notifier(object):
             payload.append(
                 [self.flashing, i, self.power, self.duration]
                 )
+        return payload
 
     def red(self):
         self.make_payload('red')
@@ -51,8 +53,8 @@ class Notifier(object):
     def white(self):
         self.make_payload('white')
 
-    def send(self, payload):
-        for p in payload:
+    def send(self):
+        for p in self.payload:
             requests.post('http://127.0.0.1:5000', json=json.dumps(p))
 
 a = Notifier()
