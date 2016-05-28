@@ -58,6 +58,6 @@ class Notifier(object):
             requests.post('http://127.0.0.1:5000', json=json.dumps(p))
 
 a = Notifier()
-a.led([1,2,3,4])
 a.flashing=1
+a.led([1,2,3,4])
 a.send()
