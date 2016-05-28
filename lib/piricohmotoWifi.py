@@ -30,6 +30,8 @@ class Wifi(Config):
     print ssids
     return ssids
 
+
+
   def restart_connection(self):
     """ Restart the wifi """
     print "restart_connection"

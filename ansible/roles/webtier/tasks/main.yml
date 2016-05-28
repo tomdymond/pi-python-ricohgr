@@ -2,7 +2,18 @@
 
 #- name: Initialise a bare repo in /home/ubuntu
 
-- name: Copy post receive hook
+- name: Create bare repo dir
+  file: path=/home/ubuntu/piricohmoto.git owner=ubuntu group=ubuntu mode=0775 state=directory
+  tags: git
+
+- name: Initialise a bare repo in home dir
+  command: chdir=/home/ubuntu/piricohmoto.git creates=/home/ubuntu/piricohmoto.git/HEAD git init --bare
+  tags: git
+
+- name: ensure repositories permisions
+  file: path=/home/ubuntu/piricohmoto.git owner=ubuntu group=ubuntu recurse=True
+
+- name: Copy post receive hookcd 
   copy: src=files/post-receive dest=/home/ubuntu/piricohmoto.git/hooks owner=root group=root mode=0755
 
 - name: Ensure packages are installed
@@ -46,6 +57,7 @@
     - sh
     - ipython
     - ipdb
+    - uWSGI
   ignore_errors: True
 
 - name: Ensure systemd file for supervisor is installed
@@ -80,8 +92,8 @@
 - name: Be sure certain folders are present
   file: path={{ item.path }} owner={{ item.owner }} group={{ item.group }} mode={{ item.mode }} state=directory
   with_items:
-    - { path: '/etc/uwsgi', owner: 'root', group: 'root', mode: '0700' }
-    - { path: '/etc/uwsgi/vassals', owner: 'root', group: 'root', mode: '0700' }
+    - { path: '/etc/uwsgi', owner: 'root', group: 'root', mode: '0755' }
+    - { path: '/etc/uwsgi/vassals', owner: 'root', group: 'root', mode: '0755' }
     - { path: '/var/log/piricohmoto', owner: 'appuser', group: 'root', mode: '0755' }
     - { path: '/download', owner: 'appuser', group: 'appuser', mode: '0700' }
 
@@ -123,3 +135,5 @@
     - supervisor
     - nginx
     - uwsgi
+
+

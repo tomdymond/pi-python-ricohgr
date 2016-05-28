@@ -2,13 +2,18 @@
 # file: roles/common/tasks/main.yml
 
 - name: Remove some packages
-  apt: name={{ item }} state=absent
+  apt: name={{ item }} state=absent 
   tags: packages
   with_items:
     - docker.io
+    - python-flask
+    - python-gtk2
+    - python-ipaddress
+    - python-jinja2
+    - python-markupsafe
 
 - name: be sure python is installed
-  apt: name={{ item }} state=present
+  apt: name={{ item }} state=present install_recommends=no
   tags: packages
   with_items:
     - supervisor
@@ -37,9 +42,11 @@
   pip: name={{ item.name }} state={{ item.state }}
   with_items:
     - { name: wireless, state: absent }
-    - { name: ipython, state: present }
-    - { name: ipdb, state: present }
+    - { name: ipython, state: absent }
+    - { name: ipdb, state: absent }
     - { name: wifi, state: absent }
+    - { name: uWSGI, state: absent }
+
   ignore_errors: True
 
 - name: Create /home/venvs
@@ -110,12 +117,23 @@
     - i2c-dev
     - i2c-bcm2708
 
+- name: Check supervisor is enabled
+  command: systemctl is-enabled supervisor
+  register: result
+  tags: services
+
+- name: Enable supervisor
+  command: systemctl enable supervisor 
+  when: result.stdout == 'disabled'
+  tags: services
+
 - name: Ensure services are running
   service: name={{ item }} state=running enabled=yes
   tags: services
   with_items: 
     - hostapd
     - isc-dhcp-server
+    - supervisor
 
 
 

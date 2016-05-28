@@ -1,5 +1,5 @@
 [program:piricohmotoServiceLogger]
-command=/home/venvs/piricohmoto/bin/python /code/piricohmoto/bin/piricohmotoServiceLogger.py
+command=nice /home/venvs/piricohmoto/bin/python /code/piricohmoto/bin/piricohmotoServiceLogger.py
 directory=/tmp
 user=appuser
 autostart=true
