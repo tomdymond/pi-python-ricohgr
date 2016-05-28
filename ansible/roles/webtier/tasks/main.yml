@@ -98,7 +98,7 @@
     - { path: '/download', owner: 'appuser', group: 'appuser', mode: '0700' }
 
 - name: Copy over uWSGI config
-  template: src=files/piricohmoto.uwsgi.ini.j2 dest=/var/www/piricohmoto/piricohmoto_uwsgi.ini owner=root group=root mode=0644
+  template: src=templates/piricohmoto.uwsgi.ini.j2 dest=/var/www/piricohmoto/piricohmoto_uwsgi.ini owner=root group=root mode=0644
   notify: restart nginx
 
 - name: Link config in vassals folder
@@ -115,19 +115,19 @@
   notify: restart nginx
 
 - name: Give ownership of all files in folder to www-data
-  file: path={{ item }} owner=www-data group=www-data recurse=true
+  file: path="{{ item }}" owner=www-data group=www-data recurse=true
   with_items:
-    - {{ install_root }}/config_app
+    - "{{ install_root }}/config_app"
     - /var/www/piricohmoto
 
 - name: Create a symlink for the config_app
   file: src={{ install_root }}/config_app dest=/var/www/piricohmoto/config_app state=link
 
-- name: Copy over piricohmoto config 
+- name: Copy over piricohmoto config `
   template: src=templates/piricohmoto.yml.j2 dest=/config/piricohmoto.yml owner=appuser group=appuser mode=0600
 
 - name: Ensure services are running
-  service: name={{ item }} state=running enabled=yes
+  service: name="{{ item }}" state=running enabled=yes
   tags: services
   with_items: 
     - gpsd
