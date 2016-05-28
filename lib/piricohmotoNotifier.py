@@ -55,9 +55,9 @@ class Notifier(object):
     def send(self):
         for p in self.payload:
             if p[0] == True:
-                p[0] == 0
-            else:
                 p[0] == 1
+            else:
+                p[0] == 0
             requests.post('http://127.0.0.1:5000', json=json.dumps(p))
 
 a = Notifier()
