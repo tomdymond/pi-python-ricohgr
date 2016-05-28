@@ -7,7 +7,6 @@ class Notifier(object):
     def __init__(self, power=100, duration=100, flashing=False):
         self.power = power
         self.payload = None
-        self.leds=[]
         self.duration = duration
         self.flashing = flashing
         self.led_codes = {
@@ -58,5 +57,5 @@ class Notifier(object):
             requests.post('http://127.0.0.1:5000', json=json.dumps(p))
 
 a = Notifier()
-a.leds=[1,2,3,4]
+a.led([1,2,3,4])
 a.send()
