@@ -39,7 +39,7 @@ class Wifi(Config):
     sh.sudo('wpa_supplicant', '-s', '-B', '-P', '/run/wpa_supplicant.{}.pid'.format(self.camera_interface), '-i', self.camera_interface, '-D', 'nl80211,wext', '-c', '/etc/wpa_supplicant/wpa_supplicant.conf')
     i = 0
     while not self.get_current_ssid():
-      time.sleep(2)
+      time.sleep(1)
       if i > 20:
         print "Timed out waiting for confirmation I was conncted to any AP"
         return False
@@ -78,7 +78,7 @@ class Wifi(Config):
 
     print ("Connected to Camera SSID")
     if self.get_current_ssid() == self.camera_ssid:
-      #sh.sudo('ifconfig', self.camera_interface, '192.168.0.2/24', 'up')
+      sh.sudo('ifconfig', self.camera_interface, '192.168.0.2/24', 'up')
       #sh.sudo('dhclient',self.camera_interface)
       return True
     else:
