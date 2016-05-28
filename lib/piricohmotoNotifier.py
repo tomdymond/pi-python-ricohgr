@@ -25,7 +25,7 @@ class Notifier(object):
             payload.append(
                 [self.flashing, i, self.power, self.duration]
                 )
-        return payload
+        self.payload=payload
 
     def led(self, leds):
         payload = []
@@ -33,7 +33,7 @@ class Notifier(object):
             payload.append(
                 [self.flashing, i, self.power, self.duration]
                 )
-        return payload
+        self.payload=payload
 
     def red(self):
         self.make_payload('red')
