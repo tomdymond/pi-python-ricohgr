@@ -61,14 +61,14 @@ try:
 
 
   if conn.is_camera_on():
-    conn.notify(led=16, duration=10, flashing=0, power=120)
+    conn.notify.green()
     if conn.connect_to_camera_ssid():
       a = Download_all(flow)
       a.start()
   else:
     conn.notify(led=16, duration=0, flashing=0, power=0)
     if conn.get_current_ssid:
-      conn.notify(led=17, duration=10, flashing=1)
+      conn.notify.red()
     else:
       conn.restart_connection()
       # c = Upload_all(flow)

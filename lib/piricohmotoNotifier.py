@@ -36,28 +36,29 @@ class Notifier(object):
 
     def red(self):
         self.make_payload('red')
+        self.send()
 
     def orange(self):
         self.make_payload('orange')
+        self.send()
 
     def yellow(self):
         self.make_payload('yellow')
+        self.send()
 
     def green(self):
         self.make_payload('green')
+        self.send()
 
     def blue(self):
         self.make_payload('blue')
+        self.send()
 
     def white(self):
         self.make_payload('white')
+        self.send()
 
     def send(self):
         for p in self.payload:
-            print p
             requests.post('http://127.0.0.1:5000', json=json.dumps(p))
 
-a = Notifier()
-a.flashing=1
-a.led([1,2,3,4])
-a.send()
