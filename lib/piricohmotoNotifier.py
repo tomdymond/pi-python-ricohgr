@@ -28,7 +28,7 @@ class Notifier(object):
 
     def led(self, leds):
         payload = []
-        for led in leds:
+        for i in leds:
             payload.append(
                 [self.flashing, i, self.power, self.duration]
                 )
