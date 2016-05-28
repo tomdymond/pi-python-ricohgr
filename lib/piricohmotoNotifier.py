@@ -4,7 +4,7 @@ import requests
 import json
 
 class Notifier(object):
-    def __init__(self, power=100, duration=100, flashing=False):
+    def __init__(self, power=100, duration=100, flashing=0):
         self.power = power
         self.payload = None
         self.duration = duration
@@ -54,13 +54,10 @@ class Notifier(object):
 
     def send(self):
         for p in self.payload:
-            if p[0] == True:
-                p[0] == 1
-            else:
-                p[0] == 0
+            print p
             requests.post('http://127.0.0.1:5000', json=json.dumps(p))
 
 a = Notifier()
 a.led([1,2,3,4])
-a.flashing=True
+a.flashing=0
 a.send()
