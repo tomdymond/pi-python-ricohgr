@@ -3,6 +3,7 @@
 set -x
 
 cd {{ install_root }}
+sudo git reset --hard
 sudo git pull
 
 sudo service supervisor restart
