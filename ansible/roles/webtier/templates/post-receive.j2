@@ -2,7 +2,7 @@
 
 set -x
 
-cd /code/piricohmoto
+cd {{ install_root }}
 sudo git pull
 
 sudo service supervisor restart

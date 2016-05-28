@@ -1,5 +1,5 @@
 [program:piricohmotoServiceMain]
-command=nice /home/venvs/piricohmoto/bin/python /code/piricohmoto/bin/piricohmotoServiceMain.py
+command=nice /home/venvs/piricohmoto/bin/python {{ install_root }}/bin/piricohmotoServiceMain.py
 directory=/tmp
 user=appuser
 autostart=true
