@@ -59,5 +59,5 @@ class Notifier(object):
 
 a = Notifier()
 a.led([1,2,3,4])
-a.flashing=0
+a.flashing=1
 a.send()
