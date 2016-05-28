@@ -5,3 +5,6 @@ set -x
 cd /code/piricohmoto
 sudo git pull
 
+sudo service supervisor restart
+
+
