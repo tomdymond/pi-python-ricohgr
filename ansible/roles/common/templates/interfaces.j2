@@ -17,4 +17,5 @@ allow-hotplug wlan0
 iface wlan0 inet dhcp
   wpa-conf /etc/wpa_supplicant/wpa_supplicant.conf
   post-up /etc/network/iptables
+  post-up {{ install_root }}/bin/network-light.sh
 

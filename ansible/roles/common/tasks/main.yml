@@ -136,6 +136,8 @@
     - isc-dhcp-server
     - supervisor
 
+- name: Copy network light indicator script to the network interfaces scripts directory
+  template: src=templates/network-light.sh.j2 dest={{ install_root }}/bin//network-light.sh owner=root group=root mode=0755
 #- name: GET RID OF UBUNTU FAN CAUSING ISSUES 
 #  file: path=/etc/network/if-up.d/ubuntu-fomg an state=absent
 #  with_items: 
