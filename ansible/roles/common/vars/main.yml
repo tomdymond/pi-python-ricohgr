@@ -1,2 +1,3 @@
 ---
-become: true
+install_root: /code/piricohmoto
+

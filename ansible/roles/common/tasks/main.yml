@@ -59,11 +59,11 @@
   command: virtualenv /home/venvs/piricohmoto -p /usr/bin/python2 creates="/home/venvs/piricohmoto" --system-site-packages
 
 - name: Be sure certain folders are present
-  file: path={{ item.path }} owner={{ item.owner }} group={{ item.group }} mode={{ item.mode }} state=directory
+  file: path={{ item.path }} owner={{ item.owner }} group={{ item.group }} mode={{ item.mode }} state=directory recurse=true
   with_items:
     - { path: '/persist', owner: 'root', group: 'root', mode: '0600' }
     - { path: '/config', owner: 'root', group: 'root', mode: '0755' }
-    - { path: '/code', owner: 'root', group: 'root', mode: '0755' }
+    - { path: "{{ install_root }}", owner: 'root', group: 'root', mode: '0755' }
 
 - name: Copy a base interfaces file that has a static IP
   template: src=templates/interfaces.j2 dest=/etc/network/interfaces owner=root group=root mode=0644 backup=yes
@@ -86,6 +86,7 @@
   template: src=templates/wpa_supplicant.conf.j2 dest=/etc/wpa_supplicant/wpa_supplicant.conf owner=root group=root mode=0644 backup=yes
   notify:
     - restart networking
+  tags: networking
 
 - name: Copy defaults hostapd configuration
   copy: src=files/hostapd dest=/etc/default/hostapd owner=root group=root mode=0644 backup=yes
@@ -134,6 +135,12 @@
     - hostapd
     - isc-dhcp-server
     - supervisor
+
+#- name: GET RID OF UBUNTU FAN CAUSING ISSUES 
+#  file: path=/etc/network/if-up.d/ubuntu-fomg an state=absent
+#  with_items: 
+#    - /etc/network/if-up.d/ubuntu-fan
+#    - /etc/network/if-down.d/ubuntu-fan
 
 
 

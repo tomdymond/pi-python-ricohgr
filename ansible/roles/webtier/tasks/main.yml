@@ -14,7 +14,7 @@
   file: path=/home/ubuntu/piricohmoto.git owner=ubuntu group=ubuntu recurse=True
 
 - name: Copy post receive hookcd 
-  copy: src=files/post-receive dest=/home/ubuntu/piricohmoto.git/hooks owner=root group=root mode=0755
+  template: src=templates/post-receive.j2 dest=/home/ubuntu/piricohmoto.git/hooks owner=root group=root mode=0755
 
 - name: Ensure packages are installed
   apt: name={{ item }} state=installed
@@ -33,7 +33,7 @@
 
 - name: Check out piricohmoto project into /code folder
   git: repo=/home/ubuntu/piricohmoto.git
-       dest=/code/piricohmoto
+       dest={{ install_root }}
        version=devel update=yes
   ignore_errors: True
 
@@ -64,11 +64,11 @@
   copy: src=/lib/systemd/system/supervisor.service dest=/etc/systemd/system/supervisor.service remote_src=True
 
 - name: Copy supervisor files
-  copy: src={{ item }} dest=/etc/supervisor/conf.d/{{ item }}.conf
+  template: src={{ item }} dest=/etc/supervisor/conf.d/{{ item }}.conf
   with_items:
-    - piricohmotoServiceMain
-    - piricohmotoServiceLogger
-    - piricohmotoServiceNotifier
+    - piricohmotoServiceMain.j2
+    - piricohmotoServiceLogger.j2
+    - piricohmotoServiceNotifier.j2
   notify:
     - restart supervisor
 
@@ -98,7 +98,7 @@
     - { path: '/download', owner: 'appuser', group: 'appuser', mode: '0700' }
 
 - name: Copy over uWSGI config
-  copy: src=files/piricohmoto.uwsgi.ini dest=/var/www/piricohmoto/piricohmoto_uwsgi.ini owner=root group=root mode=0644
+  template: src=files/piricohmoto.uwsgi.ini.j2 dest=/var/www/piricohmoto/piricohmoto_uwsgi.ini owner=root group=root mode=0644
   notify: restart nginx
 
 - name: Link config in vassals folder
@@ -117,11 +117,11 @@
 - name: Give ownership of all files in folder to www-data
   file: path={{ item }} owner=www-data group=www-data recurse=true
   with_items:
-    - /code/piricohmoto/config_app
+    - {{ install_root }}/config_app
     - /var/www/piricohmoto
 
 - name: Create a symlink for the config_app
-  file: src=/code/piricohmoto/config_app dest=/var/www/piricohmoto/config_app state=link
+  file: src={{ install_root }}/config_app dest=/var/www/piricohmoto/config_app state=link
 
 - name: Copy over piricohmoto config 
   template: src=templates/piricohmoto.yml.j2 dest=/config/piricohmoto.yml owner=appuser group=appuser mode=0600
