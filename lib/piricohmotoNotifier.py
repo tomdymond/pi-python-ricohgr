@@ -10,11 +10,11 @@ class Notifier(object):
         self.duration = duration
         self.flashing = flashing
         self.led_codes = {
-            'red': [1, 7, 13]
-            'orange': [2, 8, 14]
-            'yellow': [3, 9, 15]
-            'green': [4, 10, 16]
-            'blue': [5, 11, 17]
+            'red': [1, 7, 13],
+            'orange': [2, 8, 14],
+            'yellow': [3, 9, 15],
+            'green': [4, 10, 16],
+            'blue': [5, 11, 17],
             'white': [6, 12, 18]
         }
 
