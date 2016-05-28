@@ -66,7 +66,7 @@ try:
       a = Download_all(flow)
       a.start()
   else:
-    conn.notify(led=16, duration=0, flashing=0, power=0)
+    conn.notify.blue()
     if conn.get_current_ssid:
       conn.notify.red()
     else:
