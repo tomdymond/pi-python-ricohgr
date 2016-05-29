@@ -27,6 +27,8 @@ def do_everything():
       conn.notify.status_payload(0002)
       if conn.connect_to_camera_ssid():
         flow.download_all()
+        flow.geotag_all()
+        flow.upload_all()
     else:
       if conn.get_current_ssid():
         print "Connected to a SSID at least : {}".format(conn.get_current_ssid())
