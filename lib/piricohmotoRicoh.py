@@ -35,14 +35,14 @@ class RicohImage(Image):
     print reponse.status_code
     if reponse.status_code == 200:
       print "saving file..."
-      self.notify.flashing=1
-      self.notify.blue()
+      self.notify.status_payload(0006)
       with open('{}/{}'.format(self.download_dir, self.filename), 'wb') as f:
         for chunk in reponse.iter_content(chunk_size=1024): 
           if chunk: # filter out keep-alive new chunks
             f.write(chunk)
       r.hmset('IMAGES', {self.filename: json.dumps({'UPLOAD': False, 'GPS': {}})})
       return True
+    self.notify.status_payload(1006)
     return False
 
 class Ricoh(Camera):

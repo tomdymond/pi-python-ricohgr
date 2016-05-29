@@ -24,13 +24,13 @@ def do_everything():
   conn = flow.connection()
   try:
     if conn.is_camera_on():
-      conn.notify.green()
+      conn.notify.status_payload(0002)
       if conn.connect_to_camera_ssid():
         flow.download_all()
     else:
       if conn.get_current_ssid():
         print "Connected to a SSID at least : {}".format(conn.get_current_ssid())
-        conn.notify.orange()
+        conn.notify.status_payload(0003)
         conn.restart_connection()
       else:
         print "Not connected to ANY ssid. So restart wpa_supplicant"
