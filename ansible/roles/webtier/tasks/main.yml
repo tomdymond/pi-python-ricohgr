@@ -107,7 +107,7 @@
     - { path: '/etc/uwsgi', owner: 'root', group: 'root', mode: '0755' }
     - { path: '/etc/uwsgi/vassals', owner: 'root', group: 'root', mode: '0755' }
     - { path: '/var/log/piricohmoto', owner: 'appuser', group: 'root', mode: '0755' }
-    - { path: '/download', owner: 'appuser', group: 'appuser', mode: '0700' }
+    - { path: '/download', owner: 'appuser', group: 'appuser', mode: '0755' }
 
 - name: Copy over uWSGI config
   template: src=templates/piricohmoto.uwsgi.ini.j2 dest=/var/www/piricohmoto/piricohmoto_uwsgi.ini owner=root group=root mode=0644
@@ -124,6 +124,10 @@
 
 - name: Link nginx base config
   file: src=/etc/nginx/sites-available/piricohmoto dest=/etc/nginx/sites-enabled/piricohmoto state=link
+  notify: restart nginx
+
+- name: Remove nginx default config
+  file: path=/etc/nginx/sites-enabled/default state=absent
   notify: restart nginx
 
 - name: Give ownership of all files in folder to www-data
