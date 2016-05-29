@@ -53,7 +53,7 @@ class Camera(Config):
     self.dropbox_images = self.get_dropbox_images()
     for filename in self.redis_connection.hkeys('IMAGES'):
       image = Image(config_file=self.config_file, filename=filename)
-      if not image.is_uploaded():
+      if not image.is_uploaded() and image.is_geotagged():
         if filename in self.dropbox_images:
           j = json.loads(self.redis_connection.hget('IMAGES', filename))
           j['UPLOAD'] = True
