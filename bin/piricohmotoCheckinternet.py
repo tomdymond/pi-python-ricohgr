@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 
+
+from os import sys, path, mkdir
 import requests
 
 cwd = path.dirname(path.abspath(__file__))
