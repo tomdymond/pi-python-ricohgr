@@ -79,11 +79,14 @@ class Wifi(Config):
 
   def get_current_ssid(self):
     """ Just return the current ssid """
+    print "In function get_current_ssid"
     try:
       output = sh.sudo('/sbin/iwgetid').stdout
       if output:
         s = output.split()[1]
+        print s
         ssid = re.findall(r'"(.*?)"', s)[0]
+        print 'ssid={}'.format(ssid) 
       return ssid
     except Exception as e:
       message = e.message
