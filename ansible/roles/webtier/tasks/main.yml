@@ -13,8 +13,8 @@
 - name: ensure repositories permisions
   file: path=/home/ubuntu/piricohmoto.git owner=ubuntu group=ubuntu recurse=True
 
-- name: Copy post receive hookcd 
-  template: src=templates/post-receive.j2 dest=/home/ubuntu/piricohmoto.git/hooks owner=root group=root mode=0755
+- name: Copy post receive hook
+  template: src=templates/post-receive.j2 dest=/home/ubuntu/piricohmoto.git/hooks/post-receive owner=ubuntu group=ubuntu mode=0755
 
 - name: Ensure packages are installed
   apt: name={{ item }} state=installed
