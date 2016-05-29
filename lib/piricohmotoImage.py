@@ -96,15 +96,14 @@ class Image(Config):
     latitude = geo_data['latitude']
     longitude = geo_data['longitude']
 
-    print "latitude={}".format(latitude)
-    print "longitude={}".format(longitude)
-    print type(latitude)
-    print type(longitude)
-
-    if latitude == float('nan') or longitude == float('nan'):
-      print "Invalid GPS data. Replacing with 0 values"
+    try:
+      int(latitude)
+      int(longitude)
+    except Exception as e:
       latitude = float(0)
       longitude = float(0)
+      print "Invalid GPS data. Replacing with 0 values"
+
     try:
       exif.set_gps_location(self.filename, latitude, longitude)
       self.notify.status_payload(0102)
