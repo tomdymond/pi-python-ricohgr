@@ -17,11 +17,13 @@ import threading
 import redis
 import json
 
-from piricohmotoNotifier import Notifier
+
 
 cwd = path.dirname(path.abspath(__file__))
 sys.path.append('{}/lib/'.format(cwd))
 sys.path.append('{}/../lib/'.format(cwd))
+
+from piricohmotoNotifier import Notifier
 
 class GpsPoller(threading.Thread):
   def __init__(self):
