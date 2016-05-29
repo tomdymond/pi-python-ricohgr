@@ -10,9 +10,13 @@ sys.path.append('{}/lib/'.format(cwd))
 sys.path.append('{}/../lib/'.format(cwd))
 
 from piricohmotoCamera import Camera
+from piricohmotoChecks import Checks
+
+c = Checks()
 
 flow = Camera(config_file='/config/piricohmoto.yml')
 while True:
-  flow.upload_all()
+  if c.check_internet()[0]
+    flow.upload_all()
   sleep(30)
   

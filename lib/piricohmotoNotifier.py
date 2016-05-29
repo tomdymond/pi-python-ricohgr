@@ -33,12 +33,12 @@ class Notifier(object):
             0105: ['Geotagging',              'yellow',   1, 0,  50,  50],
             0106: ['UNASSIGNED',              'orange',   1, 0, 100,  50],
 
-            0201: ['UNASSIGNED',              'white',    2, 0, 100, 100],
+            0201: ['USB KEY PRESENT',         'white',    2, 0, 100, 100],
             0202: ['UNASSIGNED',              'green',    2, 0, 100, 100],
             0203: ['UNASSIGNED',              'blue',     2, 0, 100, 100],
             0204: ['UNASSIGNED',              'red',      2, 0, 100, 100],
             0205: ['UNASSIGNED',              'yellow',   2, 0, 100, 100],
-            0206: ['UNASSIGNED',              'orange',   2, 0, 100, 100],
+            0206: ['DISK SPACE',              'orange',   2, 0, 100, 100],
 
             1001: ['No internet connection',  'white',    0, 1,  50, 999], 
             1002: ['Camera not connected',    'green',    0, 1,   0, 999],
@@ -48,18 +48,18 @@ class Notifier(object):
             1006: ['Failed downloading photo','orange',   0, 1,  50, 100],
 
             1101: ['UNASSIGNED',              'white',    1, 1, 100, 100],
-            1102: ['Failed tagging',          'green',    1, 1, 100, 100],
-            1103: ['Failed uploading',        'blue',     1, 1, 100, 100],
+            1102: ['Failed tagging',          'green',    1, 1, 100,  50],
+            1103: ['Failed uploading',        'blue',     1, 1, 100,  50],
             1104: ['UNASSIGNED',              'red',      1, 1, 100, 100],
             1105: ['UNASSIGNED',              'yellow',   1, 1, 100, 100],
             1106: ['UNASSIGNED',              'orange',   1, 1, 100, 100],
 
-            1201: ['UNASSIGNED',              'white',    2, 1, 100, 100],
+            1201: ['NO USB KEY PRESENT',      'white',    2, 1, 100, 100],
             1202: ['UNASSIGNED',              'green',    2, 1, 100, 100],
             1203: ['UNASSIGNED',              'blue',     2, 1, 100, 100],
             1204: ['UNASSIGNED',              'red',      2, 1, 100, 100],
             1205: ['UNASSIGNED',              'yellow',   2, 1, 100, 100],
-            1206: ['UNASSIGNED',              'orange',   2, 1, 100, 100],
+            1206: ['LOW DISK SPACE',          'orange',   2, 1, 100, 100],
 
             3001: ['UNASSIGNED',              'white',    [0,1,2], 0, 100, 100], 
             3002: ['UNASSIGNED',              'green',    [0,1,2], 0, 100, 100],

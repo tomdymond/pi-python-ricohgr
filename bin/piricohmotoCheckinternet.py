@@ -1,40 +1,22 @@
 #!/usr/bin/env python
 
-import os
-from os import sys, path, mkdir
-import requests
+from os import sys, path
 from time import sleep
-import sh
 
 cwd = path.dirname(path.abspath(__file__))
 sys.path.append('{}/lib/'.format(cwd))
 sys.path.append('{}/../lib/'.format(cwd))
 
-
 from piricohmotoNotifier import Notifier
-
+from piricohmotoChecks import Checks
 
 n = Notifier()
-
-def check_cpu_temp():
-    os.environ['PATH'] += ':/opt/vc/bin'
-    result = sh.sudo('vcgencmd','measure_temp')
-    temp = float(result.stdout.rstrip().split('=')[1].split("'")[0])
-    if temp > 70:
-        return n.status_payload(4004)
-    return n.status_payload(3004)
-
-def check_internet():
-    try:
-        response = requests.head('http://www.google.com')
-        if int(response.status_code) in (200, 302):
-            return n.status_payload(0001)
-        else:
-            return n.status_payload(1001)
-    except Exception as e:
-        return n.status_payload(1001)
+c = Checks()
 
 while True:
-    check_internet()
-    check_cpu_temp()
+    n.status_payload(c.check_internet()[1])
+    n.status_payload(c.check_internet()[1])
+    n.status_payload(c.check_cpu_temp()[1])
+    n.status_payload(c.check_disk_space()[1])
+    n.status_payload(c.check_usb_storage()[1])
     sleep(30)
