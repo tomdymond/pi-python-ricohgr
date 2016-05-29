@@ -99,6 +99,7 @@ class Wifi(Config):
 
 
   def restart_wpasupplicant(self):
+    print "Restarting wpa_supplicant"
     try:
       sh.sudo('killall','wpa_supplicant')
     except Exception as e:
