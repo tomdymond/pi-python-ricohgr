@@ -36,15 +36,21 @@ class Wifi(Config):
     """ Restart the wifi """
     print "restart_connection"
 
+    print "Removing IP"
     sh.sudo('ip', 'addr', 'flush', 'dev', self.camera_interface)
 
+    print "Shutting down interface {}".format(self.camera_interface)
     sh.sudo('ifdown', self.camera_interface)
     time.sleep(2)
+
+    print "Bringing interface {} up again".format(self.camera_interface)
     sh.sudo('ifup', self.camera_interface)
 
     #sh.sudo('killall','wpa_supplicant')
     #sh.sudo('killall', 'dhclient')
     #sh.sudo('wpa_supplicant', '-s', '-B', '-P', '/run/wpa_supplicant.{}.pid'.format(self.camera_interface), '-i', self.camera_interface, '-D', 'nl80211,wext', '-c', '/etc/wpa_supplicant/wpa_supplicant.conf')
+
+    print "Entering a while loop until I'm connected to an SSID"
     i = 0
     while not self.get_current_ssid():
       print "waiting... {}/{}".format(i, 20)
