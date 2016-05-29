@@ -73,6 +73,8 @@
     - piricohmotoServiceNotifier
     - piricohmotoCheckinternet
     - piricohmotoServiceMain
+    - piricohmotoUpload
+    - piricohmotoGeotag
   notify:
     - restart supervisor
   tags: supervisor
