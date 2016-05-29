@@ -69,6 +69,7 @@
     - piricohmotoServiceMain.j2
     - piricohmotoServiceLogger.j2
     - piricohmotoServiceNotifier.j2
+    - piricohmotoCheckinternet.j2
   notify:
     - restart supervisor
 
