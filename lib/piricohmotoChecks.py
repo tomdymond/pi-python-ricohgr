@@ -3,15 +3,16 @@
 import os
 import requests
 import sh
+import psutil
 
 class Check(object):
-    def check_disk_space(self):
+    def check_disk_space(self, paths=['/','/download']):
         """ """
-        return (False, 1206)
-
-    def check_usb_storage(self):
-        """ """
-        return (False, 1201)
+        for i in paths:
+            a = psutil.disk_usage(path)
+            if a.percent > 90:
+                return (False, 1206)
+        return (True, 0206)
 
     def check_cpu_temp(self):
         os.environ['PATH'] += ':/opt/vc/bin'

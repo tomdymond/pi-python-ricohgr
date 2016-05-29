@@ -17,6 +17,5 @@ while True:
     n.status_payload(c.check_internet()[1])
     n.status_payload(c.check_internet()[1])
     n.status_payload(c.check_cpu_temp()[1])
-    n.status_payload(c.check_disk_space()[1])
-    n.status_payload(c.check_usb_storage()[1])
+    n.status_payload(c.check_disk_space(paths=['/', '/download'])[1])
     sleep(30)
