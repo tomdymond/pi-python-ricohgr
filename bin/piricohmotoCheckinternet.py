@@ -20,7 +20,7 @@ def check_cpu_temp():
     os.environ['PATH'] += ':/opt/vc/bin'
     result = sh.sudo('vcgencmd','measure_temp')
     temp = float(result.stdout.rstrip().split('=')[1].split("'")[0])
-    if temp > 60:
+    if temp > 70:
         return n.status_payload(4004)
     return n.status_payload(3004)
 
