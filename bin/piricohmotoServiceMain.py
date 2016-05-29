@@ -32,6 +32,8 @@ def do_everything():
         print "Connected to a SSID at least : {}".format(conn.get_current_ssid())
         conn.notify.orange()
         conn.restart_connection()
+      else:
+        conn.restart_wpasupplicant()
         
   except Exception as e:
     print e.message

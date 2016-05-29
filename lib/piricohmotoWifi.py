@@ -74,18 +74,7 @@ class Wifi(Config):
           print e.message
           return False   
     return True
-    #print "Removing IP"
-    #sh.sudo('ip', 'addr', 'flush', 'dev', self.camera_interface)
-    #print "Shutting down interface {}".format(self.camera_interface)
-    #sh.sudo('ifdown', self.camera_interface)
-    #time.sleep(2)
-    #print "Bringing interface {} up again".format(self.camera_interface)
-    #sh.sudo('ifup', self.camera_interface)
-    #
-    #
-    #print "Running dhclient on {}".format(self.camera_interface)
-
-
+    
 
 
   def get_current_ssid(self):
@@ -108,9 +97,8 @@ class Wifi(Config):
     print ("Camera is OFF!")
     return False
 
-  def connect_to_camera_ssid(self):
-    """ Return true if connected to camera SSID """
 
+  def restart_wpasupplicant(self):
     try:
       sh.sudo('killall','wpa_supplicant')
     except Exception as e:
@@ -118,6 +106,13 @@ class Wifi(Config):
     sleep(1)
     sh.sudo('wpa_supplicant', '-s', '-B', '-P', '/run/wpa_supplicant.{}.pid'.format(self.camera_interface), '-i', self.camera_interface, '-D', 'nl80211,wext', '-c', '/etc/wpa_supplicant/wpa_supplicant.conf')
     sleep(10)
+
+  def connect_to_camera_ssid(self):
+    """ Return true if connected to camera SSID """
+
+    if self.get_current_ssid() != self.camera_ssid:
+      self.restart_wpasupplicant()
+      sleep(1)
 
     if self.get_current_ssid() == self.camera_ssid:
       print ("Connected to Camera SSID")
