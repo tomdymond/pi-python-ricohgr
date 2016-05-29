@@ -71,17 +71,18 @@
     - piricohmotoServiceLogger
     - piricohmotoServiceNotifier
     - piricohmotoCheckinternet
-  notify:
-    - restart supervisor
-  tags: supervisor
-
-- name: Remove supervisor files
-  file: path=/etc/supervisor/conf.d/{{ item }}.conf state=absent
-  with_items:
     - piricohmotoServiceMain
   notify:
     - restart supervisor
   tags: supervisor
+
+#- name: Remove supervisor files
+#  file: path=/etc/supervisor/conf.d/{{ item }}.conf state=absent
+#  with_items:
+#    - piricohmotoServiceMain
+#  notify:
+#    - restart supervisor
+#  tags: supervisor
 
 - name: Create nginx SSL dir
   file: path=/etc/nginx/ssl state=directory owner=root group=root mode=0600
