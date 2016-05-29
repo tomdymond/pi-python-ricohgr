@@ -27,7 +27,7 @@ def do_everything():
         flow.download_all()
     else:
       if conn.get_current_ssid():
-        print "Connected to a SSID at least : {}".format(ssid)
+        print "Connected to a SSID at least : {}".format(conn.get_current_ssid())
         conn.notify.orange()
         conn.restart_connection()
         
