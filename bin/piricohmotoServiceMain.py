@@ -33,6 +33,7 @@ def do_everything():
         conn.notify.orange()
         conn.restart_connection()
       else:
+        print "Not connected to ANY ssid. So restart wpa_supplicant"
         conn.restart_wpasupplicant()
         
   except Exception as e:

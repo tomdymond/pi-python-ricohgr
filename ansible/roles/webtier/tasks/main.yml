@@ -37,7 +37,7 @@
        dest={{ install_root }}
        version=devel update=yes
   ignore_errors: True
-  
+
 
 - name: Ensure appuser exists
   user: name=appuser shell=/bin/bash groups=i2c
@@ -68,12 +68,20 @@
 - name: Copy supervisor files
   template: src={{ item }}.j2 dest=/etc/supervisor/conf.d/{{ item }}.conf
   with_items:
-    - piricohmotoServiceMain
     - piricohmotoServiceLogger
     - piricohmotoServiceNotifier
     - piricohmotoCheckinternet
   notify:
     - restart supervisor
+  tags: supervisor
+
+- name: Remove supervisor files
+  file: path=/etc/supervisor/conf.d/{{ item }}.conf state=absent
+  with_items:
+    - piricohmotoServiceMain
+  notify:
+    - restart supervisor
+  tags: supervisor
 
 - name: Create nginx SSL dir
   file: path=/etc/nginx/ssl state=directory owner=root group=root mode=0600
