@@ -26,14 +26,11 @@ def do_everything():
       if conn.connect_to_camera_ssid():
         flow.download_all()
     else:
-      conn.notify.blue()
-      ssid = conn.get_current_ssid()
-      if ssid:
+      if conn.get_current_ssid():
         print "Connected to a SSID at least : {}".format(ssid)
         conn.notify.orange()
-      else:
-        print "Currently not connected to any SSID. restart_connection"
         conn.restart_connection()
+        
   except Exception as e:
     print e.message
 

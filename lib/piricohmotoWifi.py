@@ -11,6 +11,7 @@ from piricohmotoConfig import Config
 class Wifi(Config):
   def __init__(self, **kwargs):
     Config.__init__(self, **kwargs)
+    self.cached_ssid = None
     self.camera_ssid = self.config['camera_ssid']
     self.camera_interface = self.config['camera_interface']
     os.environ['PATH'] += ":/sbin:/usr/sbin"
@@ -36,19 +37,6 @@ class Wifi(Config):
     """ Restart the wifi """
     print "restart_connection"
 
-    #print "Removing IP"
-    #sh.sudo('ip', 'addr', 'flush', 'dev', self.camera_interface)
-
-    print "Shutting down interface {}".format(self.camera_interface)
-    sh.sudo('ifdown', self.camera_interface)
-    time.sleep(2)
-
-    print "Bringing interface {} up again".format(self.camera_interface)
-    sh.sudo('ifup', self.camera_interface)
-
-    #sh.sudo('killall','wpa_supplicant')
-    #sh.sudo('killall', 'dhclient')
-    #sh.sudo('wpa_supplicant', '-s', '-B', '-P', '/run/wpa_supplicant.{}.pid'.format(self.camera_interface), '-i', self.camera_interface, '-D', 'nl80211,wext', '-c', '/etc/wpa_supplicant/wpa_supplicant.conf')
 
     print "Entering a while loop until I'm connected to an SSID"
     i = 0
@@ -58,10 +46,33 @@ class Wifi(Config):
       if i > 20:
         print "Timed out waiting for confirmation I was conncted to any AP"
         return False
-    print "Running dhclient on {}".format(self.camera_interface)
-    
-    #sh.sudo('dhclient', self.camera_interface)
+
+    if self.get_current_ssid:
+      if self.get_current_ssid != self.cached_ssid:
+        self.cached_ssid = self.get_current_ssid
+        try:
+          sh.sudo('killall', 'dhclient')
+        except Exception as e:
+          print e.message
+        try:
+          sh.sudo('dhclient', self.camera_interface)
+        except Exception as e:
+          print e.message
+          return False   
     return True
+    #print "Removing IP"
+    #sh.sudo('ip', 'addr', 'flush', 'dev', self.camera_interface)
+    #print "Shutting down interface {}".format(self.camera_interface)
+    #sh.sudo('ifdown', self.camera_interface)
+    #time.sleep(2)
+    #print "Bringing interface {} up again".format(self.camera_interface)
+    #sh.sudo('ifup', self.camera_interface)
+    #sh.sudo('killall','wpa_supplicant')
+    #sh.sudo('wpa_supplicant', '-s', '-B', '-P', '/run/wpa_supplicant.{}.pid'.format(self.camera_interface), '-i', self.camera_interface, '-D', 'nl80211,wext', '-c', '/etc/wpa_supplicant/wpa_supplicant.conf')
+    #print "Running dhclient on {}".format(self.camera_interface)
+
+
+
 
   def get_current_ssid(self):
     """ Just return the current ssid """
