@@ -22,8 +22,10 @@ def check_internet():
     else:
         n.flashing=1
 
+    print response.status_code
     n.duration=20
     n.led([n.led_codes['white'][0]])
+    print n.payload
     n.send()
 
 while True:
