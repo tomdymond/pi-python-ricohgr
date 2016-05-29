@@ -27,9 +27,12 @@ def do_everything():
         self.flow.download_all()
     else:
       conn.notify.blue()
-      if conn.get_current_ssid:
-        conn.notify.red()
+      ssid = conn.get_current_ssid
+      if ssid:
+        print "Connected to a SSID at least : {}".format(ssid)
+        conn.notify.orange()
       else:
+        print "Currently not connected to any SSID. restart_connection"
         conn.restart_connection()
   except Exception as e:
     print e.message
