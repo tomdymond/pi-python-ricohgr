@@ -64,12 +64,12 @@
   copy: src=/lib/systemd/system/supervisor.service dest=/etc/systemd/system/supervisor.service remote_src=True
 
 - name: Copy supervisor files
-  template: src={{ item }} dest=/etc/supervisor/conf.d/{{ item }}.conf
+  template: src={{ item }}.j2 dest=/etc/supervisor/conf.d/{{ item }}.conf
   with_items:
-    - piricohmotoServiceMain.j2
-    - piricohmotoServiceLogger.j2
-    - piricohmotoServiceNotifier.j2
-    - piricohmotoCheckinternet.j2
+    - piricohmotoServiceMain
+    - piricohmotoServiceLogger
+    - piricohmotoServiceNotifier
+    - piricohmotoCheckinternet
   notify:
     - restart supervisor
 
