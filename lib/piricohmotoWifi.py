@@ -7,11 +7,12 @@ import sys
 import time
 import os
 from piricohmotoConfig import Config
+import redis
 
 class Wifi(Config):
   def __init__(self, **kwargs):
     Config.__init__(self, **kwargs)
-    self.cached_ssid = None
+    self.cached_ssid = self.get_cached_ssid()
     self.camera_ssid = self.config['camera_ssid']
     self.camera_interface = self.config['camera_interface']
     os.environ['PATH'] += ":/sbin:/usr/sbin"
@@ -32,6 +33,13 @@ class Wifi(Config):
     return ssids
 
 
+  def get_cached_ssid(self):
+    r = redis.StrictRedis(host='localhost')
+    return r.get('SSID')
+
+  def write_cached_ssid(self, ssid):
+    r = redis.StrictRedis(host='localhost')
+    return r.set('SSID', ssid)
 
   def restart_connection(self):
     """ Restart the wifi """
@@ -54,7 +62,7 @@ class Wifi(Config):
       print "Connected with {}. Previous was {}".format(current_ssid, self.cached_ssid)
       if current_ssid != self.cached_ssid:
         print "Detected an SSID change. restarting DHCP"
-        self.cached_ssid = current_ssid
+        self.write_cached_ssid(current_ssid)
         try:
           sh.sudo('killall', 'dhclient')
         except Exception as e:
