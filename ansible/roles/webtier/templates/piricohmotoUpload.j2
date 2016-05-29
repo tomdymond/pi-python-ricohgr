@@ -1,0 +1,9 @@
+[program:piricohmotoUpload]
+command=nice /home/venvs/piricohmoto/bin/python {{ install_root }}/bin/piricohmotoUpload.py
+directory=/tmp
+user=appuser
+autostart=true
+autorestart=true
+startretries=3
+stderr_logfile=/var/log/piricohmoto/piricohmotoUpload.err.log
+stdout_logfile=/var/log/piricohmoto/piricohmotoUpload.out.log
