@@ -36,8 +36,8 @@ class Wifi(Config):
     """ Restart the wifi """
     print "restart_connection"
 
-    print "Removing IP"
-    sh.sudo('ip', 'addr', 'flush', 'dev', self.camera_interface)
+    #print "Removing IP"
+    #sh.sudo('ip', 'addr', 'flush', 'dev', self.camera_interface)
 
     print "Shutting down interface {}".format(self.camera_interface)
     sh.sudo('ifdown', self.camera_interface)
@@ -60,7 +60,7 @@ class Wifi(Config):
         return False
     print "Running dhclient on {}".format(self.camera_interface)
     
-    sh.sudo('dhclient', self.camera_interface)
+    #sh.sudo('dhclient', self.camera_interface)
     return True
 
   def get_current_ssid(self):
