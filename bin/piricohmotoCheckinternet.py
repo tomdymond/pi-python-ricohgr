@@ -12,6 +12,15 @@ sys.path.append('{}/../lib/'.format(cwd))
 from piricohmotoNotifier import Notifier
 
 
+def check_cpu_temp():
+    n = Notifier()
+    os.environ['PATH'] += ':/opt/vc/bin'
+    result = sh.vcgencmd('measure_temp')
+    temp = float(result.stdout.rstrip().split('=')[1].split("'")[0])
+    if temp > 60:
+        return n.status_payload(4004)
+    return n.status_payload(3004)
+
 def check_internet():
     n = Notifier()
 
