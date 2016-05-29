@@ -17,13 +17,13 @@ def check_internet():
     n = Notifier()
     n.power=50
 
-    if int(response.status_code) == 200:
+    if int(response.status_code) in (200, 302):
         n.flashing=0
     else:
         n.flashing=1
 
     print response.status_code
-    n.duration=20
+    n.duration=40
     n.led([n.led_codes['white'][0]])
     print n.payload
     n.send()
