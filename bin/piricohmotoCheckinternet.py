@@ -11,22 +11,21 @@ sys.path.append('{}/../lib/'.format(cwd))
 
 from piricohmotoNotifier import Notifier
 
-response = requests.head('http://www.google.com')
-n = Notifier()
-n.power=50
-n.flashing=1
-n.duration=2
 
-if int(response.status_code) == 200:
-    n.flashing=0
+def check_internet():
+    response = requests.head('http://www.google.com')
+    n = Notifier()
+    n.power=50
 
-else:
-    n.flashing=1
+    if int(response.status_code) == 200:
+        n.flashing=0
+    else:
+        n.flashing=1
 
-n.led([n.led_codes['white'][0]])
-n.duration=20
- 
+    n.duration=20
+    n.led([n.led_codes['white'][0]])
+    n.send()
 
-n.send()
-
-sleep(30)
+while True:
+    check_internet()
+    sleep(30)
