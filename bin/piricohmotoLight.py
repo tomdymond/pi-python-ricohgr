@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 
 import argparse
+from os import sys, path
+
 
 cwd = path.dirname(path.abspath(__file__))
 sys.path.append('{}/lib/'.format(cwd))
