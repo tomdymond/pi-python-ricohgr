@@ -109,17 +109,9 @@ class Wifi(Config):
 
   def connect_to_camera_ssid(self):
     """ Return true if connected to camera SSID """
-    if self.get_current_ssid() != self.camera_ssid:
-      print ("Trying to connect to camera ssid {}".format(self.camera_ssid))
-      print ("Current SSID: {}".format(self.get_current_ssid()))
-      self.restart_connection()
-      print ("Waiting for interface")
- 
-
     print ("Connected to Camera SSID")
     if self.get_current_ssid() == self.camera_ssid:
-      #sh.sudo('ifconfig', self.camera_interface, '192.168.0.2/24', 'up')
-      sh.sudo('dhclient',self.camera_interface)
+      self.restart_connection()
       return True
     else:
       print ("Problem connecting to SSID {}".format(self.camera_ssid))
