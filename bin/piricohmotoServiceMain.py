@@ -27,6 +27,7 @@ def do_everything():
         flow.download_all()
     else:
       if conn.get_current_ssid():
+        conn.notify.status_payload(1002)
         print "Connected to a SSID at least : {}".format(conn.get_current_ssid())
         conn.notify.status_payload(0003)
         conn.restart_connection()
