@@ -18,7 +18,7 @@ n = Notifier()
 
 def check_cpu_temp():
     os.environ['PATH'] += ':/opt/vc/bin'
-    result = sh.vcgencmd('measure_temp')
+    result = sh.sudo('vcgencmd','measure_temp')
     temp = float(result.stdout.rstrip().split('=')[1].split("'")[0])
     if temp > 60:
         return n.status_payload(4004)
@@ -35,6 +35,6 @@ def check_internet():
         return n.status_payload(1001)
 
 while True:
-    #check_internet()
+    check_internet()
     check_cpu_temp()
     sleep(30)
