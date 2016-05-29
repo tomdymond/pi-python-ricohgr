@@ -97,7 +97,8 @@ class Image(Config):
     longitude = geo_data['longitude']
     try:
       exif.set_gps_location(self.filename, latitude, longitude)
-      self.notify.status_payload(0003)
+      self.notify.status_payload(0102)
     except Exception as e:
+      self.notify.status_payload(1102)
       print e.message
       
