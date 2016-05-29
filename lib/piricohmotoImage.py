@@ -95,6 +95,9 @@ class Image(Config):
     exif = self.exifdata()
     latitude = geo_data['latitude']
     longitude = geo_data['longitude']
+    if latitude == 'Nan': latitude=0
+    if longitude == 'Nan': longitude=0
+
     try:
       exif.set_gps_location(self.filename, latitude, longitude)
       self.notify.status_payload(0102)
