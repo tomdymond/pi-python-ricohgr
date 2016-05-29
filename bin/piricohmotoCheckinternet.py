@@ -35,4 +35,5 @@ def check_internet():
 
 while True:
     check_internet()
+    check_cpu_temp()
     sleep(30)
