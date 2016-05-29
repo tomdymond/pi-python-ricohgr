@@ -5,6 +5,7 @@ import sh
 import re
 import sys
 import time
+from time import sleep
 import os
 from piricohmotoConfig import Config
 import redis
@@ -110,7 +111,10 @@ class Wifi(Config):
   def connect_to_camera_ssid(self):
     """ Return true if connected to camera SSID """
 
-    sh.sudo('killall','wpa_supplicant')
+    try:
+      sh.sudo('killall','wpa_supplicant')
+    except Exception as e:
+      print e.message
     sleep(1)
     sh.sudo('wpa_supplicant', '-s', '-B', '-P', '/run/wpa_supplicant.{}.pid'.format(self.camera_interface), '-i', self.camera_interface, '-D', 'nl80211,wext', '-c', '/etc/wpa_supplicant/wpa_supplicant.conf')
     sleep(10)
