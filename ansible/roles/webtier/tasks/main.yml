@@ -37,6 +37,7 @@
        dest={{ install_root }}
        version=devel update=yes
   ignore_errors: True
+  
 
 - name: Ensure appuser exists
   user: name=appuser shell=/bin/bash groups=i2c
