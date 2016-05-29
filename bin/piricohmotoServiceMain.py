@@ -5,6 +5,7 @@ Main service
 
 import logging
 import time
+from time import sleep
 from os import sys, path, mkdir
 import datetime
 from time import *
@@ -50,36 +51,42 @@ class Upload_all(threading.Thread):
     self.flow.upload_all()
 
 
+def do_everything():
+  conn = flow.connection()
 
-      
-flow = Ricoh(config_file='/config/piricohmoto.yml')
-conn = flow.connection()
-
-try:
-  #b = Tag_all(flow)
-  #b.start()
+  try:
+    #b = Tag_all(flow)
+    #b.start()
 
 
-  if conn.is_camera_on():
-    conn.notify.green()
-    if conn.connect_to_camera_ssid():
-      a = Download_all(flow)
-      a.start()
-  else:
-    conn.notify.blue()
-    if conn.get_current_ssid:
-      conn.notify.red()
+    if conn.is_camera_on():
+      conn.notify.green()
+      if conn.connect_to_camera_ssid():
+        a = Download_all(flow)
+        a.start()
     else:
-      conn.restart_connection()
-      # c = Upload_all(flow)
-      # c.start()
+      conn.notify.blue()
+      if conn.get_current_ssid:
+        conn.notify.red()
+      else:
+        conn.restart_connection()
+        # c = Upload_all(flow)
+        # c.start()
 
-except (KeyboardInterrupt, SystemExit): #when you press ctrl+c
-  print ("\nKilling Threads...")
-  a.running = False
-  b.running = False
-  c.running = False
-  a.join() # wait for the thread to finish what it's doing
-  b.join() # wait for the thread to finish what it's doing
-  c.join()
-print ("Done.\nExiting.")      
+  except (KeyboardInterrupt, SystemExit): #when you press ctrl+c
+    print ("\nKilling Threads...")
+    a.running = False
+    b.running = False
+    c.running = False
+    a.join() # wait for the thread to finish what it's doing
+    b.join() # wait for the thread to finish what it's doing
+    c.join()
+  print ("Done.\nExiting.") 
+
+
+flow = Ricoh(config_file='/config/piricohmoto.yml')
+while True:
+  do_everything()
+  sleep(30)
+
+
