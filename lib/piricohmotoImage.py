@@ -95,6 +95,12 @@ class Image(Config):
     exif = self.exifdata()
     latitude = geo_data['latitude']
     longitude = geo_data['longitude']
+
+    print "latitude={}".format(latitude)
+    print "longitude={}".format(longitude)
+    print type(latitude)
+    print type(longitude)
+
     if latitude == 'NaN' or longitude == 'NaN':
       print "Invalid GPS data. Replacing with 0 values"
       latitude = 0
