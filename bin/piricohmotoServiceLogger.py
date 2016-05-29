@@ -17,6 +17,8 @@ import threading
 import redis
 import json
 
+from piricohmotoNotifier import Notifier
+
 cwd = path.dirname(path.abspath(__file__))
 sys.path.append('{}/lib/'.format(cwd))
 sys.path.append('{}/../lib/'.format(cwd))
@@ -34,13 +36,17 @@ class GpsPoller(threading.Thread):
 
 gpsp = GpsPoller() # create the thread
 r = redis.StrictRedis(host='localhost')
+n = Notifier()
 try:
   gpsp.start() # start it up
   while True:
+
     if gpsp.gpsd.fix.latitude:
+      n.status_payload(0005)
       localtime = datetime.datetime.now().strftime('%s')
       r.hmset('GPS', {localtime: json.dumps(gpsp.gpsd.fix.__dict__)})
-
+    else:
+      n.status_payload(1005)
     time.sleep(5)
 
 except (KeyboardInterrupt, SystemExit): #when you press ctrl+c
