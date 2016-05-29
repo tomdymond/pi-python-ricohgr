@@ -12,6 +12,7 @@
 
 - name: ensure repositories permisions
   file: path=/home/ubuntu/piricohmoto.git owner=ubuntu group=ubuntu recurse=True
+  tags: postreceive
 
 - name: Copy post receive hook
   template: src=templates/post-receive.j2 dest=/home/ubuntu/piricohmoto.git/hooks/post-receive owner=ubuntu group=ubuntu mode=0755
