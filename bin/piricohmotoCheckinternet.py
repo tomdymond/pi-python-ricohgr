@@ -35,6 +35,6 @@ def check_internet():
         return n.status_payload(1001)
 
 while True:
-    check_internet()
+    #check_internet()
     check_cpu_temp()
     sleep(30)
