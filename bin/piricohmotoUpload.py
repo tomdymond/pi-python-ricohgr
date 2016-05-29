@@ -10,7 +10,7 @@ sys.path.append('{}/lib/'.format(cwd))
 sys.path.append('{}/../lib/'.format(cwd))
 
 from piricohmotoCamera import Camera
-from piricohmotoChecks import Checks
+from piricohmotoChecks import Check
 
 c = Check()
 
