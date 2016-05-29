@@ -47,9 +47,14 @@ class Wifi(Config):
         print "Timed out waiting for confirmation I was conncted to any AP"
         return False
 
-    if self.get_current_ssid:
-      if self.get_current_ssid != self.cached_ssid:
-        self.cached_ssid = self.get_current_ssid
+
+    current_ssid = self.get_current_ssid()
+
+    if current_ssid:
+      print "Connected with {}. Previous was {}".format(current_ssid, self.cached_ssid)
+      if current_ssid != self.cached_ssid:
+        print "Detected an SSID change. restarting DHCP"
+        self.cached_ssid = current_ssid
         try:
           sh.sudo('killall', 'dhclient')
         except Exception as e:
