@@ -31,6 +31,6 @@ def do_everything():
       else:
         conn.restart_connection()
 
-while True:
-  do_everything()
-  sleep(30)
+#while True:
+#  do_everything()
+#  sleep(30)
