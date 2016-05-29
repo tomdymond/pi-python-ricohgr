@@ -1,0 +1,20 @@
+# Managed by ansible
+
+ddns-update-style none;
+ignore client-updates;
+authoritative;
+option local-wpad code 252 = text;
+
+subnet
+192.168.2.0 netmask 255.255.255.0 {
+  option routers 192.168.2.1;
+  option subnet-mask
+  255.255.255.0;
+  option broadcast-address
+  192.168.2.255;
+  option domain-name-servers 8.8.8.8;
+  option time-offset 0;
+  range 192.168.2.3 192.168.2.13;
+  default-lease-time 1209600;
+  max-lease-time 1814400;
+}

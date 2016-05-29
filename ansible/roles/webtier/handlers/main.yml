@@ -1,0 +1,12 @@
+---
+- name: reload systemctl
+  command: /bin/systemctl daemon-reload
+
+- name: restart nginx
+  service: name=nginx state=restarted
+
+- name: restart uwsgi
+  service: name=uwsgi state=restarted
+
+- name: restart supervisor
+  service: name=supervisor state=restarted

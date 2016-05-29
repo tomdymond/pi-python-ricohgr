@@ -4,46 +4,16 @@
 import yaml
 import os
 import sys
-
-
-class piglowclient(object):
-  def __init__(self):
-    pass
-  
-  def notify(self, colour, duration=5, flashing=False):
-    """ Send a request to the notificatin daemon """
-    if flashing:
-      c = 'flashing'
-    else:
-      c = 'fixed'
-    try:
-      response = requests.get('http://127.0.0.1/piglow/{}/{}/{}'.format(colour, c, duration))
-      if response.status_code == 200:
-        return True
-      return False
-    except Exception as e:
-      return False
-    
+import requests
+import json
+from piricohmotoNotifier import Notifier
 
 class Config(object):
   def __init__(self, **kwargs):
     self.config = self.load_config(kwargs['config_file'])
     self.config_file = kwargs['config_file']
-    self.piglowclient = piglowClient(self)
+    self.notify = Notifier()
 
-  def notify(self, colour, duration=5, flashing=False):
-    """ Send a request to the notificatin daemon """
-    if flashing:
-      c = 'flashing'
-    else:
-      c = 'fixed'
-    try:
-      response = requests.get('http://127.0.0.1/piglow/{}/{}/{}'.format(colour, c, duration))
-      if response.status_code == 200:
-        return True
-      return False
-    except Exception as e:
-      return False
 
   def load_config(self, config_file):
     """ Load config """

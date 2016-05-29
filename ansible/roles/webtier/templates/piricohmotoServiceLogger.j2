@@ -1,5 +1,5 @@
 [program:piricohmotoServiceLogger]
-command=/opt/pi-python-ricohgr/bin/piricohmotoServiceLogger.py
+command=nice /home/venvs/piricohmoto/bin/python {{ install_root }}/bin/piricohmotoServiceLogger.py
 directory=/tmp
 user=appuser
 autostart=true

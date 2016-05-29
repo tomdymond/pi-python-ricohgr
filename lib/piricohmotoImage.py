@@ -32,10 +32,11 @@ class Image(Config):
       j = json.loads(r.hget('IMAGES', self.filename))
       j['UPLOAD'] = True
       r.hmset('IMAGES', {self.filename: json.dumps(j)})
-      self.notify(colour='blue', flashing=True, duration=2)
+      self.notify.flashing=1
+      self.notify.blue()
       return True
     except Exception as e:
-      self.notify(colour='red', flashing=True, duration=2)
+      self.notify.red()
       print (e.message)
     return False
 
@@ -95,6 +96,9 @@ class Image(Config):
     exif = self.exifdata()
     latitude = geo_data['latitude']
     longitude = geo_data['longitude']
-    exif.set_gps_location(self.filename, latitude, longitude)
-    self.notify(colour='green', flashing=False, duration=2)
+    try:
+      exif.set_gps_location(self.filename, latitude, longitude)
+      self.notify.blue()
+    except Exception as e:
+      print e.message
       

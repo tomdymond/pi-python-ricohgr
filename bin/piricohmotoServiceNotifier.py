@@ -1,68 +1,55 @@
 #!/usr/bin/env python
-"""
-For now, a simple endpoint to display visual status of my Pi. It's a start...
-"""
-
-import piglow
-import time
+import sys
 import threading
+import json
+import piglow
+import random
+from time import sleep
 
-from flask import Flask
+from flask import Flask, request
 app = Flask(__name__)
 
 class Notifier(threading.Thread):
-  def __init__(self, colour='green', flashing=True, power=100):
+  def __init__(self):
     threading.Thread.__init__(self)
-    self.colour = colour
     self.running = True
-    self.piglow = piglow
-    self.flashing = flashing
-    self.power = power
-    self.event= True
+    self.new_map=[[[0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0]], [[0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0]]]
 
-  def stop(self):
-    self.piglow.clear()
-    self.piglow.show()
-    self.running=False
+  def set_colour(self, item):
+    for p, i in enumerate(self.new_map[item]):
+      if i[1] < 1:
+        i[0] = 0
+      else:
+        i[1] -= 1
+      piglow.led(p, i[0])
+    piglow.show()
 
   def run(self):
-    """ Make it start """
-    print ("run")
     while self.running:
-      if self.flashing:
-        self.piglow.clear()
-        self.piglow.show()
-        time.sleep(0.5)
-
-      if self.event or self.flashing:
-        if self.colour not in ['red', 'green', 'blue', 'yellow', 'orange']:
-          self.colour = 'red'
-        self.piglow.clear()
-        self.piglow.colour(self.colour, self.power)
-        self.piglow.show()
-        self.event = False
-      time.sleep(0.5)
+      for i in [0,1]:
+        self.set_colour(i)
+        sleep(0.2)
 
 
-@app.route('/piglow/<colour>/<colourstate>')
-def change_colour(colour, colourstate):
-  if colourstate == 'flashing':
-    a.flashing = True
+
+@app.route('/', methods=["POST"])
+def change_colour():
+  r = json.loads(request.get_json(silent=True))
+  n.new_map[0][r[1]] = [r[2], r[3]]
+  if r[0]:
+    n.new_map[1][r[1]] = [0, 0]
   else:
-    a.flashing = False
-  a.colour=colour
-  a.event=True
-  return colour
-
+    n.new_map[1][r[1]] = [r[2], r[3]]
+  return "GOOD"
 
 if __name__ == '__main__':
-  a = Notifier(flashing=False)
+  n = Notifier()
+  n.start()
+
   try:
-    a.start()
-    while True:
-      app.run()
-  except (KeyboardInterrupt, SystemExit): #when you press ctrl+c
-    print ("\nKilling Thread...")
-    a.running = False
-    a.join() # wait for the thread to finish what it's doing
-  print ("Done.\nExiting.")
+    app.run()
+    n.running = False
+    n.join()
+  except (KeyboardInterrupt, SystemExit):
+    n.running = False
+    n.join()

@@ -35,6 +35,8 @@ class RicohImage(Image):
     print reponse.status_code
     if reponse.status_code == 200:
       print "saving file..."
+      self.notify.flashing=1
+      self.notify.blue()
       with open('{}/{}'.format(self.download_dir, self.filename), 'wb') as f:
         for chunk in reponse.iter_content(chunk_size=1024): 
           if chunk: # filter out keep-alive new chunks

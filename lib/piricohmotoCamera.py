@@ -13,7 +13,7 @@ class Camera(Config):
     Config.__init__(self, **kwargs)
     self.redis_connection = redis.StrictRedis(host='localhost')
     self.access_token = self.config['access_token']
-    self.dropbox_images = self.get_dropbox_images()
+    
 
 
   def geotag_all(self):
@@ -39,14 +39,18 @@ class Camera(Config):
 
   def get_dropbox_images(self):
     """ Return of list of images already uploaded """
-    client = dropbox.client.DropboxClient(self.access_token)
     remote_list = set()
-    for i in  client.metadata('/')['contents']:
-      remote_list.add(i['path'].split('/')[1])
+    try:
+      client = dropbox.client.DropboxClient(self.access_token)
+      for i in client.metadata('/')['contents']:
+        remote_list.add(i['path'].split('/')[1])
+    except Exception as e:
+      print e.message
     return list(remote_list)
      
   def upload_all(self):
     """ Upload all images if jpeg """
+    self.dropbox_images = self.get_dropbox_images()
     for filename in self.redis_connection.hkeys('IMAGES'):
       image = Image(config_file=self.config_file, filename=filename)
       if not image.is_uploaded():

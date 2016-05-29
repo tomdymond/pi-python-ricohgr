@@ -1,0 +1,4 @@
+{% for nic in network_cards %}
+SUBSYSTEM=="net", ACTION=="add", ATTR{address}=="{{ nic.mac }}", NAME="{{ nic.interface }}"
+{% endfor %}
+

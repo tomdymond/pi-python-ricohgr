@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-NAME="${1}""
+NAME="${1}"
 
 [ ! "${NAME}" ] && NAME="test5"
 

@@ -1,0 +1,10 @@
+[program:piricohmotoCheckinternet]
+command=nice /home/venvs/piricohmoto/bin/python {{ install_root }}/bin/piricohmotoCheckinternet.py
+directory=/tmp
+user=appuser
+autostart=true
+autorestart=true
+startretries=3
+stderr_logfile=/var/log/piricohmoto/piricohmotoCheckinternet.err.log
+stdout_logfile=/var/log/piricohmoto/piricohmotoCheckinternet.out.log
+

@@ -1,0 +1,23 @@
+# file: production
+
+[all:vars]
+ansible_user=ubuntu
+become=true
+
+[london-piweb]
+proto16 ansible_host=192.168.1.55 
+proto32 ansible_host=192.168.1.56
+
+[vietnam-piweb]
+proto8 ansible_host=192.168.2.8
+
+[piweb:children]
+london-piweb
+vietnam-piweb
+
+[london:children]
+london-piweb
+
+[vietnam:children]
+vietnam-piweb
+

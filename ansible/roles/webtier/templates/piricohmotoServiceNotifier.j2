@@ -1,5 +1,5 @@
 [program:piricohmotoServiceNotifier]
-command=/opt/pi-python-ricohgr/bin/piricohmotoServiceNotifier.py
+command=nice /home/venvs/piricohmoto/bin/python {{ install_root }}/bin/piricohmotoServiceNotifier.py
 directory=/tmp
 user=appuser
 autostart=true

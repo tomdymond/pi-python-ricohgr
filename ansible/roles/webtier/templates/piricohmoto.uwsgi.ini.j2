@@ -1,0 +1,10 @@
+[uwsgi]
+base = {{ install_root }}/config_app
+app = piricohmoto
+module = %(app)
+home = /home/venvs/piricohmoto
+pythonpath = %(base)
+socket = /var/www/piricohmoto/%n.sock
+chmod-socket    = 644
+callable = app
+logto = /var/log/uwsgi/%n.log

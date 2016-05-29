@@ -1,23 +1,29 @@
-ansible playbook for :
+BUILDING THE BASE IMAGEddd
+---------
+apt-get install gddrescue
+ddrescue -d -D --force /home/ubuntu/ubuntu-standard-16.04-server-armhf-raspberry-pi.img /dev/sda
 
-- wpa_supplicant.conf
-- install packages
-- user ssh key
-- clone project files
-- generate config
-- configure cron tab
 
-- order status indicator light
-- punch hole in case
+---------
+STATUS INDICATORS
 
-status codes:
  - flashing: GPS satellites not found
  - blue: Wifi connected to camera
  - yellow: No network connection
  - green: Connected to internet
  - red: A service is not running
 
+---------
+ANSIBLE WORK
 
+- install packages
+- user ssh key
+- clone project files
+- generate config
+
+
+---------
+DOCKER STUFF
 
 Create base image:
  debootstrap xenial xenial
@@ -35,11 +41,66 @@ Add to /boot/config
 
 dtparam=i2c_arm=on
 
-
-
  
- docker build -t test5 .
- docker run -it -v /root/config:/config --privileged -v /dev/bus/usb:/dev/bus/usb test5
+docker build -t test5 .
+:q
+
+
+
+docker run -it --net=host -v /root/config:/config --privileged -v /share/redis:/var/lib/redis -v /dev/bus/usb:/dev/bus/usb test5 bash
+
+
+-----------
+CHRIS TESTING
+For Chris's PI:  IP 1.6 or 1.8. Put a sticker on it with details
+Send Pi to Vietnam
+
+-----------
+REDIS
+
+Because things run in docker now, save the redis database on the shared folder. 
+
+-----------
+SECURITY
+
+Need a way to protect the config yaml file. When the device boots up, run in hostapp wifi mode. Phone will connect to Pi over https and one can either:
+ - Unlock current configuration with 4 digit PIN
+ - Upload new configuration
+
+ ----------
+
+because chris's version won't have GPS, work around this by simulating gps entries
+
+
+
+BLUETOOTH STUFF WORKING !!!
+
+Needs to do all this again to figure out what made it work:
+
+apt-get install -y bluez i-dbus
+git clone https://github.com/mk-fg/fgtk
+
+
+use bluetoothctl to pair the device
+
+#!/bin/bash
+
+br=bnep
+
+[[ -n "$(brctl show $br 2>&1 1>/dev/null)" ]] && {
+        brctl addbr $br
+        brctl setfd $br 0
+        brctl stp $br off
+        ip addr add 10.1.2.3/24 dev $br
+        ip link set $br up
+}
+
+exec fgtk/bt-pan --debug client 44:80:EB:F2:0C:36
+
+hcitool scan
+
+to get the GPS working, run sdptool browse 44:80:EB:F2:0C:36
+
 
 
 
