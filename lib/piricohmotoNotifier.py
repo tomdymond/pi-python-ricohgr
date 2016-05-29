@@ -138,6 +138,10 @@ class Notifier(object):
         self.send()
 
     def send(self):
-        for p in self.payload:
-            requests.post('http://127.0.0.1:5000', json=json.dumps(p))
+        try:
+            for p in self.payload:
+                requests.post('http://127.0.0.1:5000', json=json.dumps(p))
+        except Exception as e:
+            print e.message
+                
 
