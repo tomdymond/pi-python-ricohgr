@@ -104,9 +104,9 @@ class Notifier(object):
                     [flashing, led, power, duration]
                     )
         else:
-            led = self.led_codes[colour][p]
+            led = self.led_codes[colour][position]
             payload.append(
-                [flashing, i, power, duration]
+                [flashing, led, power, duration]
                 )
         print description
         self.payload=payload
