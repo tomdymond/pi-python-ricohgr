@@ -80,8 +80,8 @@ class Wifi(Config):
     #time.sleep(2)
     #print "Bringing interface {} up again".format(self.camera_interface)
     #sh.sudo('ifup', self.camera_interface)
-    #sh.sudo('killall','wpa_supplicant')
-    #sh.sudo('wpa_supplicant', '-s', '-B', '-P', '/run/wpa_supplicant.{}.pid'.format(self.camera_interface), '-i', self.camera_interface, '-D', 'nl80211,wext', '-c', '/etc/wpa_supplicant/wpa_supplicant.conf')
+    #
+    #
     #print "Running dhclient on {}".format(self.camera_interface)
 
 
@@ -109,8 +109,14 @@ class Wifi(Config):
 
   def connect_to_camera_ssid(self):
     """ Return true if connected to camera SSID """
-    print ("Connected to Camera SSID")
+
+    sh.sudo('killall','wpa_supplicant')
+    sleep(1)
+    sh.sudo('wpa_supplicant', '-s', '-B', '-P', '/run/wpa_supplicant.{}.pid'.format(self.camera_interface), '-i', self.camera_interface, '-D', 'nl80211,wext', '-c', '/etc/wpa_supplicant/wpa_supplicant.conf')
+    sleep(10)
+
     if self.get_current_ssid() == self.camera_ssid:
+      print ("Connected to Camera SSID")
       self.restart_connection()
       return True
     else:
