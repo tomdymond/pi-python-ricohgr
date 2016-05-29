@@ -83,10 +83,11 @@ class Wifi(Config):
     try:
       output = sh.sudo('/sbin/iwgetid').stdout
       if output:
-        s = output.split()[1]
-        print s
-        ssid = re.findall(r'"(.*?)"', s)[0]
-        print 'ssid={}'.format(ssid) 
+        s = output.split(':')
+        #print s
+        ssid = s[1].rstrip().replace('"','')
+        #ssid = re.findall(r'"(.*?)"', s)[0]
+        #print 'ssid={}'.format(ssid) 
       return ssid
     except Exception as e:
       message = e.message
