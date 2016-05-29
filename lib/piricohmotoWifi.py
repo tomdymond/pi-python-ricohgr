@@ -39,13 +39,15 @@ class Wifi(Config):
     sh.sudo('ip', 'addr', 'flush', 'dev', self.camera_interface)
 
     sh.sudo('ifdown', self.camera_interface)
+    time.sleep(2)
     sh.sudo('ifup', self.camera_interface)
-    
+
     #sh.sudo('killall','wpa_supplicant')
     #sh.sudo('killall', 'dhclient')
     #sh.sudo('wpa_supplicant', '-s', '-B', '-P', '/run/wpa_supplicant.{}.pid'.format(self.camera_interface), '-i', self.camera_interface, '-D', 'nl80211,wext', '-c', '/etc/wpa_supplicant/wpa_supplicant.conf')
     i = 0
     while not self.get_current_ssid():
+      print "waiting... {}/{}".format(i, 20)
       time.sleep(1)
       if i > 20:
         print "Timed out waiting for confirmation I was conncted to any AP"
