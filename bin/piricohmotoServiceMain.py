@@ -24,7 +24,7 @@ def do_everything():
     if conn.is_camera_on():
       conn.notify.green()
       if conn.connect_to_camera_ssid():
-        self.flow.download_all()
+        flow.download_all()
     else:
       conn.notify.blue()
       ssid = conn.get_current_ssid()
