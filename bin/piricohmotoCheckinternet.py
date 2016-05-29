@@ -4,10 +4,12 @@ import os
 from os import sys, path, mkdir
 import requests
 from time import sleep
+import sh
 
 cwd = path.dirname(path.abspath(__file__))
 sys.path.append('{}/lib/'.format(cwd))
 sys.path.append('{}/../lib/'.format(cwd))
+
 
 from piricohmotoNotifier import Notifier
 
