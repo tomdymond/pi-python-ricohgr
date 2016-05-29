@@ -17,6 +17,7 @@ sys.path.append('{}/../lib/'.format(cwd))
 from piricohmotoRicoh import Ricoh
 
 def do_everything():
+  """ foo """
   flow = Ricoh(config_file='/config/piricohmoto.yml')
   conn = flow.connection()
   try:
@@ -30,7 +31,9 @@ def do_everything():
         conn.notify.red()
       else:
         conn.restart_connection()
+  except Exception as e:
+    print e.message
 
-#while True:
-#  do_everything()
-#  sleep(30)
+while True:
+  do_everything()
+  sleep(30)
