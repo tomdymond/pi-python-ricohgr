@@ -11,7 +11,7 @@ from piricohmotoNotifier import Notifier
 from piricohmotoChecks import Checks
 
 n = Notifier()
-c = Checks()
+c = Check()
 
 while True:
     n.status_payload(c.check_internet()[1])

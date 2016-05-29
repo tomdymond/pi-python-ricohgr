@@ -12,7 +12,7 @@ sys.path.append('{}/../lib/'.format(cwd))
 from piricohmotoCamera import Camera
 from piricohmotoChecks import Checks
 
-c = Checks()
+c = Check()
 
 flow = Camera(config_file='/config/piricohmoto.yml')
 while True:
