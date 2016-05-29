@@ -27,7 +27,7 @@ def do_everything():
         self.flow.download_all()
     else:
       conn.notify.blue()
-      ssid = conn.get_current_ssid
+      ssid = conn.get_current_ssid()
       if ssid:
         print "Connected to a SSID at least : {}".format(ssid)
         conn.notify.orange()
