@@ -8,16 +8,13 @@ import time
 from time import sleep
 from os import sys, path, mkdir
 import datetime
-from time import *
 import os
-
 
 cwd = path.dirname(path.abspath(__file__))
 sys.path.append('{}/lib/'.format(cwd))
 sys.path.append('{}/../lib/'.format(cwd))
 
 from piricohmotoRicoh import Ricoh
-
 
 def do_everything():
   flow = Ricoh(config_file='/config/piricohmoto.yml')
@@ -34,9 +31,6 @@ def do_everything():
       else:
         conn.restart_connection()
 
-
 while True:
   do_everything()
   sleep(30)
-
-
