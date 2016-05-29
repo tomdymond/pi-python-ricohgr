@@ -43,7 +43,8 @@
   user: name=appuser shell=/bin/bash groups=i2c
 
 - name: Copy sudoers.d file
-  copy: src=files/appuser.sudo dest=/etc/sudoers.d/appuser 
+  copy: src=files/appuser.sudo dest=/etc/sudoers.d/appuser
+  tags: sudo 
 
 - name: Install some pip packages
   pip: name={{ item }} state=latest virtualenv=/home/venvs/piricohmoto extra_args="--timeout=5"
