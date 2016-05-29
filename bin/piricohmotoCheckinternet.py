@@ -18,11 +18,11 @@ def check_internet():
     try:
         response = requests.head('http://www.google.com')
         if int(response.status_code) in (200, 302):
-            return n.notify.status_payload(0001)
+            return n.status_payload(0001)
         else:
-            return n.notify.status_payload(1001)
+            return n.status_payload(1001)
     except Exception as e:
-        return n.notify.status_payload(1001)
+        return n.status_payload(1001)
 
 while True:
     check_internet()
