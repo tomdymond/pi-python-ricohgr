@@ -96,11 +96,15 @@ class Notifier(object):
         """ Prepare a standard status code payload """
         payload = []
         description, colour, position, flashing, power, duration = self.status_codes[code]
-        leds = self.led_codes[colour][position]
-        print leds
-        if type(leds) == int:
-            leds=[leds]
-        for i in leds:
+
+        if type(position) == list:
+            for p in position:
+                led = self.led_codes[colour][p]
+                payload.append(
+                    [flashing, led, power, duration]
+                    )
+        else:
+            led = self.led_codes[colour][p]
             payload.append(
                 [flashing, i, power, duration]
                 )
