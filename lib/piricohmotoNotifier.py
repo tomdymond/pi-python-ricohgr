@@ -21,9 +21,9 @@ class Notifier(object):
             # description, colour, led position, flashing, power, duration
             0001: ['Internet connected',      'white',    0, 0, 100, 999],
             0002: ['Camera connected',        'green',    0, 0, 100, 999],
-            0003: ['SSID connected',          'blue',     0, 0, 100, 100],
+            0003: ['SSID connected',          'blue',     0, 0, 100, 999],
             0004: ['UNASSIGNED',              'red',      0, 0, 100, 100],
-            0005: ['GPS satellites found',    'yellow',   0, 0, 100, 100],
+            0005: ['GPS satellites found',    'yellow',   0, 0, 100, 999],
             0006: ['Downloading photos',      'orange',   0, 0, 100, 100],
 
             0101: ['UNASSIGNED',              'white',    1, 0,  50, 100],
@@ -42,9 +42,9 @@ class Notifier(object):
 
             1001: ['No internet connection',  'white',    0, 1,  50, 999], 
             1002: ['Camera not connected',    'green',    0, 1,   0, 999],
-            1003: ['No SSID',                 'blue',     0, 1,  50, 100],
+            1003: ['No SSID',                 'blue',     0, 1,  50, 999],
             1004: ['UNASSIGNED',              'red',      0, 1,  50, 100],
-            1005: ['No GPS',                  'yellow',   0, 1,  50, 100],
+            1005: ['No GPS',                  'yellow',   0, 1,  50, 999],
             1006: ['Failed downloading photo','orange',   0, 1,  50, 100],
 
             1101: ['UNASSIGNED',              'white',    1, 1, 100, 100],
@@ -143,5 +143,5 @@ class Notifier(object):
                 requests.post('http://127.0.0.1:5000', json=json.dumps(p))
         except Exception as e:
             print e.message
-                
+
 
