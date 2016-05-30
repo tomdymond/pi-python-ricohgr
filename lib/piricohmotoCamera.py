@@ -19,12 +19,11 @@ class Camera(Config):
   def thumbnail_all(self):
     """ Upload all images if jpeg """
     for image in self.redis_connection.hgetall('IMAGES').keys():
-      if 'GEO' not in self.redis_connection.hget('IMAGES', image):
-        image = Image(config_file=self.config_file, filename=image)
-        if image.is_downloaded():
-          image.create_smallsize(1000)
-          image.create_smallsize(500)
-          image.create_smallsize(100)
+      image = Image(config_file=self.config_file, filename=image)
+      if image.is_downloaded():
+        image.create_smallsize(1000)
+        image.create_smallsize(500)
+        image.create_smallsize(100)
 
 
   def geotag_all2(self):
