@@ -9,6 +9,8 @@ import dropbox
 import redis
 import json
 import os
+import PIL
+from PIL import Image
 
 class Image(Config):
   def __init__(self, **kwargs):
@@ -16,6 +18,21 @@ class Image(Config):
     self.filename = kwargs['filename']
     self.access_token = self.config['access_token']
     self.download_dir = self.config['download_dir']
+
+  def create_smallsize(self, basewidth):
+    b = self.filename.split('.')
+    base_name = b[0]
+    file_extension = b[1]
+    newname = '{}/{}_{}.{}'.format(self.download_dir, base_name, basewidth, file_extension)
+    if os.path.exists(newname):
+      return True
+
+    img = Image.open('{}/{}'.format(self.download_dir, self.filename))
+    wpercent = (basewidth / float(img.size[0]))
+    hsize = int((float(img.size[1]) * float(wpercent)))
+    img = img.resize((basewidth, hsize), PIL.Image.ANTIALIAS)
+    img.save(newname)
+    return True
 
   def upload_to_dropbox(self):
     """ Upload the picture to dropbox """

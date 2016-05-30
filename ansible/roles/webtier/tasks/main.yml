@@ -76,6 +76,7 @@
     - piricohmotoServiceMain
     - piricohmotoUpload
     - piricohmotoGeotag
+    - piricohmotoThumbnail
   notify:
     - restart supervisor
   tags: supervisor
