@@ -39,8 +39,7 @@
   ignore_errors: True
 
 - name: Check out Bootstrap-Image-Gallery project into /opt folder
-  git: repo=https://github.com/blueimp/Bootstrap-Image-Gallery
-       dest=/opt/Bootstrap-Image-Gallery pdate=yes
+  git: repo=https://github.com/blueimp/Bootstrap-Image-Gallery dest=/opt/Bootstrap-Image-Gallery update=yes
   ignore_errors: True
 
 - name: Ensure appuser exists
