@@ -8,7 +8,7 @@ import datetime
 import redis
 import json
 from piricohmotoConfig import Config
-import base64
+
 
 
 

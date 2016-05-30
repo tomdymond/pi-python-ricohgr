@@ -11,6 +11,7 @@ import json
 import os
 import PIL
 from PIL import Image as Image2
+import base64
 
 class Image(Config):
   def __init__(self, **kwargs):
@@ -141,6 +142,7 @@ class Image(Config):
       r.hmset('IMAGES', {self.filename: json.dumps(j)})
     return location
 
+
   def geotag_image(self):
     """ Attempt to geo tag photo """
     print "About to geotag {}".format(self.filename)
@@ -149,8 +151,7 @@ class Image(Config):
     latitude = geo_data['latitude']
     longitude = geo_data['longitude']
 
-    self.get_geo_map_from_google()
-    self.get_geo_payload_from_google()
+
 
     try:
       exif.set_gps_location(self.filename, latitude, longitude)
