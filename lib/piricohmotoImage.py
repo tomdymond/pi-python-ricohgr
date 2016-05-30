@@ -135,12 +135,12 @@ class Image(Config):
     longitude = geo_data['longitude']
     r = redis.StrictRedis(host='localhost')
     if not r.hexists('GPSKEYS', self.get_gps_key() ):
-    try:
-      request = requests.get('http://maps.googleapis.com/maps/api/geocode/json?latlng={},{}&sensor=true'.format(latitude, longitude), timeout=5)
-      r.hmset('GPSKEYS', {self.get_gps_key(): json.dumps(request.json()) })
-      return True
-    except Exception as e:
-      print e.message
+      try:
+        request = requests.get('http://maps.googleapis.com/maps/api/geocode/json?latlng={},{}&sensor=true'.format(latitude, longitude), timeout=5)
+        r.hmset('GPSKEYS', {self.get_gps_key(): json.dumps(request.json()) })
+        return True
+      except Exception as e:
+        print e.message
     print "Already retreived GPS data from google for image {}".format(self.filename)
     return False
 
