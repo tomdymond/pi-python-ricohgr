@@ -16,7 +16,7 @@ c = Check()
 
 flow = Camera(config_file='/config/piricohmoto.yml')
 while True:
-  if c.check_internet()[0]
+  if c.check_internet()[0]:
     flow.upload_all()
   sleep(30)
   
