@@ -37,7 +37,7 @@ class Image(Config):
       return True
     except Exception as e:
       print "Failed to create thumbnail for {}".format(self.filename)
-      os.remove(self.filename)
+      os.remove('{}/{}'.format(self.download_dir, self.filename))
       r = redis.StrictRedis(host='localhost')
       r.hdel('IMAGES',self.filename)
       print e.message
