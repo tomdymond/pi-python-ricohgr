@@ -24,6 +24,7 @@ class Camera(Config):
         if image.is_downloaded():
           image.create_smallsize(1000)
           image.create_smallsize(500)
+          image.create_smallsize(100)
 
   def geotag_all(self):
     """ Upload all images if jpeg """
