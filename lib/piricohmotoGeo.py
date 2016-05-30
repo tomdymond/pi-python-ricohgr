@@ -17,27 +17,7 @@ class Geo(Config):
     Config.__init__(self, **kwargs)
     self.timestamp = kwargs['image_timestamp']
 
-  def get_geo_map_from_google(self, latitude, longitude, width=200, height=200):
-    # https://maps.googleapis.com/maps/api/staticmap?center=51,0&zoom=12&size=200x200
-    gps_key = self.get_gps_key(latitude, longitude)
-    filename = '/download/maps/{}.JPG'.format(gps_key)
-    if not os.path.exists(filename):
-      reponse = requests.get('https://maps.googleapis.com/maps/api/staticmap?center={latitude},{longitude}&zoom=12&size={width}x{height}'.format(latitude=latitude, longitude=longitude))
-      with open(filename), 'wb') as f:
-        for chunk in reponse.iter_content(chunk_size=1024): 
-          if chunk: # filter out keep-alive new chunks
-            f.write(chunk)
 
-  def get_gps_key(self, latitude, longitude):
-    return base64.b64encode(str((latitude,longitude)))
-
-  def get_geo_payload_from_google(self, latitude, longitude):
-    """ Retrive information on the location from google """
-    request = requests.get('http://maps.googleapis.com/maps/api/geocode/json?latlng={},{}&sensor=true'.format(latitude, longitude)).json()
-    gps_key = self.get_gps_key(latitude, longitude)
-    r = redis.StrictRedis(host='localhost')
-    if not r.hexists('GPSKEYS', gps_key ):
-      r.hmset('GPSKEYS', {gps_key: json.dumps(request.json()) })
 
 
   def _get_nearest_number(self, image_timestamp, numberlist):
@@ -59,9 +39,18 @@ class Geo(Config):
     """ Return timestamp and current location """
     print "get_current_location()"
     
-
     print "self_timestamp={}".format(self.timestamp)
     timestamp = self._get_nearest_number(self.timestamp, time_keys)
     print "closest timestamp is {}".format(timestamp)
     #print r.hget('GPS', timestamp)
-    return json.loads(r.hget('GPS', timestamp))
+    location = json.loads(r.hget('GPS', timestamp))
+    try:
+      int(location['latitude'])
+      int(location['longitude'])
+    except Exception as e:
+      location['latitude'] = float(0)
+      location['longitude'] = float(0)
+      print "Invalid GPS data. Replacing with 0 values"
+    return location
+
+

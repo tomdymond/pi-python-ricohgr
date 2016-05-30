@@ -95,6 +95,37 @@ class Image(Config):
     exif = Exif(config_file=self.config_file, filename=self.filename)
     return exif
 
+
+  def get_geo_map_from_google(self, width=200, height=200):
+    geo_data = self.geodata()
+    latitude = geo_data['latitude']
+    longitude = geo_data['longitude']
+
+    # https://maps.googleapis.com/maps/api/staticmap?center=51,0&zoom=12&size=200x200
+    filename = '/download/maps/{}.JPG'.format(self.get_gps_key())
+    if not os.path.exists(filename):
+      reponse = requests.get('https://maps.googleapis.com/maps/api/staticmap?center={latitude},{longitude}&zoom=12&size={width}x{height}'.format(latitude=latitude, longitude=longitude))
+      with open(filename), 'wb') as f:
+        for chunk in reponse.iter_content(chunk_size=1024): 
+          if chunk: # filter out keep-alive new chunks
+            f.write(chunk)
+
+  def get_gps_key(self):
+    geo_data = self.geodata()
+    latitude = geo_data['latitude']
+    longitude = geo_data['longitude']
+    return base64.b64encode(str((latitude,longitude)))
+
+  def get_geo_payload_from_google(self):
+    """ Retrive information on the location from google """
+    geo_data = self.geodata()
+    latitude = geo_data['latitude']
+    longitude = geo_data['longitude']
+    request = requests.get('http://maps.googleapis.com/maps/api/geocode/json?latlng={},{}&sensor=true'.format(latitude, longitude)).json()
+    r = redis.StrictRedis(host='localhost')
+    if not r.hexists('GPSKEYS', self.get_gps_key() ):
+      r.hmset('GPSKEYS', {self.get_gps_key(): json.dumps(request.json()) })
+
   def geodata(self):
     """ Return geo data """
     r = redis.StrictRedis(host='localhost')
@@ -105,10 +136,6 @@ class Image(Config):
       image_timestamp = exif.get_taken_time()
       geo = Geo(config_file=self.config_file, image_timestamp=image_timestamp)
       location = geo.get_current_location()
-
-      ## OMG It's so bad shoehorning this here. 
-      geo.get_geo_map_from_google(location['latitude'])
-      geo.get_geo_payload_from_google(location['longitude'])
 
       j['GPS'] = location
       r.hmset('IMAGES', {self.filename: json.dumps(j)})
@@ -122,13 +149,8 @@ class Image(Config):
     latitude = geo_data['latitude']
     longitude = geo_data['longitude']
 
-    try:
-      int(latitude)
-      int(longitude)
-    except Exception as e:
-      latitude = float(0)
-      longitude = float(0)
-      print "Invalid GPS data. Replacing with 0 values"
+    self.get_geo_map_from_google()
+    self.get_geo_payload_from_google()
 
     try:
       exif.set_gps_location(self.filename, latitude, longitude)
