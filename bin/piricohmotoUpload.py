@@ -4,6 +4,7 @@ Upload script
 """
 
 from os import sys, path, mkdir
+from time import sleep
 
 cwd = path.dirname(path.abspath(__file__))
 sys.path.append('{}/lib/'.format(cwd))
@@ -18,5 +19,5 @@ flow = Camera(config_file='/config/piricohmoto.yml')
 while True:
   if c.check_internet()[0]:
     flow.upload_all()
-  sleep(30)
+  sleep(60)
   
