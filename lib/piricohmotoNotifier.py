@@ -19,7 +19,7 @@ class Notifier(object):
         }
         self.status_codes = {
             # description, colour, led position, flashing, power, duration
-            0001: ['Internet connected',      'white',    0, 0, 100, 999],
+            0001: ['Internet connected',      'white',    0, 0,  50, 999],
             0002: ['Camera connected',        'green',    0, 0, 100, 999],
             0003: ['SSID connected',          'blue',     0, 0, 100, 999],
             0004: ['UNASSIGNED',              'red',      0, 0, 100, 100],
@@ -64,7 +64,7 @@ class Notifier(object):
             3001: ['UNASSIGNED',              'white',    [0,1,2], 0, 100, 100], 
             3002: ['UNASSIGNED',              'green',    [0,1,2], 0, 100, 100],
             3003: ['UNASSIGNED',              'blue',     [0,1,2], 0, 100, 100],
-            3004: ['CPU OK',                  'red',      [0,1,2], 0, 20,  999],
+            3004: ['CPU OK',                  'red',      [0,1,2], 0, 10,  999],
             3005: ['UNASSIGNED',              'yellow',   [0,1,2], 0, 100, 100],
             3006: ['UNASSIGNED',              'orange',   [0,1,2], 0, 100, 100],
 

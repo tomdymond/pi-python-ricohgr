@@ -26,6 +26,7 @@ class Camera(Config):
 
   def download_all(self):
     """ Download all images """
+    print "download_all"
     images_downloaded = self.redis_connection.hkeys('IMAGES')
     images = []
     for foldername in self.listdirs():
