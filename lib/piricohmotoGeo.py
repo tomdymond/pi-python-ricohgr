@@ -26,6 +26,8 @@ class Geo(Config):
     best_time = None
     #print "numberlist={}".format(numberlist)
     for gps_timestamp in numberlist:
+      print gps_timestamp
+      print numberlist
       time_diff = (int(gps_timestamp) - int(image_timestamp))
       #print "time_diff={}".format(time_diff)
       if time_diff < 0:
@@ -43,17 +45,20 @@ class Geo(Config):
     
     print "self_timestamp={}".format(self.timestamp)
     timestamp = self._get_nearest_number(self.timestamp, time_keys)
-    print "closest timestamp is {}".format(timestamp)
-    print 'r.hget("GPS", timestamp)'
-    print r.hget('GPS', timestamp)
-    location = json.loads(r.hget('GPS', timestamp))
-    try:
-      int(location['latitude'])
-      int(location['longitude'])
-    except Exception as e:
-      location['latitude'] = float(0)
-      location['longitude'] = float(0)
-      print "Invalid GPS data. Replacing with 0 values"
-    return location
+    if timestamp:
+      print "closest timestamp is {}".format(timestamp)
+      print 'r.hget("GPS", timestamp)'
+      print r.hget('GPS', timestamp)
+      location = json.loads(r.hget('GPS', timestamp))
+      try:
+        int(location['latitude'])
+        int(location['longitude'])
+      except Exception as e:
+        location['latitude'] = float(0)
+        location['longitude'] = float(0)
+        print "Invalid GPS data. Replacing with 0 values"
+      return location
+    return 
+
 
 
