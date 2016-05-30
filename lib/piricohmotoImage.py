@@ -122,7 +122,7 @@ class Image(Config):
     geo_data = self.geodata()
     latitude = geo_data['latitude']
     longitude = geo_data['longitude']
-    request = requests.get('http://maps.googleapis.com/maps/api/geocode/json?latlng={},{}&sensor=true'.format(latitude, longitude)).json()
+    request = requests.get('http://maps.googleapis.com/maps/api/geocode/json?latlng={},{}&sensor=true'.format(latitude, longitude))
     r = redis.StrictRedis(host='localhost')
     if not r.hexists('GPSKEYS', self.get_gps_key() ):
       r.hmset('GPSKEYS', {self.get_gps_key(): json.dumps(request.json()) })
