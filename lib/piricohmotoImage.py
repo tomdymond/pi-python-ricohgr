@@ -105,6 +105,11 @@ class Image(Config):
       image_timestamp = exif.get_taken_time()
       geo = Geo(config_file=self.config_file, image_timestamp=image_timestamp)
       location = geo.get_current_location()
+
+      ## OMG It's so bad shoehorning this here. 
+      geo.get_geo_map_from_google(location['latitude'])
+      geo.get_geo_payload_from_google(location['longitude'])
+
       j['GPS'] = location
       r.hmset('IMAGES', {self.filename: json.dumps(j)})
     return location
