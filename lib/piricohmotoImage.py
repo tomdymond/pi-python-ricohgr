@@ -10,7 +10,7 @@ import redis
 import json
 import os
 import PIL
-from PIL import Image
+from PIL import Image as Image2
 
 class Image(Config):
   def __init__(self, **kwargs):
@@ -27,7 +27,7 @@ class Image(Config):
     if os.path.exists(newname):
       return True
 
-    img = Image.open('{}/{}'.format(self.download_dir, self.filename))
+    img = Image2.open('{}/{}'.format(self.download_dir, self.filename))
     wpercent = (basewidth / float(img.size[0]))
     hsize = int((float(img.size[1]) * float(wpercent)))
     img = img.resize((basewidth, hsize), PIL.Image.ANTIALIAS)
