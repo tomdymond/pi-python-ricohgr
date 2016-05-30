@@ -26,8 +26,6 @@ class Geo(Config):
     best_time = None
     #print "numberlist={}".format(numberlist)
     for gps_timestamp in numberlist:
-      print gps_timestamp
-      print numberlist
       time_diff = (int(gps_timestamp) - int(image_timestamp))
       #print "time_diff={}".format(time_diff)
       if time_diff < 0:
