@@ -6,6 +6,7 @@ from piricohmotoConfig import Config
 from piricohmotoImage import Image
 import dropbox
 import redis
+import json
 
 class Camera(Config):
   def __init__(self, **kwargs):
