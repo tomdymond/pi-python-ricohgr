@@ -18,7 +18,7 @@ from piricohmotoRicoh import Ricoh
 
 def do_everything():
   """ foo """
-  
+  flow = Ricoh(config_file='/config/piricohmoto.yml')
   conn = flow.connection()
   try:
     if conn.is_camera_on():
@@ -38,7 +38,7 @@ def do_everything():
   except Exception as e:
     print e.message
 
-flow = Ricoh(config_file='/config/piricohmoto.yml')
+#flow = Ricoh(config_file='/config/piricohmoto.yml')
 while True:
   do_everything()
   sleep(30)
