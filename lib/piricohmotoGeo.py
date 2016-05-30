@@ -44,7 +44,8 @@ class Geo(Config):
     print "self_timestamp={}".format(self.timestamp)
     timestamp = self._get_nearest_number(self.timestamp, time_keys)
     print "closest timestamp is {}".format(timestamp)
-    #print r.hget('GPS', timestamp)
+    print 'r.hget("GPS", timestamp)'
+    print r.hget('GPS', timestamp)
     location = json.loads(r.hget('GPS', timestamp))
     try:
       int(location['latitude'])
