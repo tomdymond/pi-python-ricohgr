@@ -59,7 +59,7 @@ class Camera(Config):
         if filename in self.dropbox_images:
           j = json.loads(self.redis_connection.hget('IMAGES', filename))
           j['UPLOAD'] = True
-          self.redis_connection.hmset('IMAGES', {self.filename: json.dumps(j)})
+          self.redis_connection.hmset('IMAGES', {filename: json.dumps(j)})
         else:
           image.upload_to_dropbox()
       print ("Skipping {}. Already uploaded".format(filename))
