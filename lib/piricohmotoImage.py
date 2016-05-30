@@ -107,11 +107,16 @@ class Image(Config):
     # https://maps.googleapis.com/maps/api/staticmap?center=51,0&zoom=12&size=200x200
     filename = '/download/maps/{}.JPG'.format(self.get_gps_key())
     if not os.path.exists(filename):
-      response = requests.get('https://maps.googleapis.com/maps/api/staticmap?center={latitude},{longitude}&zoom=12&size={width}x{height}'.format(latitude=latitude, longitude=longitude, width=width, height=height), timeout=5)
+      try:
+        response = requests.get('https://maps.googleapis.com/maps/api/staticmap?center={latitude},{longitude}&zoom=12&size={width}x{height}'.format(latitude=latitude, longitude=longitude, width=width, height=height), timeout=5)
+      except Exception as e:
+        print e.message
+        return False
       with open(filename, 'wb') as f:
         for chunk in response.iter_content(chunk_size=1024): 
           if chunk: # filter out keep-alive new chunks
             f.write(chunk)
+      return True
 
   def get_gps_key(self):
     geo_data = self.geodata()
@@ -125,10 +130,15 @@ class Image(Config):
     geo_data = self.geodata()
     latitude = geo_data['latitude']
     longitude = geo_data['longitude']
-    request = requests.get('http://maps.googleapis.com/maps/api/geocode/json?latlng={},{}&sensor=true'.format(latitude, longitude), timeout=5)
-    r = redis.StrictRedis(host='localhost')
-    if not r.hexists('GPSKEYS', self.get_gps_key() ):
-      r.hmset('GPSKEYS', {self.get_gps_key(): json.dumps(request.json()) })
+    try:
+      request = requests.get('http://maps.googleapis.com/maps/api/geocode/json?latlng={},{}&sensor=true'.format(latitude, longitude), timeout=5)
+      r = redis.StrictRedis(host='localhost')
+      if not r.hexists('GPSKEYS', self.get_gps_key() ):
+        r.hmset('GPSKEYS', {self.get_gps_key(): json.dumps(request.json()) })
+      return True
+    except Exception as e:
+      print e.message
+    return False
 
   def geodata(self):
     """ Return geo data """
