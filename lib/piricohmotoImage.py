@@ -27,12 +27,16 @@ class Image(Config):
     if os.path.exists(newname):
       return True
 
-    img = Image2.open('{}/{}'.format(self.download_dir, self.filename))
-    wpercent = (basewidth / float(img.size[0]))
-    hsize = int((float(img.size[1]) * float(wpercent)))
-    img = img.resize((basewidth, hsize), PIL.Image.ANTIALIAS)
-    img.save(newname)
-    return True
+    try:
+      img = Image2.open('{}/{}'.format(self.download_dir, self.filename))
+      wpercent = (basewidth / float(img.size[0]))
+      hsize = int((float(img.size[1]) * float(wpercent)))
+      img = img.resize((basewidth, hsize), PIL.Image.ANTIALIAS)
+      img.save(newname)
+      return True
+    except Exception as e:
+      print "Failed to create thumbnail for {}".format(self.filename)
+      print e.message
 
   def upload_to_dropbox(self):
     """ Upload the picture to dropbox """
