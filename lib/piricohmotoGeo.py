@@ -24,6 +24,9 @@ class Geo(Config):
     """ From list of numbers, return the closest number """
     best = 999999999
     best_time = None
+    print '_get_nearest_number'
+    print image_timestamp
+    print numberlist
     #print "numberlist={}".format(numberlist)
     for gps_timestamp in numberlist:
       print gps_timestamp
