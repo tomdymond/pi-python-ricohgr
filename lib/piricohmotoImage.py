@@ -98,6 +98,8 @@ class Image(Config):
 
 
   def get_geo_map_from_google(self, width=200, height=200):
+    """ get_geo_map_from_google """
+    print "getting get_geo_map_from_google"
     geo_data = self.geodata()
     latitude = geo_data['latitude']
     longitude = geo_data['longitude']
@@ -119,6 +121,7 @@ class Image(Config):
 
   def get_geo_payload_from_google(self):
     """ Retrive information on the location from google """
+    print "getting get_geo_payload_from_google"
     geo_data = self.geodata()
     latitude = geo_data['latitude']
     longitude = geo_data['longitude']
