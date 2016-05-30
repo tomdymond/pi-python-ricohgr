@@ -3,7 +3,7 @@
 from flask import Flask, render_template, make_response
 from flask_bootstrap import Bootstrap
 import os
-
+import redis
 
 def create_app():
   app = Flask(__name__)
@@ -20,12 +20,12 @@ app = create_app()
 
 @app.route("/")
 def hello():
-  images = os.listdir('/download')
-
+  r = redis.StrictRedis(host='localhost')
+  images = r.hkeys('IMAGES')
   foo = map(remove_ext, images)
 
   return render_template('test.html', images=foo)
 
 if __name__ == "__main__":
   app.run(host='0.0.0.0', port=8080)
-  
+
