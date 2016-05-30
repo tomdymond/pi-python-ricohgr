@@ -15,5 +15,5 @@ from piricohmotoCamera import Camera
 flow = Camera(config_file='/config/piricohmoto.yml')
 while True:
   flow.thumbnail_all()
-  sleep(60)
+  sleep(120)
   
