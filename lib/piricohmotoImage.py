@@ -117,6 +117,9 @@ class Image(Config):
           if chunk: # filter out keep-alive new chunks
             f.write(chunk)
       return True
+    else:
+      print "Already have location picture for {}".format(self.filename)
+    return True
 
   def get_gps_key(self):
     geo_data = self.geodata()
@@ -130,14 +133,15 @@ class Image(Config):
     geo_data = self.geodata()
     latitude = geo_data['latitude']
     longitude = geo_data['longitude']
+    r = redis.StrictRedis(host='localhost')
+    if not r.hexists('GPSKEYS', self.get_gps_key() ):
     try:
       request = requests.get('http://maps.googleapis.com/maps/api/geocode/json?latlng={},{}&sensor=true'.format(latitude, longitude), timeout=5)
-      r = redis.StrictRedis(host='localhost')
-      if not r.hexists('GPSKEYS', self.get_gps_key() ):
-        r.hmset('GPSKEYS', {self.get_gps_key(): json.dumps(request.json()) })
+      r.hmset('GPSKEYS', {self.get_gps_key(): json.dumps(request.json()) })
       return True
     except Exception as e:
       print e.message
+    print "Already retreived GPS data from google for image {}".format(self.filename)
     return False
 
   def geodata(self):
