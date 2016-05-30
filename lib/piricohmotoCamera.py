@@ -26,12 +26,23 @@ class Camera(Config):
           image.create_smallsize(500)
           image.create_smallsize(100)
 
+
+  def geotag_all2(self):
+    """ Upload all images if jpeg """
+    for image in self.redis_connection.hgetall('IMAGES').keys():
+      image = Image(config_file=self.config_file, filename=image)
+      image.get_geo_map_from_google()
+      image.get_geo_payload_from_google()
+
+
   def geotag_all(self):
     """ Upload all images if jpeg """
     for image in self.redis_connection.hgetall('IMAGES').keys():
       if 'GEO' not in self.redis_connection.hget('IMAGES', image):
         image = Image(config_file=self.config_file, filename=image)
         if image.is_downloaded() and not image.is_geotagged():
+          image.get_geo_map_from_google()
+          image.get_geo_payload_from_google()
           image.geotag_image()
 
   def download_all(self):

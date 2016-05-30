@@ -15,5 +15,6 @@ from piricohmotoCamera import Camera
 flow = Camera(config_file='/config/piricohmoto.yml')
 while True:
   flow.geotag_all()
+  flow.geotag_all2()
   sleep(60)
   
