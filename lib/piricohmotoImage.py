@@ -105,7 +105,7 @@ class Image(Config):
     # https://maps.googleapis.com/maps/api/staticmap?center=51,0&zoom=12&size=200x200
     filename = '/download/maps/{}.JPG'.format(self.get_gps_key())
     if not os.path.exists(filename):
-      reponse = requests.get('https://maps.googleapis.com/maps/api/staticmap?center={latitude},{longitude}&zoom=12&size={width}x{height}'.format(latitude=latitude, longitude=longitude))
+      reponse = requests.get('https://maps.googleapis.com/maps/api/staticmap?center={latitude},{longitude}&zoom=12&size={width}x{height}'.format(latitude=latitude, longitude=longitude, width=width, height=height))
       with open(filename, 'wb') as f:
         for chunk in reponse.iter_content(chunk_size=1024): 
           if chunk: # filter out keep-alive new chunks
