@@ -16,21 +16,20 @@ sys.path.append('{}/../lib/'.format(cwd))
 
 from piricohmotoRicoh import Ricoh
 
-
-
 def do_everything():
   """ foo """
-  
+  flow = Ricoh(config_file='/config/piricohmoto.yml')
   conn = flow.connection()
   try:
     if conn.is_camera_on():
-      conn.notify.green()
+      conn.notify.status_payload(0002)
       if conn.connect_to_camera_ssid():
         flow.download_all()
     else:
       if conn.get_current_ssid():
+        conn.notify.status_payload(1002)
         print "Connected to a SSID at least : {}".format(conn.get_current_ssid())
-        conn.notify.orange()
+        conn.notify.status_payload(0003)
         conn.restart_connection()
       else:
         print "Not connected to ANY ssid. So restart wpa_supplicant"
@@ -39,7 +38,7 @@ def do_everything():
   except Exception as e:
     print e.message
 
-flow = Ricoh(config_file='/config/piricohmoto.yml')
+#flow = Ricoh(config_file='/config/piricohmoto.yml')
 while True:
   do_everything()
   sleep(30)

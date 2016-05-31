@@ -112,6 +112,9 @@
 - name: Enable i2c
   lineinfile: dest=/boot/config.txt line="dtparam=i2c_arm=on"
 
+- name: Ensure USB storage is configured
+  mount: name=/download src=/dev/sda1 fstype=vfat opts=auto,users,rw,uid=1001,gid=1001,umask=0002,nofail state=present
+
 - name: Enable i2c in modules
   lineinfile: dest=/etc/modules line={{ item }}
   with_items: 

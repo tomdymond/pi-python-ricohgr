@@ -10,6 +10,7 @@ from piricohmotoWifi import Wifi
 import redis
 import json
 from os import path
+import os
 
 class RicohWifi(Wifi):
   def __init__(self, **kwargs):
@@ -31,18 +32,20 @@ class RicohImage(Image):
     if path.exists('{}/{}'.format(self.download_dir, self.filename)):
       r.hmset('IMAGES', {self.filename: json.dumps({'UPLOAD': False, 'GPS': {}})})
       return True
-    reponse = requests.get('http://{ip}/v1/photos/{dirname}/{filename}?size={size}'.format(ip=self.ip, dirname=self.dirname, filename=self.filename, size=size), timeout=10)
+
+    reponse = requests.get('http://{ip}/v1/photos/{dirname}/{filename}?size={size}'.format(ip=self.ip, dirname=self.dirname, filename=self.filename, size=size), timeout=60, stream=True)
     print reponse.status_code
     if reponse.status_code == 200:
       print "saving file..."
-      self.notify.flashing=1
-      self.notify.blue()
-      with open('{}/{}'.format(self.download_dir, self.filename), 'wb') as f:
+      self.notify.status_payload(0006)
+      with open('{}/{}.partial'.format(self.download_dir, self.filename), 'wb') as f:
         for chunk in reponse.iter_content(chunk_size=1024): 
           if chunk: # filter out keep-alive new chunks
             f.write(chunk)
+      os.rename('{}/{}.partial'.format(self.download_dir, self.filename), '{}/{}'.format(self.download_dir, self.filename))
       r.hmset('IMAGES', {self.filename: json.dumps({'UPLOAD': False, 'GPS': {}})})
       return True
+    self.notify.status_payload(1006)
     return False
 
 class Ricoh(Camera):

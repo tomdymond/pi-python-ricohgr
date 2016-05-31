@@ -1,8 +1,6 @@
 #!/usr/bin/env python
 
-
-from os import sys, path, mkdir
-import requests
+from os import sys, path
 from time import sleep
 
 cwd = path.dirname(path.abspath(__file__))
@@ -10,25 +8,14 @@ sys.path.append('{}/lib/'.format(cwd))
 sys.path.append('{}/../lib/'.format(cwd))
 
 from piricohmotoNotifier import Notifier
+from piricohmotoChecks import Check
 
-
-def check_internet():
-    n = Notifier()
-    n.power=50
-
-    try:
-        response = requests.head('http://www.google.com')
-        if int(response.status_code) in (200, 302):
-            n.flashing=0
-        else:
-            n.flashing=1
-    except Exception as e:
-        n.flashing=1
-
-    n.duration=40
-    n.led([n.led_codes['white'][0]])
-    n.send()
+n = Notifier()
+c = Check()
 
 while True:
-    check_internet()
+    n.status_payload(c.check_internet()[1])
+    n.status_payload(c.check_internet()[1])
+    n.status_payload(c.check_cpu_temp()[1])
+    n.status_payload(c.check_disk_space(paths=['/', '/download'])[1])
     sleep(30)

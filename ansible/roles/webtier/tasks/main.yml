@@ -38,12 +38,16 @@
        version=devel update=yes
   ignore_errors: True
 
+- name: Check out Bootstrap-Image-Gallery project into /opt folder
+  git: repo=https://github.com/blueimp/Bootstrap-Image-Gallery dest=/opt/Bootstrap-Image-Gallery update=yes
+  ignore_errors: True
 
 - name: Ensure appuser exists
   user: name=appuser shell=/bin/bash groups=i2c
 
 - name: Copy sudoers.d file
-  copy: src=files/appuser.sudo dest=/etc/sudoers.d/appuser 
+  copy: src=files/appuser.sudo dest=/etc/sudoers.d/appuser
+  tags: sudo 
 
 - name: Install some pip packages
   pip: name={{ item }} state=latest virtualenv=/home/venvs/piricohmoto extra_args="--timeout=5"
@@ -60,6 +64,7 @@
     - ipython
     - ipdb
     - uWSGI
+    - psutil
   ignore_errors: True
 
 - name: Ensure systemd file for supervisor is installed
@@ -71,17 +76,21 @@
     - piricohmotoServiceLogger
     - piricohmotoServiceNotifier
     - piricohmotoCheckinternet
+    - piricohmotoServiceMain
+    - piricohmotoUpload
+    - piricohmotoGeotag
+    - piricohmotoThumbnail
   notify:
     - restart supervisor
   tags: supervisor
 
-- name: Remove supervisor files
-  file: path=/etc/supervisor/conf.d/{{ item }}.conf state=absent
-  with_items:
-    - piricohmotoServiceMain
-  notify:
-    - restart supervisor
-  tags: supervisor
+#- name: Remove supervisor files
+#  file: path=/etc/supervisor/conf.d/{{ item }}.conf state=absent
+#  with_items:
+#    - piricohmotoServiceMain
+#  notify:
+#    - restart supervisor
+#  tags: supervisor
 
 - name: Create nginx SSL dir
   file: path=/etc/nginx/ssl state=directory owner=root group=root mode=0600
@@ -106,7 +115,8 @@
     - { path: '/etc/uwsgi', owner: 'root', group: 'root', mode: '0755' }
     - { path: '/etc/uwsgi/vassals', owner: 'root', group: 'root', mode: '0755' }
     - { path: '/var/log/piricohmoto', owner: 'appuser', group: 'root', mode: '0755' }
-    - { path: '/download', owner: 'appuser', group: 'appuser', mode: '0700' }
+    - { path: '/download', owner: 'appuser', group: 'appuser', mode: '0755' }
+    - { path: '/download/maps', owner: 'appuser', group: 'appuser', mode: '0755' }
 
 - name: Copy over uWSGI config
   template: src=templates/piricohmoto.uwsgi.ini.j2 dest=/var/www/piricohmoto/piricohmoto_uwsgi.ini owner=root group=root mode=0644
@@ -123,6 +133,10 @@
 
 - name: Link nginx base config
   file: src=/etc/nginx/sites-available/piricohmoto dest=/etc/nginx/sites-enabled/piricohmoto state=link
+  notify: restart nginx
+
+- name: Remove nginx default config
+  file: path=/etc/nginx/sites-enabled/default state=absent
   notify: restart nginx
 
 - name: Give ownership of all files in folder to www-data
