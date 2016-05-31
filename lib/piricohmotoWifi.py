@@ -7,7 +7,7 @@ import sys
 import time
 from time import sleep
 import os
-from piricohmotoConfig import Config, Data
+from piricohmotoConfig import Config
 
 class Wifi(Config):
   def __init__(self, **kwargs):
@@ -34,10 +34,10 @@ class Wifi(Config):
 
 
   def get_cached_ssid(self):
-    return Data.get_key('SSID')
+    return self.data.get_key('SSID')
 
   def write_cached_ssid(self, ssid):
-    return Data.set_key('SSID', ssid)
+    return self.data.set_key('SSID', ssid)
 
   def restart_connection(self):
     """ Restart the wifi """
