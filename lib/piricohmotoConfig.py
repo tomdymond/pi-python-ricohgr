@@ -18,7 +18,7 @@ class Data(object):
   def gpskey_exits(self, key):
     return self.r.hexists('GPSKEYS', key)
 
-  def get_key(key):
+  def get_key(self, key):
     return self.r.get(key)
 
   def set_key(key, value):
