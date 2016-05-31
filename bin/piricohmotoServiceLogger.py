@@ -46,7 +46,7 @@ try:
     if gpsp.gpsd.fix.latitude:
       n.status_payload(0005)
       localtime = datetime.datetime.now().strftime('%s')
-      data.create_new_gpsrecord(localtime, gpsp.gpsd.fix.__dict__):
+      data.create_new_gpsrecord(localtime, gpsp.gpsd.fix.__dict__)
     else:
       n.status_payload(1005)
     time.sleep(5)
