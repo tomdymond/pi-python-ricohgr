@@ -4,7 +4,6 @@
 import yaml
 import os
 import sys
-import requests
 import json
 from piricohmotoNotifier import Notifier
 import redis
@@ -40,16 +39,19 @@ class Data(object):
   def create_new_gpskey(self, gpskey, data):
     return self.r.hmset('GPSKEYS', {gpskey: json.dumps(data) })
 
+  def create_new_gpsrecord(self, key, data):
+    return self.r.hmset('GPS', {key: json.dumps(data) })
+
   def get_hkeys(self, key):
     return self.r.hkeys('GPS')
-    self.redis_connection.hgetall('IMAGES').keys():
+    self.redis_connection.hgetall('IMAGES').keys()
 
 class Config(object):
   def __init__(self, **kwargs):
     self.config = self.load_config(kwargs['config_file'])
     self.config_file = kwargs['config_file']
     self.notify = Notifier()
-
+    self.data = Data()
 
   def load_config(self, config_file):
     """ Load config """
