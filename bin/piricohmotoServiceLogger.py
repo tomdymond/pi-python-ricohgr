@@ -24,6 +24,8 @@ sys.path.append('{}/../lib/'.format(cwd))
 from piricohmotoConfig import Data
 from piricohmotoNotifier import Notifier
 
+data = Data()
+
 class GpsPoller(threading.Thread):
   def __init__(self):
     threading.Thread.__init__(self)
@@ -44,7 +46,7 @@ try:
     if gpsp.gpsd.fix.latitude:
       n.status_payload(0005)
       localtime = datetime.datetime.now().strftime('%s')
-      Data.create_new_gpsrecord(localtime, gpsp.gpsd.fix.__dict__):
+      data.create_new_gpsrecord(localtime, gpsp.gpsd.fix.__dict__):
     else:
       n.status_payload(1005)
     time.sleep(5)

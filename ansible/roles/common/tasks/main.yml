@@ -36,6 +36,7 @@
     - python
     - hostapd
     - isc-dhcp-server
+    - python-smbus
   ignore_errors: True
 
 - name: Install some pip packages

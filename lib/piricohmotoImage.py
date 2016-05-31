@@ -3,7 +3,7 @@
 
 import requests
 from piricohmotoGeo import Geo
-from piricohmotoConfig import Config, Data
+from piricohmotoConfig import Config
 from piricohmotoExif import Exif
 import dropbox
 import json
@@ -37,7 +37,7 @@ class Image(Config):
     except Exception as e:
       print "Failed to create thumbnail for {}".format(self.filename)
       os.remove('{}/{}'.format(self.download_dir, self.filename))
-      Data.remove_image(self.filename)
+      self.data.remove_image(self.filename)
       print e.message
 
   def upload_to_dropbox(self):
@@ -51,9 +51,9 @@ class Image(Config):
       # Share it
       response = client.share('/{}'.format(self.filename), short_url=False)
 
-      j = Data.unpack('IMAGES', self.filename)
+      j = self.data.unpack('IMAGES', self.filename)
       j['UPLOAD'] = True
-      Data.repack('IMAGES', self.filename, j)
+      self.data.repack('IMAGES', self.filename, j)
       self.notify.status_payload(0103)
       return True
     except Exception as e:
@@ -62,21 +62,21 @@ class Image(Config):
     return False
 
   def is_uploaded(self):
-    if self.filename in Data.get_hkeys('IMAGES'):
-      j = Data.unpack('IMAGES', self.filename)
+    if self.filename in self.data.get_hkeys('IMAGES'):
+      j = self.data.unpack('IMAGES', self.filename)
       if j['UPLOAD']:
         return True
     return False
 
   def is_downloaded(self):
     """ Bool. If the image is already downloaded """
-    if Data.image_exists(self.filename) and os.path.exists('{}/{}'.format(self.download_dir, self.filename)):
+    if self.data.image_exists(self.filename) and os.path.exists('{}/{}'.format(self.download_dir, self.filename)):
       return True
     return False
 
   def is_geotagged(self):
     """ Bool. If the image is already geo tagged """
-    if Data.image_exists(self.filename):
+    if self.data.image_exists(self.filename):
       j = json.loads(r.hget('IMAGES', self.filename))
       #print j
       if j['GPS']:
@@ -130,10 +130,10 @@ class Image(Config):
     geo_data = self.geodata()
     latitude = geo_data['latitude']
     longitude = geo_data['longitude']
-    if not Data.gpskey_exits( self.get_gps_key() ):
+    if not self.data.gpskey_exits( self.get_gps_key() ):
       try:
         request = requests.get('http://maps.googleapis.com/maps/api/geocode/json?latlng={},{}&sensor=true'.format(latitude, longitude), timeout=5)
-        Data.create_new_gpskey( self.get_gps_key(), request.json() )
+        self.data.create_new_gpskey( self.get_gps_key(), request.json() )
         return True
       except Exception as e:
         print e.message
@@ -142,7 +142,7 @@ class Image(Config):
 
   def geodata(self):
     """ Return geo data """
-    j = Data.unpack('IMAGES', self.filename)
+    j = self.data.unpack('IMAGES', self.filename)
     location = j['GPS']
     if not location:
       exif = self.exifdata()
@@ -151,7 +151,7 @@ class Image(Config):
       location = geo.get_current_location()
 
       j['GPS'] = location
-      Data.repack('IMAGES', self.filename, j)
+      self.data.repack('IMAGES', self.filename, j)
     return location
 
 

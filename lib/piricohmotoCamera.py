@@ -15,7 +15,7 @@ class Camera(Config):
     
   def thumbnail_all(self):
     """ Upload all images if jpeg """
-    for image in Data.get_hkeys('IMAGES'):
+    for image in self.data.get_hkeys('IMAGES'):
       image = Image(config_file=self.config_file, filename=image)
       if image.is_downloaded():
         image.create_smallsize(1000)
@@ -24,7 +24,7 @@ class Camera(Config):
 
   def geotag_all(self):
     """ Upload all images if jpeg """
-    for image in Data.get_hkeys('IMAGES'):
+    for image in self.data.get_hkeys('IMAGES'):
       image = Image(config_file=self.config_file, filename=image)
       if image.is_downloaded() and not image.is_geotagged():
         image.get_geo_map_from_google()
@@ -34,7 +34,7 @@ class Camera(Config):
   def download_all(self):
     """ Download all images """
     print "download_all"
-    images_downloaded = Data.get_hkeys('IMAGES')
+    images_downloaded = self.data.get_hkeys('IMAGES')
     images = []
     for foldername in self.listdirs():
       for i in self.listimages(foldername):
@@ -59,13 +59,13 @@ class Camera(Config):
   def upload_all(self):
     """ Upload all images if jpeg """
     self.dropbox_images = self.get_dropbox_images()
-    for filename in Data.get_hkeys('IMAGES'):
+    for filename in self.data.get_hkeys('IMAGES'):
       image = Image(config_file=self.config_file, filename=filename)
       if not image.is_uploaded() and image.is_geotagged():
         if filename in self.dropbox_images:
-          j = Data.unpack('IMAGES', filename)
+          j = self.data.unpack('IMAGES', filename)
           j['UPLOAD'] = True
-          Data.repack('IMAGES', filename, j)
+          self.data.repack('IMAGES', filename, j)
         else:
           image.upload_to_dropbox()
       print ("Skipping {}. Already uploaded".format(filename))

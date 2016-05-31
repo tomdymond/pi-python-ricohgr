@@ -5,7 +5,7 @@ import requests
 import sys
 from piricohmotoImage import Image
 from piricohmotoCamera import Camera
-from piricohmotoConfig import Config, Data
+from piricohmotoConfig import Config
 from piricohmotoWifi import Wifi
 
 import json
@@ -31,7 +31,7 @@ class RicohImage(Image):
 
 
     if path.exists('{}/{}'.format(self.download_dir, self.filename)):
-      Data.create_new_image(self.filename)
+      self.data.create_new_image(self.filename)
       return True
 
     reponse = requests.get('http://{ip}/v1/photos/{dirname}/{filename}?size={size}'.format(ip=self.ip, dirname=self.dirname, filename=self.filename, size=size), timeout=60, stream=True)
@@ -44,7 +44,7 @@ class RicohImage(Image):
           if chunk: # filter out keep-alive new chunks
             f.write(chunk)
       os.rename('{}/{}.partial'.format(self.download_dir, self.filename), '{}/{}'.format(self.download_dir, self.filename))
-      Data.create_new_image(self.filename)
+      self.data.create_new_image(self.filename)
       return True
     self.notify.status_payload(1006)
     return False

@@ -6,17 +6,13 @@ import os
 import sys
 import datetime
 import json
-from piricohmotoConfig import Config, Data
-
-
+from piricohmotoConfig import Config
 
 
 class Geo(Config):
   def __init__(self, **kwargs):
     Config.__init__(self, **kwargs)
     self.timestamp = kwargs['image_timestamp']
-
-
 
 
   def _get_nearest_number(self, image_timestamp, numberlist):
@@ -37,7 +33,7 @@ class Geo(Config):
   def get_current_location(self):
     """ Return timestamp and current location """
     print "get_current_location()"
-    time_keys = Data.get_hkeys('GPS')
+    time_keys = self.data.get_hkeys('GPS')
     
     print "self_timestamp={}".format(self.timestamp)
     timestamp = self._get_nearest_number(self.timestamp, time_keys)
