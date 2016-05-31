@@ -21,7 +21,7 @@ class Data(object):
   def get_key(self, key):
     return self.r.get(key)
 
-  def set_key(key, value):
+  def set_key(self, key, value):
     return self.r.set(key, value)
 
   def unpack(self, key, filename):
