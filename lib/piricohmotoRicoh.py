@@ -10,6 +10,7 @@ from piricohmotoWifi import Wifi
 import redis
 import json
 from os import path
+import os
 
 class RicohWifi(Wifi):
   def __init__(self, **kwargs):
