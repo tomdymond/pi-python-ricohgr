@@ -5,9 +5,8 @@ import requests
 import os
 import sys
 import datetime
-import redis
 import json
-from piricohmotoConfig import Config
+from piricohmotoConfig import Config, Data
 
 
 
@@ -38,8 +37,7 @@ class Geo(Config):
   def get_current_location(self):
     """ Return timestamp and current location """
     print "get_current_location()"
-    r = redis.StrictRedis(host='localhost')
-    time_keys = r.hkeys('GPS')
+    time_keys = Data.get_hkeys('GPS')
     
     print "self_timestamp={}".format(self.timestamp)
     timestamp = self._get_nearest_number(self.timestamp, time_keys)
