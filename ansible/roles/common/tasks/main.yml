@@ -11,6 +11,7 @@
     - python-ipaddress
     - python-jinja2
     - python-markupsafe
+    - ubuntu-fan
 
 - name: be sure python is installed
   apt: name={{ item }} state=present install_recommends=no
