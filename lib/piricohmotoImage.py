@@ -77,7 +77,7 @@ class Image(Config):
   def is_geotagged(self):
     """ Bool. If the image is already geo tagged """
     if self.data.image_exists(self.filename):
-      j = json.loads(r.hget('IMAGES', self.filename))
+      j = self.data.unpack(self.filename)
       #print j
       if j['GPS']:
         print "Image {} already geotagged".format(self.filename)
