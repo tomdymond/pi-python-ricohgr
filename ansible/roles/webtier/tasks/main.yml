@@ -148,7 +148,7 @@
 - name: Create a symlink for the config_app
   file: src={{ install_root }}/config_app dest=/var/www/piricohmoto/config_app state=link
 
-- name: Copy over piricohmoto config `
+- name: Copy over piricohmoto config
   template: src=templates/piricohmoto.yml.j2 dest=/config/piricohmoto.yml owner=appuser group=appuser mode=0600
 
 - name: Ensure services are running
@@ -160,5 +160,4 @@
     - supervisor
     - nginx
     - uwsgi
-
 
