@@ -1,6 +1,6 @@
 #!/usr/bin/env python
-""" 
-Geotag script 
+"""
+Geotag script
 """
 
 from os import sys, path, mkdir
@@ -19,5 +19,5 @@ flow = Camera(config_file='/config/piricohmoto.yml')
 while True:
   if c.check_cpu_temp()[0]:
     flow.geotag_all()
-    sleep(60)
-  
+  sleep(60)
+
