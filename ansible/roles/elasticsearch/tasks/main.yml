@@ -11,12 +11,17 @@
   tags: elasticsearch
 
 - name: Ensure packages are installed
-  apt: name={{ item }} state=installed
+  apt: name={{ item }} state=latest update_cache=yes
   tags: elasticsearch
   with_items:
     - openjdk-8-jre-headless
     - elasticsearch
   ignore_errors: True
+
+- name: Remove some packages
+  apt: name={{ item }} state=absent purge=yes autoremove=yes
+  with_items:
+    - libelasticsearch1.7-java
 
 - name: Check elasticsearch is enabled
   command: systemctl is-enabled elasticsearch
@@ -29,7 +34,7 @@
   tags: services
 
 - name: Set ES_JAVA_OPTS
-  lineinfile: dest=/etc/default/elasticsearch line="ES_JAVA_OPTS=-Xms64m -Xmx64m"
+  lineinfile: dest=/etc/default/elasticsearch line='ES_JAVA_OPTS="-Xms64m -Xmx64m"'
 
 - name: Enable elasticsearch
   service: name=elasticsearch state=running enabled=yes
