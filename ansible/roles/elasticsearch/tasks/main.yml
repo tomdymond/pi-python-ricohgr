@@ -1,0 +1,26 @@
+---
+
+- name: Install elastic apt key
+  apt_key: url=https://packages.elastic.co/GPG-KEY-elasticsearch state=present
+  notify: apt_update
+  tags: elasticsearch
+
+- name: Add elasticsearch source
+  copy: src=files/elasticsearch-5.x.list dest=/etc/apt/sources.list.d/elasticsearch-5.x.list
+  notify: apt_update
+  tags: elasticsearch
+
+- name: Ensure packages are installed
+  apt: name={{ item }} state=installed
+  tags: elasticsearch
+  with_items:
+    - openjdk-8-jre-headless
+    - elasticsearch
+  ignore_errors: True
+
+- name: Set ES_JAVA_OPTS
+  lineinfile: dest=/etc/default/elasticsearch line="ES_JAVA_OPTS=-Xms64m -Xmx64m"
+
+- name: Enable elasticsearch
+  service: name=elasticsearch state=running enabled=yes
+  tags: elasticsearch
