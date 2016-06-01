@@ -43,8 +43,8 @@ class Data(object):
     return self.r.hmset('GPS', {key: json.dumps(data) })
 
   def get_hkeys(self, key):
-    return self.r.hkeys('GPS')
-    self.redis_connection.hgetall('IMAGES').keys()
+    return self.r.hkeys(key)
+
 
 class Config(object):
   def __init__(self, **kwargs):
