@@ -15,6 +15,7 @@ from time import *
 import time
 import threading
 import json
+import re
 
 
 cwd = path.dirname(path.abspath(__file__))
@@ -42,10 +43,26 @@ n = Notifier()
 try:
   gpsp.start() # start it up
   while True:
-
     if gpsp.gpsd.fix.latitude:
       n.status_payload(0005)
       localtime = datetime.datetime.now().strftime('%s')
+
+      d = int(datetime.datetime.now().strftime('%s'))
+      t = gpsp.gpsd.fix.time
+      print t
+      if t:
+        if re.findall('\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z', str(t)):
+          dt = datetime.datetime.strptime(t.split('.')[0], "%Y-%m-%dT%H:%M:%S")
+          dt = int(dt.strftime('%s'))
+        else:
+          dt = int(float(t))
+
+        print "{} / {}".format(d, dt)
+        if d == dt:
+          n.status_payload(0005)
+        else:
+          n.status_payload(1005)
+
       data.create_new_gpsrecord(localtime, gpsp.gpsd.fix.__dict__)
     else:
       n.status_payload(1005)
