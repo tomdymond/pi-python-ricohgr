@@ -19,5 +19,5 @@ flow = Camera(config_file='/config/piricohmoto.yml')
 while True:
   if c.check_cpu_temp()[0]:
     flow.thumbnail_all()
-    sleep(120)
+  sleep(120)
   
