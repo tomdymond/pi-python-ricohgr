@@ -11,9 +11,13 @@ sys.path.append('{}/lib/'.format(cwd))
 sys.path.append('{}/../lib/'.format(cwd))
 
 from piricohmotoCamera import Camera
+from piricohmotoChecks import Check
 
+
+c = Check()
 flow = Camera(config_file='/config/piricohmoto.yml')
 while True:
-  flow.geotag_all()
-  sleep(60)
+  if c.check_cpu_temp()[0]:
+    flow.geotag_all()
+    sleep(60)
   

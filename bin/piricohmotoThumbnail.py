@@ -11,9 +11,13 @@ sys.path.append('{}/lib/'.format(cwd))
 sys.path.append('{}/../lib/'.format(cwd))
 
 from piricohmotoCamera import Camera
+from piricohmotoChecks import Check
+
+c = Check()
 
 flow = Camera(config_file='/config/piricohmoto.yml')
 while True:
-  flow.thumbnail_all()
-  sleep(120)
+  if c.check_cpu_temp()[0]:
+    flow.thumbnail_all()
+    sleep(120)
   
