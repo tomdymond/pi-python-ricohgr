@@ -65,6 +65,7 @@
     - ipdb
     - uWSGI
     - psutil
+    - elasticsearch
   ignore_errors: True
 
 - name: Ensure systemd file for supervisor is installed

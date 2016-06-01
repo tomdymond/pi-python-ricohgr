@@ -18,6 +18,16 @@
     - elasticsearch
   ignore_errors: True
 
+- name: Check elasticsearch is enabled
+  command: systemctl is-enabled elasticsearch
+  register: result
+  tags: services
+
+- name: Enable elasticsearch
+  command: systemctl enable elasticsearch 
+  when: result.stdout == 'disabled'
+  tags: services
+
 - name: Set ES_JAVA_OPTS
   lineinfile: dest=/etc/default/elasticsearch line="ES_JAVA_OPTS=-Xms64m -Xmx64m"
 
