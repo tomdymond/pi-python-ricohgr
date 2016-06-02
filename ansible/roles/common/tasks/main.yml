@@ -13,11 +13,10 @@
     - python-markupsafe
     - ubuntu-fan
 
-- name: be sure python is installed
+- name: Install some packages
   apt: name={{ item }} state=present install_recommends=no
   tags: packages
   with_items:
-    - supervisor
     - parallel
     - wireless-tools
     - wpasupplicant
@@ -25,18 +24,17 @@
     - htop
     - dstat
     - tmux
-    - build-essential
     - unzip
     - wget
     - git
     - vim
-    - bluez
-    - python-dev
     - python-virtualenv
     - python-dbus
     - python
-    - hostapd
-    - isc-dhcp-server
+    - python-smbus
+    - python-pip
+    - python-pil
+    - python-pyexiv2
     - python-smbus
   ignore_errors: True
 
@@ -63,7 +61,7 @@
 - name: Be sure certain folders are present
   file: path={{ item.path }} owner={{ item.owner }} group={{ item.group }} mode={{ item.mode }} state=directory recurse=true
   with_items:
-    - { path: '/persist', owner: 'root', group: 'root', mode: '0600' }
+    - { path: '/download', owner: 'root', group: 'root', mode: '0600' }
     - { path: '/config', owner: 'root', group: 'root', mode: '0755' }
     - { path: "{{ install_root }}", owner: 'root', group: 'root', mode: '0755' }
 
@@ -81,73 +79,14 @@
 - name: Copy a base 10-network.rules file
   template: src=templates/10-network.rules.j2 dest=/etc/udev/rules.d/10-network.rules owner=root group=root mode=0644 backup=yes
 
-- name: Copy iptables script
-  copy: src=files/iptables dest=/etc/network/iptables owner=root group=root mode=0755
-
 - name: Copy a base wpa_supplicant file
   template: src=templates/wpa_supplicant.conf.j2 dest=/etc/wpa_supplicant/wpa_supplicant.conf owner=root group=root mode=0644 backup=yes
   notify:
     - restart networking
   tags: networking
 
-- name: Copy defaults hostapd configuration
-  copy: src=files/hostapd dest=/etc/default/hostapd owner=root group=root mode=0644 backup=yes
-  notify:
-    - restart hostapd
-
-- name: Copy the hostapd configuration
-  template: src=templates/hostapd.conf.j2 dest=/etc/hostapd/hostapd.conf owner=root group=root mode=0644 backup=yes
-  notify:
-    - restart hostapd
-
-- name: Copy the dhcp server config
-  template: src=templates/dhcpd.conf.j2 dest=/etc/dhcp/dhcpd.conf owner=root group=root mode=0644 backup=yes
-  notify:
-    - restart isc-dhcp-server
-
-- name: Copy files to get bluetooth internet kind of working
-  copy: src=files/{{ item }} dest=/root/{{ item }}
-  with_items:
-    - bt-network.sh
-    - bt-pan.py
-
-- name: Enable i2c
-  lineinfile: dest=/boot/config.txt line="dtparam=i2c_arm=on"
-
 - name: Ensure USB storage is configured
   mount: name=/download src=/dev/sda1 fstype=vfat opts=auto,users,rw,uid=1001,gid=1001,umask=0002,nofail state=present
 
-- name: Enable i2c in modules
-  lineinfile: dest=/etc/modules line={{ item }}
-  with_items: 
-    - i2c-dev
-    - i2c-bcm2708
-
-- name: Check supervisor is enabled
-  command: systemctl is-enabled supervisor
-  register: result
-  tags: services
-
-- name: Enable supervisor
-  command: systemctl enable supervisor 
-  when: result.stdout == 'disabled'
-  tags: services
-
-- name: Ensure services are running
-  service: name={{ item }} state=running enabled=yes
-  tags: services
-  with_items: 
-    - hostapd
-    - isc-dhcp-server
-    - supervisor
-
 - name: Copy network light indicator script to the network interfaces scripts directory
   template: src=templates/network-light.sh.j2 dest={{ install_root }}/bin//network-light.sh owner=root group=root mode=0755
-#- name: GET RID OF UBUNTU FAN CAUSING ISSUES 
-#  file: path=/etc/network/if-up.d/ubuntu-fomg an state=absent
-#  with_items: 
-#    - /etc/network/if-up.d/ubuntu-fan
-#    - /etc/network/if-down.d/ubuntu-fan
-
-
-

@@ -8,5 +8,3 @@
 - name: restart uwsgi
   service: name=uwsgi state=restarted
 
-- name: restart supervisor
-  service: name=supervisor state=restarted
