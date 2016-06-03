@@ -38,9 +38,6 @@ class GpsPoller(threading.Thread):
     while self.running:
       self.gpsd.next() #this will continue to loop and grab EACH set of gpsd info to clear the buffer
 
-
-
-
 def normalise_time(timestamp):
   if timestamp:
     if re.findall('\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z', str(timestamp)):
@@ -53,11 +50,33 @@ def normalise_time(timestamp):
 
 gpsp = GpsPoller() # create the thread
 n = Notifier()
+
 try:
   gpsp.start() # start it up
+
+  initial_payload = {
+    'altitude': 0,
+    'climb': 0,
+    'epc': 0,
+    'epd': 0,
+    'eps': 0,
+    'ept': 0,
+    'epv': 0,
+    'epx': 0,
+    'epy': 0,
+    'latitude': 0,
+    'longitude': 0,
+    'mode': 3,
+    'speed': 0.0,
+    'time': str(datetime.datetime.now().strftime('%s')),
+    'track': 0
+    }
+
+  data.create_new_gpsrecord(localtime, initial_payload)
+
   while True:
     if gpsp.gpsd.fix.latitude:
-      
+
       epochs_time_system = int(datetime.datetime.now().strftime('%s'))
       epochs_time_gps = normalise_time(gpsp.gpsd.fix.time)
 
