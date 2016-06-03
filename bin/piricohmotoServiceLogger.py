@@ -38,32 +38,34 @@ class GpsPoller(threading.Thread):
     while self.running:
       self.gpsd.next() #this will continue to loop and grab EACH set of gpsd info to clear the buffer
 
+
+
+
+def normalise_time(timestamp):
+  if timestamp:
+    if re.findall('\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z', str(timestamp)):
+      dt = datetime.datetime.strptime(timestamp.split('.')[0], "%Y-%m-%dT%H:%M:%S")
+      dt = int(dt.strftime('%s'))
+    else:
+      dt = int(float(timestamp))
+  return dt
+
+
 gpsp = GpsPoller() # create the thread
 n = Notifier()
 try:
   gpsp.start() # start it up
   while True:
     if gpsp.gpsd.fix.latitude:
-      n.status_payload(0005)
-      localtime = datetime.datetime.now().strftime('%s')
+      
+      epochs_time_system = int(datetime.datetime.now().strftime('%s'))
+      epochs_time_gps = normalise_time(gpsp.gpsd.fix.time)
 
-      d = int(datetime.datetime.now().strftime('%s'))
-      t = gpsp.gpsd.fix.time
-      print t
-      if t:
-        if re.findall('\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z', str(t)):
-          dt = datetime.datetime.strptime(t.split('.')[0], "%Y-%m-%dT%H:%M:%S")
-          dt = int(dt.strftime('%s'))
-        else:
-          dt = int(float(t))
-
-        print "{} / {}".format(d, dt)
-        if d == dt:
-          n.status_payload(0005)
-        else:
-          n.status_payload(1005)
-
-      data.create_new_gpsrecord(localtime, gpsp.gpsd.fix.__dict__)
+      if abs(epochs_time_system - epochs_time_gps) < 5:
+        n.status_payload(0005)
+        data.create_new_gpsrecord(localtime, gpsp.gpsd.fix.__dict__)
+      else:
+        n.status_payload(1005)
     else:
       n.status_payload(1005)
     time.sleep(5)
