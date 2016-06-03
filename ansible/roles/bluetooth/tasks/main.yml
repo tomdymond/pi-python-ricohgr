@@ -1,0 +1,19 @@
+---
+
+- name: Install some packages
+  apt: name={{ item }} state=present install_recommends=no
+  tags: packages
+  with_items:
+    - build-essential
+    - bluez
+    - python-dev
+
+  ignore_errors: True
+
+- name: Copy files to get bluetooth internet kind of working
+  copy: src=files/{{ item }} dest=/root/{{ item }}
+  with_items:
+    - bt-network.sh
+    - bt-pan.py
+
+    

@@ -1,0 +1,41 @@
+---
+
+- name: Install some packages
+  apt: name={{ item }} state=present install_recommends=no
+  tags: packages
+  with_items:
+    - supervisor
+  ignore_errors: True
+
+- name: Check supervisor is enabled
+  command: systemctl is-enabled supervisor
+  register: result
+  tags: services
+
+- name: Enable supervisor
+  command: systemctl enable supervisor 
+  when: result.stdout == 'disabled'
+  tags: services
+
+- name: Ensure services are running
+  service: name={{ item }} state=running enabled=yes
+  tags: services
+  with_items: 
+    - supervisor
+
+- name: Ensure systemd file for supervisor is installed
+  copy: src=/lib/systemd/system/supervisor.service dest=/etc/systemd/system/supervisor.service remote_src=True
+
+- name: Copy supervisor files
+  template: src={{ item }}.j2 dest=/etc/supervisor/conf.d/{{ item }}.conf
+  with_items:
+    - piricohmotoServiceLogger
+    - piricohmotoServiceNotifier
+    - piricohmotoCheckinternet
+    - piricohmotoServiceMain
+    - piricohmotoUpload
+    - piricohmotoGeotag
+    - piricohmotoThumbnail
+  notify:
+    - restart supervisor
+  tags: supervisor

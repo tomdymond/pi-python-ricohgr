@@ -1,0 +1,66 @@
+---
+
+- name: Install some pip packages
+  pip: name={{ item }} state=latest virtualenv=/home/venvs/piricohmoto extra_args="--timeout=5"
+  with_items:
+    - redis
+    - PyYaml
+    - flask
+    - flask_bootstrap
+    - uWSGI
+    - piglow
+    - requests
+    - dropbox
+    - sh
+    - ipython
+    - ipdb
+    - uWSGI
+    - psutil
+    - elasticsearch
+  ignore_errors: True
+
+- name: Create bare repo dir
+  file: path=/home/ubuntu/piricohmoto.git owner=ubuntu group=ubuntu mode=0775 state=directory
+  tags: git
+
+- name: Initialise a bare repo in home dir
+  command: chdir=/home/ubuntu/piricohmoto.git creates=/home/ubuntu/piricohmoto.git/HEAD git init --bare
+  tags: git
+
+- name: ensure repositories permisions
+  file: path=/home/ubuntu/piricohmoto.git owner=ubuntu group=ubuntu recurse=True
+  tags: postreceive
+
+- name: Copy post receive hook
+  template: src=templates/post-receive.j2 dest=/home/ubuntu/piricohmoto.git/hooks/post-receive owner=ubuntu group=ubuntu mode=0755
+
+- name: Check out piricohmoto project into /code folder
+  git: repo=/home/ubuntu/piricohmoto.git
+       dest={{ install_root }}
+       version=devel update=yes
+  ignore_errors: True
+
+- name: Ensure my piricohmoto folder exists
+  file: path=/var/www/piricohmoto state=directory owner=root group=root mode=0755
+
+
+- name: Be sure certain folders are present
+  file: path={{ item.path }} owner={{ item.owner }} group={{ item.group }} mode={{ item.mode }} state=directory
+  with_items:
+    - { path: '/etc/uwsgi', owner: 'root', group: 'root', mode: '0755' }
+    - { path: '/etc/uwsgi/vassals', owner: 'root', group: 'root', mode: '0755' }
+    - { path: '/var/log/piricohmoto', owner: 'appuser', group: 'root', mode: '0755' }
+    - { path: '/download', owner: 'appuser', group: 'appuser', mode: '0755' }
+    - { path: '/download/maps', owner: 'appuser', group: 'appuser', mode: '0755' }
+
+- name: Give ownership of all files in folder to www-data
+  file: path="{{ item }}" owner=www-data group=www-data recurse=true
+  with_items:
+    - "{{ install_root }}/config_app"
+
+
+- name: Create a symlink for the config_app
+  file: src={{ install_root }}/config_app dest=/var/www/piricohmoto/config_app state=link
+
+- name: Copy over piricohmoto config
+  template: src=templates/piricohmoto.yml.j2 dest=/config/piricohmoto.yml owner=appuser group=appuser mode=0600
