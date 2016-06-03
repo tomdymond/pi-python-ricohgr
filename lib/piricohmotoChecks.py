@@ -8,7 +8,7 @@ import psutil
 class Check(object):
     def check_disk_space(self, paths=['/','/download']):
         """ """
-        for i in paths:
+        for path in paths:
             a = psutil.disk_usage(path)
             if a.percent > 90:
                 return (False, 1206)
