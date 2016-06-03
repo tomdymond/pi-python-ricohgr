@@ -2,18 +2,18 @@
 
 - name: Install some packages
   apt: name={{ item }} state=present install_recommends=no
-  tags: packages
   with_items:
     - build-essential
     - bluez
     - python-dev
-
   ignore_errors: True
+  tags: bluetooth
 
 - name: Copy files to get bluetooth internet kind of working
-  copy: src=files/{{ item }} dest=/root/{{ item }}
+  copy: src=files/{{ item }} dest=/opt/{{ item }} owner=root group=root mode=0755
   with_items:
     - bt-network.sh
     - bt-pan.py
+  tags: bluetooth
 
     
