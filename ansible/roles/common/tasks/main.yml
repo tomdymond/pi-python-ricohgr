@@ -61,7 +61,6 @@
 - name: Be sure certain folders are present
   file: path={{ item.path }} owner={{ item.owner }} group={{ item.group }} mode={{ item.mode }} state=directory recurse=true
   with_items:
-    - { path: '/download', owner: 'root', group: 'root', mode: '0600' }
     - { path: '/config', owner: 'root', group: 'root', mode: '0755' }
     - { path: "{{ install_root }}", owner: 'root', group: 'root', mode: '0755' }
 
