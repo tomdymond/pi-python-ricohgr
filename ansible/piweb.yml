@@ -2,4 +2,12 @@
 - hosts: piweb
   roles:
     - common
+    - hostapd
+    - gps
+    - redis
+    - supervisor
+    - bluetooth
+    - piglow
+    - elasticsearch
+    - piricohmoto
     - webtier

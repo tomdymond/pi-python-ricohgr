@@ -2,40 +2,11 @@
 
 #- name: Initialise a bare repo in /home/ubuntu
 
-- name: Create bare repo dir
-  file: path=/home/ubuntu/piricohmoto.git owner=ubuntu group=ubuntu mode=0775 state=directory
-  tags: git
-
-- name: Initialise a bare repo in home dir
-  command: chdir=/home/ubuntu/piricohmoto.git creates=/home/ubuntu/piricohmoto.git/HEAD git init --bare
-  tags: git
-
-- name: ensure repositories permisions
-  file: path=/home/ubuntu/piricohmoto.git owner=ubuntu group=ubuntu recurse=True
-  tags: postreceive
-
-- name: Copy post receive hook
-  template: src=templates/post-receive.j2 dest=/home/ubuntu/piricohmoto.git/hooks/post-receive owner=ubuntu group=ubuntu mode=0755
-
 - name: Ensure packages are installed
   apt: name={{ item }} state=installed
   tags: packages
   with_items:
-    - python-pil
-    - python-pip
-    - python-pyexiv2
-    - python-gps
-    - python-smbus
-    - gpsd
-    - gpsd-clients 
     - nginx
-    - redis-server
-  ignore_errors: True
-
-- name: Check out piricohmoto project into /code folder
-  git: repo=/home/ubuntu/piricohmoto.git
-       dest={{ install_root }}
-       version=devel update=yes
   ignore_errors: True
 
 - name: Check out Bootstrap-Image-Gallery project into /opt folder
@@ -48,49 +19,6 @@
 - name: Copy sudoers.d file
   copy: src=files/appuser.sudo dest=/etc/sudoers.d/appuser
   tags: sudo 
-
-- name: Install some pip packages
-  pip: name={{ item }} state=latest virtualenv=/home/venvs/piricohmoto extra_args="--timeout=5"
-  with_items:
-    - redis
-    - PyYaml
-    - flask
-    - flask_bootstrap
-    - uWSGI
-    - piglow
-    - requests
-    - dropbox
-    - sh
-    - ipython
-    - ipdb
-    - uWSGI
-    - psutil
-  ignore_errors: True
-
-- name: Ensure systemd file for supervisor is installed
-  copy: src=/lib/systemd/system/supervisor.service dest=/etc/systemd/system/supervisor.service remote_src=True
-
-- name: Copy supervisor files
-  template: src={{ item }}.j2 dest=/etc/supervisor/conf.d/{{ item }}.conf
-  with_items:
-    - piricohmotoServiceLogger
-    - piricohmotoServiceNotifier
-    - piricohmotoCheckinternet
-    - piricohmotoServiceMain
-    - piricohmotoUpload
-    - piricohmotoGeotag
-    - piricohmotoThumbnail
-  notify:
-    - restart supervisor
-  tags: supervisor
-
-#- name: Remove supervisor files
-#  file: path=/etc/supervisor/conf.d/{{ item }}.conf state=absent
-#  with_items:
-#    - piricohmotoServiceMain
-#  notify:
-#    - restart supervisor
-#  tags: supervisor
 
 - name: Create nginx SSL dir
   file: path=/etc/nginx/ssl state=directory owner=root group=root mode=0600
@@ -105,18 +33,6 @@
 - name: Copy over nginx base config
   copy: src=files/piricohmoto.conf dest=/etc/nginx/sites-available/piricohmoto owner=root group=root mode=0600
   notify: restart nginx
-
-- name: Ensure my piricohmoto folder exists
-  file: path=/var/www/piricohmoto state=directory owner=root group=root mode=0755
-
-- name: Be sure certain folders are present
-  file: path={{ item.path }} owner={{ item.owner }} group={{ item.group }} mode={{ item.mode }} state=directory
-  with_items:
-    - { path: '/etc/uwsgi', owner: 'root', group: 'root', mode: '0755' }
-    - { path: '/etc/uwsgi/vassals', owner: 'root', group: 'root', mode: '0755' }
-    - { path: '/var/log/piricohmoto', owner: 'appuser', group: 'root', mode: '0755' }
-    - { path: '/download', owner: 'appuser', group: 'appuser', mode: '0755' }
-    - { path: '/download/maps', owner: 'appuser', group: 'appuser', mode: '0755' }
 
 - name: Copy over uWSGI config
   template: src=templates/piricohmoto.uwsgi.ini.j2 dest=/var/www/piricohmoto/piricohmoto_uwsgi.ini owner=root group=root mode=0644
@@ -139,26 +55,10 @@
   file: path=/etc/nginx/sites-enabled/default state=absent
   notify: restart nginx
 
-- name: Give ownership of all files in folder to www-data
-  file: path="{{ item }}" owner=www-data group=www-data recurse=true
-  with_items:
-    - "{{ install_root }}/config_app"
-    - /var/www/piricohmoto
-
-- name: Create a symlink for the config_app
-  file: src={{ install_root }}/config_app dest=/var/www/piricohmoto/config_app state=link
-
-- name: Copy over piricohmoto config `
-  template: src=templates/piricohmoto.yml.j2 dest=/config/piricohmoto.yml owner=appuser group=appuser mode=0600
-
 - name: Ensure services are running
   service: name="{{ item }}" state=running enabled=yes
   tags: services
   with_items: 
-    - gpsd
-    - redis-server
-    - supervisor
     - nginx
     - uwsgi
-
 

@@ -1,0 +1,19 @@
+---
+
+- name: Enable i2c in modules
+  lineinfile: dest=/etc/modules line={{ item }}
+  with_items: 
+    - i2c-dev
+    - i2c-bcm2708
+
+- name: Enable i2c
+  lineinfile: dest=/boot/config.txt line="dtparam=i2c_arm=on"
+
+- name: Install some packages
+  apt: name={{ item }} state=present install_recommends=no
+  tags: packages
+  with_items:
+    - python-dbus
+    - python-smbus
+  ignore_errors: True
+  

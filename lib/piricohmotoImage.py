@@ -6,7 +6,6 @@ from piricohmotoGeo import Geo
 from piricohmotoConfig import Config
 from piricohmotoExif import Exif
 import dropbox
-import redis
 import json
 import os
 import PIL
@@ -38,13 +37,11 @@ class Image(Config):
     except Exception as e:
       print "Failed to create thumbnail for {}".format(self.filename)
       os.remove('{}/{}'.format(self.download_dir, self.filename))
-      r = redis.StrictRedis(host='localhost')
-      r.hdel('IMAGES',self.filename)
+      self.data.remove_image(self.filename)
       print e.message
 
   def upload_to_dropbox(self):
     """ Upload the picture to dropbox """
-    r = redis.StrictRedis(host='localhost')
     try:
       print ("Uploading photo {} to dropbox".format(self.filename))
       client = dropbox.client.DropboxClient(self.access_token)
@@ -54,9 +51,9 @@ class Image(Config):
       # Share it
       response = client.share('/{}'.format(self.filename), short_url=False)
 
-      j = json.loads(r.hget('IMAGES', self.filename))
+      j = self.data.unpack('IMAGES', self.filename)
       j['UPLOAD'] = True
-      r.hmset('IMAGES', {self.filename: json.dumps(j)})
+      self.data.repack('IMAGES', self.filename, j)
       self.notify.status_payload(0103)
       return True
     except Exception as e:
@@ -65,25 +62,22 @@ class Image(Config):
     return False
 
   def is_uploaded(self):
-    r = redis.StrictRedis(host='localhost')
-    if r.keys('IMAGES') and self.filename in r.hkeys('IMAGES'):
-      j = json.loads(r.hget('IMAGES', self.filename))
+    if self.filename in self.data.get_hkeys('IMAGES'):
+      j = self.data.unpack('IMAGES', self.filename)
       if j['UPLOAD']:
         return True
     return False
 
   def is_downloaded(self):
     """ Bool. If the image is already downloaded """
-    r = redis.StrictRedis(host='localhost')
-    if r.hexists('IMAGES', self.filename) and os.path.exists('{}/{}'.format(self.download_dir, self.filename)):
+    if self.data.image_exists(self.filename) and os.path.exists('{}/{}'.format(self.download_dir, self.filename)):
       return True
     return False
 
   def is_geotagged(self):
     """ Bool. If the image is already geo tagged """
-    r = redis.StrictRedis(host='localhost')
-    if r.hexists('IMAGES', self.filename):
-      j = json.loads(r.hget('IMAGES', self.filename))
+    if self.data.image_exists(self.filename):
+      j = self.data.unpack('IMAGES', self.filename)
       #print j
       if j['GPS']:
         print "Image {} already geotagged".format(self.filename)
@@ -136,11 +130,10 @@ class Image(Config):
     geo_data = self.geodata()
     latitude = geo_data['latitude']
     longitude = geo_data['longitude']
-    r = redis.StrictRedis(host='localhost')
-    if not r.hexists('GPSKEYS', self.get_gps_key() ):
+    if not self.data.gpskey_exits( self.get_gps_key() ):
       try:
         request = requests.get('http://maps.googleapis.com/maps/api/geocode/json?latlng={},{}&sensor=true'.format(latitude, longitude), timeout=5)
-        r.hmset('GPSKEYS', {self.get_gps_key(): json.dumps(request.json()) })
+        self.data.create_new_gpskey( self.get_gps_key(), request.json() )
         return True
       except Exception as e:
         print e.message
@@ -149,8 +142,7 @@ class Image(Config):
 
   def geodata(self):
     """ Return geo data """
-    r = redis.StrictRedis(host='localhost')
-    j = json.loads(r.hget('IMAGES', self.filename))
+    j = self.data.unpack('IMAGES', self.filename)
     location = j['GPS']
     if not location:
       exif = self.exifdata()
@@ -159,7 +151,7 @@ class Image(Config):
       location = geo.get_current_location()
 
       j['GPS'] = location
-      r.hmset('IMAGES', {self.filename: json.dumps(j)})
+      self.data.repack('IMAGES', self.filename, j)
     return location
 
 

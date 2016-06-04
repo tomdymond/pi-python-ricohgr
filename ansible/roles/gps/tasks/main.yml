@@ -1,0 +1,15 @@
+---
+- name: Ensure packages are installed
+  apt: name={{ item }} state=installed
+  tags: packages
+  with_items:
+    - python-gps
+    - gpsd
+    - gpsd-clients 
+  ignore_errors: True
+
+- name: Ensure services are running
+  service: name="{{ item }}" state=running enabled=yes
+  tags: services
+  with_items: 
+    - gpsd

@@ -14,16 +14,18 @@ from gps import *
 from time import *
 import time
 import threading
-import redis
 import json
-
+import re
 
 
 cwd = path.dirname(path.abspath(__file__))
 sys.path.append('{}/lib/'.format(cwd))
 sys.path.append('{}/../lib/'.format(cwd))
 
+from piricohmotoConfig import Data
 from piricohmotoNotifier import Notifier
+
+data = Data()
 
 class GpsPoller(threading.Thread):
   def __init__(self):
@@ -36,17 +38,57 @@ class GpsPoller(threading.Thread):
     while self.running:
       self.gpsd.next() #this will continue to loop and grab EACH set of gpsd info to clear the buffer
 
+def get_time():
+  return int(datetime.datetime.now().strftime('%s'))
+
+def normalise_time(timestamp):
+  if timestamp:
+    if re.findall('\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z', str(timestamp)):
+      dt = datetime.datetime.strptime(timestamp.split('.')[0], "%Y-%m-%dT%H:%M:%S")
+      dt = int(dt.strftime('%s'))
+    else:
+      dt = int(float(timestamp))
+  return dt
+
+
 gpsp = GpsPoller() # create the thread
-r = redis.StrictRedis(host='localhost')
 n = Notifier()
+
 try:
   gpsp.start() # start it up
-  while True:
 
+  epochs_time_system = get_time()
+  initial_payload = {
+    'altitude': 0,
+    'climb': 0,
+    'epc': 0,
+    'epd': 0,
+    'eps': 0,
+    'ept': 0,
+    'epv': 0,
+    'epx': 0,
+    'epy': 0,
+    'latitude': 0,
+    'longitude': 0,
+    'mode': 3,
+    'speed': 0.0,
+    'time': epochs_time_system,
+    'track': 0
+    }
+
+  data.create_new_gpsrecord(epochs_time_system, initial_payload)
+
+  while True:
     if gpsp.gpsd.fix.latitude:
-      n.status_payload(0005)
-      localtime = datetime.datetime.now().strftime('%s')
-      r.hmset('GPS', {localtime: json.dumps(gpsp.gpsd.fix.__dict__)})
+
+      epochs_time_system = get_time()
+      epochs_time_gps = normalise_time(gpsp.gpsd.fix.time)
+
+      if abs(epochs_time_system - epochs_time_gps) < 5:
+        n.status_payload(0005)
+        data.create_new_gpsrecord(epochs_time_system, gpsp.gpsd.fix.__dict__)
+      else:
+        n.status_payload(1005)
     else:
       n.status_payload(1005)
     time.sleep(5)

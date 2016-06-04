@@ -1,0 +1,36 @@
+---
+
+- name: be sure python is installed
+  apt: name={{ item }} state=present install_recommends=no
+  tags: packages
+  with_items:
+    - hostapd
+    - isc-dhcp-server
+
+  ignore_errors: True
+
+- name: Copy the hostapd configuration
+  template: src=templates/hostapd.conf.j2 dest=/etc/hostapd/hostapd.conf owner=root group=root mode=0644 backup=yes
+  notify:
+    - restart hostapd
+
+- name: Copy the dhcp server config
+  template: src=templates/dhcpd.conf.j2 dest=/etc/dhcp/dhcpd.conf owner=root group=root mode=0644 backup=yes
+  notify:
+    - restart isc-dhcp-server
+
+- name: Copy defaults hostapd configuration
+  copy: src=files/hostapd dest=/etc/default/hostapd owner=root group=root mode=0644 backup=yes
+  notify:
+    - restart hostapd
+
+- name: Copy iptables script
+  copy: src=files/iptables dest=/etc/network/iptables owner=root group=root mode=0755
+
+- name: Ensure services are running
+  service: name={{ item }} state=running enabled=yes
+  tags: services
+  with_items: 
+    - hostapd
+    - isc-dhcp-server
+
